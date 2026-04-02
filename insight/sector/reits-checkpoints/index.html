@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리츠 투자 시 꼭 볼 요소 — FinQ 투자 인사이트</title>
+<meta name="description" content="부동산 자산과 임대수익을 기반으로 움직이는 리츠의 핵심 투자 포인트 정리. 금리, 배당, 자산 유형, 공실률 중심의 구조 이해.">
+<link rel="canonical" href="https://finq.kr/insight/sector/reits-checkpoints/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="리츠 투자 시 꼭 볼 요소 — FinQ 투자 인사이트">
+<meta property="og:description" content="부동산 자산과 임대수익을 기반으로 움직이는 리츠의 핵심 투자 포인트 정리. 금리, 배당, 자산 유형, 공실률 중심의 구조 이해.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/sector/reits-checkpoints/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">섹터/테마</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>리츠 투자 시 꼭 볼 요소</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">REITS</div>
+    <h1>리츠 투자 시 꼭 볼 요소</h1>
+    <p class="hero-desc">부동산 자산과 임대수익을 기반으로 움직이는 리츠의 핵심 투자 포인트를 정리하는 콘텐츠.<br>금리, 배당, 자산 유형, 공실률 중심의 구조 이해.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">리츠</span>
+      <span class="hero-tag">배당</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">배당형 자산</div>
+        <div class="summary-text">리츠는 부동산 현금흐름 기반의 대표 배당형 자산</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">금리 민감도</div>
+        <div class="summary-text">금리 변화에 민감한 자산 구조로 금리 방향성 판단이 핵심</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">유형 차이</div>
+        <div class="summary-text">오피스, 물류, 데이터센터, 주거형 등 자산 유형별 차이 존재</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 리츠는 임대수익을 배당으로 지급하는 부동산 투자 구조 → 금리가 내려가는 환경에서 강세를 보이고, 자산 유형에 따라 성장성과 안정성이 크게 달라지는 구조
+    </div>
+  </div>
+
+  <!-- 리츠의 기본 구조 -->
+  <div class="section">
+    <div class="sec-title">리츠의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>부동산 자산 보유 또는 운용</strong>
+          <span>리츠는 오피스, 물류센터, 주거 시설, 데이터센터, 쇼핑몰 등 다양한 부동산 자산을 보유하고 임대하는 구조. 자산 유형이 수익 안정성, 성장성, 경기 민감도를 결정하는 첫 번째 변수</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>임대수익과 자산가치 변화 반영</strong>
+          <span>임차인으로부터 수취하는 임대료가 주요 수익원. 공실률이 낮고 임차인 신용도가 높을수록 수익 안정성이 높아지며, 자산 가치 상승 시 추가적인 자본 이득도 발생하는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>배당 중심 현금흐름 분배 구조</strong>
+          <span>리츠는 법적으로 과세 소득의 일정 비율 이상을 배당으로 지급하도록 규정되어 있음. 이익의 대부분이 배당으로 환원되므로 자체 재투자 여력보다 외부 자금 조달에 의존하는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>금리와 공실률 변화에 따른 평가 변화</strong>
+          <span>금리 상승 시 리츠의 배당수익률 매력이 상대적으로 낮아지며 주가 하방 압력 발생. 동시에 공실률 상승이나 임대료 하락은 현금흐름을 직접 훼손하는 이중 리스크 구조</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">💰</div>
+        <div class="point-body">
+          <strong>배당수익률과 배당 지속 가능성</strong>
+          리츠 투자의 핵심은 단순 배당수익률 수치가 아니라 배당의 지속 가능성. FFO(운영자금흐름) 대비 배당 지급 비율, 부채 상환 능력, 임대 계약 만기 구조를 함께 확인해야 배당 안정성을 제대로 평가 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📈</div>
+        <div class="point-body">
+          <strong>금리 상승기와 밸류에이션 부담</strong>
+          금리 상승은 리츠에 이중 압박으로 작용. 차입 비용 증가로 이자 부담이 늘어나는 동시에, 투자자들이 국채 금리 대비 리츠 배당수익률의 매력도가 낮아졌다고 판단해 리츠 가격이 하락하는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏢</div>
+        <div class="point-body">
+          <strong>자산 유형별 성장성과 안정성 차이</strong>
+          오피스형 리츠는 재택근무 확산으로 수요 구조가 흔들리는 반면, 물류·데이터센터 리츠는 전자상거래와 클라우드 성장에 따른 구조적 수요 증가 수혜 구간. 자산 유형 선택이 수익률을 결정하는 핵심 변수
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏗️</div>
+        <div class="point-body">
+          <strong>공실률과 임차인 질의 중요성</strong>
+          공실률은 현금흐름 안정성의 직접 지표. 임차인의 신용 등급과 임대 계약 잔여 기간도 중요한 체크포인트. 대형 우량 임차인과 장기 계약을 맺은 리츠일수록 경기 변동에 강한 수익 구조를 보유
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🖥️</div>
+        <div class="point-body">
+          <strong>데이터센터·물류형 리츠의 구조적 성장 가능성</strong>
+          AI 인프라 수요 증가와 전자상거래 확대는 데이터센터·물류 리츠의 구조적 임대 수요를 지속 확대하는 동력. 전통 부동산 리츠와 달리 성장형 리츠로 분류되며 프리미엄 밸류에이션이 적용되는 경향
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">💵</div>
+        <div class="point-body">
+          <strong>정기 현금흐름 중심의 투자 구조</strong>
+          임대수익 기반의 안정적 현금흐름이 정기 배당으로 지급되는 구조. 주가 등락과 무관하게 일정한 수익을 받는 경험이 가능하여 현금흐름 목적의 투자자에게 적합한 자산 유형
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏘️</div>
+        <div class="point-body">
+          <strong>부동산 자산 기반 안정성 기대</strong>
+          실물 부동산 자산을 기반으로 하므로 주식 대비 자산 가치가 급격히 소멸될 가능성이 낮은 구조. 인플레이션 구간에서 임대료 상승을 통해 실질 수익 보존이 가능한 경우도 존재
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔍</div>
+        <div class="point-body">
+          <strong>섹터별 차별화된 리츠 선택 가능성</strong>
+          물류, 데이터센터, 주거, 의료시설, 호텔 등 다양한 부동산 유형에 따라 원하는 성장성과 안정성 조합을 선택 가능. 동일한 리츠 섹터 내에서도 자산 성격에 따른 투자 전략 다변화 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🌐</div>
+        <div class="point-body">
+          <strong>포트폴리오 분산 자산으로의 활용 가능성</strong>
+          주식·채권과 상관관계가 완전히 일치하지 않는 부동산 자산 특성으로 포트폴리오 분산 효과 기대. 금리 인하 국면에서 채권과 함께 강세를 보이는 경향이 있어 금리 사이클 판단과 연계한 배분 전략 활용 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>금리 상승기 가격 조정 가능성</strong>
+          금리가 빠르게 오르는 환경에서 리츠는 이자 비용 증가와 투자 매력도 하락이 동시에 작용하며 주가가 큰 폭으로 조정받는 경우가 빈번. 금리 방향성에 대한 판단이 리츠 투자의 가장 중요한 선행 변수
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏚️</div>
+        <div class="point-body caution">
+          <strong>공실 확대 시 배당 안정성 저하 가능성</strong>
+          경기 침체나 산업 구조 변화로 공실이 늘어나면 임대수익이 감소하며 배당 재원이 축소되는 직접 연결 구조. 과거 안정적이었던 배당이 삭감되는 경우 주가 하락 폭이 크게 확대되는 경향
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body caution">
+          <strong>자산 유형별 구조적 침체 가능성</strong>
+          오피스 리츠의 재택근무 영향, 리테일 리츠의 전자상거래 충격처럼 특정 자산 유형은 구조적 수요 감소 국면에 진입하는 경우 발생. 단순히 리츠 전체를 방어적으로 분류하면 이런 구조 변화를 놓칠 수 있는 위험 존재
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔀</div>
+        <div class="point-body caution">
+          <strong>부채 비율과 차환 부담 변수 존재</strong>
+          리츠는 자산 매입을 위해 레버리지를 활용하는 구조. 차입 비중이 높은 리츠는 금리 상승 시 차환(리파이낸싱) 비용 급증으로 배당 여력이 훼손되는 구조적 취약성 존재. 부채 만기 구조 확인이 필수
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>배당과 현금흐름을 중시하는 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>주식 외 부동산형 자산을 함께 담고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>금리 민감 자산 구조를 이해하고 활용하려는 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>고성장 기술주 중심 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>금리 변동에 민감한 단기 매매 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="../../dividend/" class="related-card">
+        <span>💰 배당주 투자 시 꼭 볼 지표</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../../macro/rates-and-stocks/" class="related-card">
+        <span>📈 금리 인상과 주식시장 관계</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../healthcare-defensive/" class="related-card">
+        <span>🏥 헬스케어 섹터의 방어적 특성</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 섹터/테마 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 투자자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 투자자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

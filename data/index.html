@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마켓 데이터 분석 — FinQ</title>
+<meta name="description" content="미국과 국내 증시의 핵심 일정, 수급, 공시, 실적 데이터를 한곳에서 확인. 거시 일정부터 기업 이벤트, 수급 흐름, 상장 일정까지.">
+<link rel="canonical" href="https://finq.kr/data/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.page-header { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 2rem; }
+.back-link { font-size: 13px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; margin-bottom: 1.5rem; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+.page-header-inner { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+.page-icon { font-size: 36px; }
+.page-label { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; }
+.page-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -0.5px; }
+.page-desc { font-size: 15px; color: var(--text-secondary); margin-top: 0.5rem; word-break: keep-all; }
+.page-desc span { display: block; }
+
+.section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.card-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.card p { word-break: keep-all; }
+.card:hover { box-shadow: var(--shadow-hover); border-color: var(--accent); transform: translateY(-2px) scale(1.02); }
+.card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 1rem; }
+.card-icon.data { background: #fef3c7; }
+[data-theme="dark"] .card-icon.data { background: #78350f; }
+.card h3 { font-size: 17px; font-weight: 650; margin-bottom: 0.4rem; }
+.card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+.feature-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.75rem; }
+.feature-tag { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+.card-cta { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 0.85rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+
+.info-box { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.info-box-inner { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+.info-box-inner ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.info-box-inner ul li { font-size: 13px; color: var(--text-secondary); padding-left: 1.1em; position: relative; word-break: keep-all; }
+.info-box-inner ul li::before { content: "·"; position: absolute; left: 0; font-weight: 700; }
+
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="마켓 데이터 분석 — FinQ">
+<meta property="og:description" content="미국과 국내 증시의 핵심 일정, 수급, 공시, 실적 데이터를 한곳에서 확인. 거시 일정부터 기업 이벤트, 수급 흐름, 상장 일정까지.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/data/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../strategy/">전략</a>
+      <a href="../data/" class="active">데이터</a>
+      <a href="../simulation/">시뮬레이션</a>
+      <a href="../insight/">인사이트</a>
+      <a href="../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <a href="../" class="back-link">← 메인으로</a>
+  <div class="page-header-inner">
+    <span class="page-icon">📡</span>
+    <div>
+      <div class="page-label">Market Data</div>
+      <h1 class="page-title">마켓 데이터 분석</h1>
+    </div>
+  </div>
+  <p class="page-desc">
+    <span>미국과 국내 증시의 핵심 일정, 수급, 공시, 실적 데이터를 한곳에서 확인</span>
+    <span>거시 일정부터 기업 이벤트, 수급 흐름, 상장 일정까지 투자 판단에 필요한 주요 데이터를 빠르게 탐색</span>
+  </p>
+</div>
+
+<div class="divider"><hr></div>
+
+<section class="section" style="padding-top:2.5rem">
+  <div class="card-grid">
+
+    <a href="us_calendar/" class="card">
+      <div class="card-icon data">📅</div>
+      <h3>경제 일정 캘린더</h3>
+      <p>FOMC, CPI, 고용지표 등 주요 거시 이벤트 일정을 한눈에 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">거시지표</span>
+        <span class="feature-tag">FOMC</span>
+        <span class="feature-tag">CPI</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="us_earnings/" class="card">
+      <div class="card-icon data">📊</div>
+      <h3>미국 실적 발표 일정</h3>
+      <p>미국 주요 기업의 실적 발표 일정과 예상치를 빠르게 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">실적발표</span>
+        <span class="feature-tag">미국주식</span>
+        <span class="feature-tag">EPS</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="us_earnings-surprise/" class="card">
+      <div class="card-icon data">⚡</div>
+      <h3>어닝 서프라이즈 분석</h3>
+      <p>실제 실적이 예상치를 얼마나 웃돌거나 밑돌았는지 비교해 시장 반응의 배경을 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">실적비교</span>
+        <span class="feature-tag">서프라이즈</span>
+        <span class="feature-tag">기업분석</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="us_insider/" class="card">
+      <div class="card-icon data">👔</div>
+      <h3>미국 내부자 거래 동향</h3>
+      <p>미국 상장기업 임원과 대주주의 매수·매도 흐름을 추적</p>
+      <div class="feature-list">
+        <span class="feature-tag">내부자거래</span>
+        <span class="feature-tag">임원매매</span>
+        <span class="feature-tag">미국시장</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="kr_flow/" class="card">
+      <div class="card-icon data">📈</div>
+      <h3>국내 수급 동향</h3>
+      <p>개인, 외국인, 기관의 매매 흐름을 통해 국내 증시 수급 변화를 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">수급분석</span>
+        <span class="feature-tag">외국인</span>
+        <span class="feature-tag">기관</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="kr_disclosure/" class="card">
+      <div class="card-icon data">📋</div>
+      <h3>국내 핵심 공시</h3>
+      <p>실적, 자사주, 유상증자, 주요사항보고서 등 핵심 공시를 빠르게 체크</p>
+      <div class="feature-list">
+        <span class="feature-tag">공시체크</span>
+        <span class="feature-tag">DART</span>
+        <span class="feature-tag">기업이슈</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="kr_ipo/" class="card">
+      <div class="card-icon data">🏢</div>
+      <h3>국내 IPO·공모 일정</h3>
+      <p>공모주 청약, 수요예측, 상장 일정 등 국내 IPO 흐름을 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">IPO</span>
+        <span class="feature-tag">공모주</span>
+        <span class="feature-tag">상장일정</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="kr_ir/" class="card">
+      <div class="card-icon data">🎤</div>
+      <h3>국내 IR 일정</h3>
+      <p>국내 상장사의 IR 일정과 발표 주제, 주요 커뮤니케이션 흐름을 한곳에서 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">IR</span>
+        <span class="feature-tag">기업설명회</span>
+        <span class="feature-tag">일정</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+    <a href="kr_fundamentals/" class="card">
+      <div class="card-icon data">🔢</div>
+      <h3>종목 재무 요약</h3>
+      <p>PER, PBR, ROE 등 핵심 재무 지표를 바탕으로 종목의 기본 체력을 빠르게 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">재무지표</span>
+        <span class="feature-tag">PER</span>
+        <span class="feature-tag">ROE</span>
+      </div>
+      <div class="card-cta">→ 분석 보기</div>
+    </a>
+
+  </div>
+</section>
+
+<div class="info-box">
+  <div class="info-box-inner">
+    <ul>
+      <li>미국 및 국내 데이터는 출처와 반영 주기가 다를 수 있습니다.</li>
+      <li>일부 데이터는 영업일 기준으로 업데이트됩니다.</li>
+      <li>본 페이지는 투자 판단을 돕기 위한 정보 정리 페이지로, 특정 투자를 권유하지 않습니다.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../about/index.html">소개</a>
+    <a href="../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

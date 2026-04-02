@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>현금흐름 중심 포트폴리오 구성법 — FinQ 투자 인사이트</title>
+<meta name="description" content="정기 분배와 배당을 기반으로 포트폴리오를 설계하는 기본 구조 정리. 배당 ETF, 리츠, 커버드콜, 채권형 자산의 역할 구분 중심의 설명.">
+<link rel="canonical" href="https://finq.kr/insight/dividend/cashflow-portfolio/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.asset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 0.25rem; }
+@media (max-width: 560px) { .asset-grid { grid-template-columns: 1fr; } }
+.asset-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.asset-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.6rem; }
+.asset-icon { font-size: 20px; }
+.asset-name { font-size: 14px; font-weight: 700; }
+.asset-badge { margin-left: auto; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+.badge-monthly { background: rgba(37,99,235,.1); color: var(--accent); }
+.badge-quarterly { background: rgba(217,119,6,.1); color: var(--orange); }
+.badge-growth { background: rgba(22,163,74,.1); color: var(--green); }
+[data-theme="dark"] .badge-monthly { background: rgba(37,99,235,.2); }
+[data-theme="dark"] .badge-quarterly { background: rgba(217,119,6,.2); }
+[data-theme="dark"] .badge-growth { background: rgba(22,163,74,.2); }
+.asset-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="현금흐름 중심 포트폴리오 구성법 — FinQ 투자 인사이트">
+<meta property="og:description" content="정기 분배와 배당을 기반으로 포트폴리오를 설계하는 기본 구조 정리. 배당 ETF, 리츠, 커버드콜, 채권형 자산의 역할 구분 중심의 설명.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/dividend/cashflow-portfolio/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">배당/현금흐름</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>현금흐름 중심 포트폴리오 구성법</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">CASHFLOW</div>
+    <h1>현금흐름 중심 포트폴리오 구성법</h1>
+    <p class="hero-desc">정기 분배와 배당을 기반으로 포트폴리오를 설계하는 기본 구조를 정리하는 콘텐츠.<br>배당 ETF, 리츠, 커버드콜, 채권형 자산의 역할 구분 중심의 설명.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">포트폴리오</span>
+      <span class="hero-tag">현금흐름</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">지급 구조</div>
+        <div class="summary-text">수익률보다 지급 구조가 중요한 자산 배치 방식</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">재원 이해</div>
+        <div class="summary-text">자산별 현금흐름 재원과 변동성 차이 이해가 핵심</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">혼합 가능성</div>
+        <div class="summary-text">월·분기·성장형 배당의 혼합 구성 가능성 존재</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 현금흐름 포트폴리오는 단순히 배당 높은 자산을 모으는 것이 아니라, 각 자산의 역할과 분배 재원·주기를 이해하고 목적에 맞게 배치하는 설계 작업
+    </div>
+  </div>
+
+  <!-- 자산군별 역할 -->
+  <div class="section">
+    <div class="sec-title">자산군별 역할 구분</div>
+    <div class="asset-grid">
+      <div class="asset-card">
+        <div class="asset-card-header">
+          <span class="asset-icon">📅</span>
+          <span class="asset-name">커버드콜 ETF</span>
+          <span class="asset-badge badge-monthly">월 배당</span>
+        </div>
+        <div class="asset-desc">옵션 프리미엄 기반 고분배 자산 → 현금흐름 비중 담당. 상승 제한 구조 존재. JEPI, JEPQ 등이 대표 사례</div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-card-header">
+          <span class="asset-icon">🏢</span>
+          <span class="asset-name">리츠(REITs)</span>
+          <span class="asset-badge badge-quarterly">분기 배당</span>
+        </div>
+        <div class="asset-desc">부동산 임대 수익 기반 분배 자산 → 금리 민감도 높음. 인플레이션 헤지 기능과 실물 자산 성격 보유</div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-card-header">
+          <span class="asset-icon">📈</span>
+          <span class="asset-name">배당 성장 ETF</span>
+          <span class="asset-badge badge-growth">성장형</span>
+        </div>
+        <div class="asset-desc">배당 증액 이력 기반 장기 복리 자산 → 현재 수익률은 낮지만 장기 배당 성장 기대. SCHD, VIG 등이 대표 사례</div>
+      </div>
+      <div class="asset-card">
+        <div class="asset-card-header">
+          <span class="asset-icon">🔒</span>
+          <span class="asset-name">채권형 자산</span>
+          <span class="asset-badge badge-monthly">월 배당</span>
+        </div>
+        <div class="asset-desc">이자 수익 기반 안정적 현금흐름 자산 → 주식 자산 대비 변동성 낮음. 포트폴리오 하방 완충 역할 수행</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기본 구조 -->
+  <div class="section">
+    <div class="sec-title">현금흐름 포트폴리오의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>목표 현금흐름 수준 설정</strong>
+          <span>월 또는 연간 기준으로 필요한 현금흐름 목표를 먼저 설정 → 총 자산 대비 몇 퍼센트의 배당 수익률이 필요한지를 역산해 필요 자산 규모와 배당 수익률 기준을 도출</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>자산군별 역할 구분</strong>
+          <span>커버드콜 ETF(고분배·월 지급), 배당 성장 ETF(장기 복리), 리츠(실물 연계), 채권형(안정 완충) 등 각 자산의 역할을 명확히 구분한 뒤 비중 배분 → 각 자산의 분배 재원과 변동성 차이 이해가 선행 필요</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>분배 주기와 변동성 조합</strong>
+          <span>월 분배 자산과 분기 분배 자산을 혼합하면 매월 수령 가능한 현금흐름 구조 설계 가능 → 동시에 분배금 수준이 다른 자산들의 변동성도 함께 고려해 전체 포트폴리오 안정성 확보</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>리밸런싱과 세후 관리 구조 반영</strong>
+          <span>자산 가격 변화에 따른 비중 조정(리밸런싱) 주기를 설정하고, 배당 수령 시 세금 처리와 환율 변수를 반영한 실질 현금흐름 기준으로 관리하는 구조 설계 필요</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body">
+          <strong>배당 ETF와 개별 배당주의 차이</strong>
+          배당 ETF는 분산과 자동 관리 효과가 있지만 개별 종목 선택 자율성이 없고, 개별 배당주는 기업 직접 선별 가능하지만 분산과 관리 부담이 증가 → 포트폴리오 규모와 관리 역량에 따라 혼합 비율 결정
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏢</div>
+        <div class="point-body">
+          <strong>리츠와 커버드콜 ETF의 역할 차이</strong>
+          리츠는 부동산 임대 수익 기반으로 인플레이션 연동 성격이 있고, 커버드콜 ETF는 옵션 프리미엄 기반으로 시장 변동성에 민감 → 두 자산을 함께 배치하면 현금흐름 재원이 다양해지는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚖️</div>
+        <div class="point-body">
+          <strong>성장형 자산과 현금흐름형 자산의 균형 필요성</strong>
+          현금흐름 자산만으로 포트폴리오를 구성하면 장기 자산 성장이 제한될 수 있음 → 배당 성장주나 성장형 ETF를 일부 혼합해 인플레이션 대비 구매력 유지 구조를 함께 설계하는 것이 일반적
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">💱</div>
+        <div class="point-body">
+          <strong>세금과 환율 변수 고려 필요성</strong>
+          해외 배당 자산은 배당소득세와 환율 변동이 실수령액에 영향 → 명목 배당수익률과 실제 세후 수령액의 차이를 반드시 감안해 목표 현금흐름 계획을 수립하는 것이 필요
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🏡</div>
+        <div class="point-body">
+          <strong>생활비 보조형 자산 구조 설계 가능성</strong>
+          포트폴리오에서 발생하는 배당과 분배금을 생활비 일부로 활용하는 구조 설계 가능 → 자산을 매도하지 않고도 정기 현금흐름을 만들어내는 자산 배치 방식
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🧘</div>
+        <div class="point-body">
+          <strong>심리적 안정성과 예측 가능한 현금흐름 확보 가능성</strong>
+          정기 분배금 수령은 시장 하락 구간에서도 일정 수준의 현금이 들어오는 심리적 안정감 제공 → 변동성이 높은 구간에서 불필요한 매도 결정을 줄이는 데 도움이 되는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🌅</div>
+        <div class="point-body">
+          <strong>은퇴형 포트폴리오와의 연결성</strong>
+          자산 인출 단계에 진입하는 은퇴 전후 시기에 현금흐름 포트폴리오 구조로 전환하면, 자산을 매도하지 않고 분배금으로 생활비를 충당하는 포트폴리오 설계 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🌐</div>
+        <div class="point-body">
+          <strong>자산군 혼합을 통한 분산 효과 가능성</strong>
+          주식 배당, 리츠, 채권 이자 등 현금흐름 재원이 다양한 자산을 혼합하면 특정 자산군 부진 시 분배금 감소 영향을 완화할 수 있는 분산 구조 확보
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>높은 분배금 추구에 따른 원금 훼손 가능성</strong>
+          분배금 수준만 높이려다 원금 손실이 발생하는 자산 비중이 지나치게 높아질 수 있음 → 분배금과 자산 가격 변화를 함께 관리하는 총자산 관점 유지가 필요
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔗</div>
+        <div class="point-body caution">
+          <strong>자산 간 상관관계 확대 가능성</strong>
+          금리 상승 구간에서는 배당주, 리츠, 채권형 자산이 동시에 하락하는 경향 → 현금흐름 자산들이 서로 독립적이지 않을 수 있어 분산 효과가 기대보다 낮아지는 국면 발생 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🧾</div>
+        <div class="point-body caution">
+          <strong>세후 실수령 기준과 명목 수익률의 차이</strong>
+          배당소득세(15.4%), 해외 원천징수세, 환율 변동 등으로 인해 실제 수령액이 명목 배당수익률보다 낮아짐 → 목표 현금흐름 계획 시 반드시 세후 기준으로 역산하는 과정 필요
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body caution">
+          <strong>금리 및 시장 환경 변화에 따른 분배 감소 가능성</strong>
+          커버드콜 ETF는 변동성 하락 시, 리츠는 금리 상승 시 분배금이 줄어드는 경향 → 시장 환경 변화에 따라 전체 현금흐름이 예상보다 감소할 수 있는 구조 인지 필요
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>정기 현금흐름을 중시하는 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>은퇴 준비 또는 생활비 보조 목적 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>총수익보다 자산 배치의 안정성을 우선하는 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>자본차익 극대화 중심 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>배당보다 고성장 중심 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="../monthly-etf-guide/" class="related-card">
+        <span>📅 월배당 ETF 비교 가이드</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../../" class="related-card">
+        <span>🌅 은퇴형 배당 포트폴리오 기초</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../../" class="related-card">
+        <span>🏢 리츠 투자 시 꼭 볼 요소</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../../" class="bottom-link">← 배당/현금흐름 전체로</a>
+    <a href="../../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

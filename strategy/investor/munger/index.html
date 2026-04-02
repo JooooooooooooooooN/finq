@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>찰리 멍거 포트폴리오 — FinQ</title>
+<meta name="description" content="찰리 멍거의 Daily Journal Corp 13F 포트폴리오. 보유 종목, 섹터 비중, 투자 철학을 한눈에 확인하세요.">
+<meta property="og:title" content="찰리 멍거 포트폴리오 — FinQ">
+<meta property="og:description" content="버크셔 해서웨이 부회장·데일리 저널 회장. 집중투자와 역발상의 대가 찰리 멍거 포트폴리오 분석.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.hero-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent);color:#fff;margin-bottom:1rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.link{cursor:pointer;transition:all .15s}.guru-chip.link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/munger/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span>›</span>
+    <a href="../../../strategy/">투자 전략</a>
+    <span>›</span>
+    <a href="../">투자자 기반 전략</a>
+    <span>›</span>
+    <span>찰리 멍거</span>
+  </div>
+
+  <h1 class="page-title">찰리 멍거</h1>
+  <p class="page-desc">Daily Journal Corporation 13F 기반 포트폴리오 분석. 집중투자와 역발상 철학의 대가, 워런 버핏의 영원한 파트너.</p>
+
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <span class="guru-chip active">찰리 멍거</span>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div>
+    </div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">찰리 멍거 Charlie Munger</div>
+        <div class="guru-sub">버크셔 해서웨이 부회장 · Daily Journal 회장 · 1924~2023</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">$4억+</div>
+            <div class="guru-stat-label">DJCO 공개 포트폴리오</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">59년</div>
+            <div class="guru-stat-label">버핏과의 파트너십</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">집중투자</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1rem">
+      <span class="info-icon">ℹ️</span>
+      <span>찰리 멍거는 2023년 11월 28일 99세로 별세했습니다. 이 페이지는 생전 마지막 13F 공시(2023년 Q3)를 기준으로 합니다. DJCO(Daily Journal Corporation)가 그의 공개 포트폴리오 13F 신고 주체입니다.</span>
+    </div>
+  </div>
+
+  <!-- 2. 보유 종목 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>주요 보유 종목</div>
+      <span class="data-tag">2023년 Q3 DJCO 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>종목</th>
+            <th>비중</th>
+            <th class="col-value">평가액</th>
+            <th class="col-shares">보유 주수</th>
+            <th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>멍거는 극도의 집중투자를 신봉했습니다. "분산투자는 무지에 대한 헤지"라며, 확신 있는 소수 종목에 집중 투자했습니다.</span>
+    </div>
+  </div>
+
+  <!-- 3. 섹터 배분 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
+      <span class="data-tag">2023년 Q3 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <!-- 4. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"훌륭한 회사를 공정한 가격에 사는 것이, 공정한 회사를 훌륭한 가격에 사는 것보다 훨씬 낫습니다."</div>
+        <div class="quote-source">— 버핏이 멍거의 영향을 설명하며 인용</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"반전시키고, 항상 반전시켜라. 문제를 뒤집어 생각하면 해답이 보인다."</div>
+        <div class="quote-source">— 역발상 사고의 핵심 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"나는 그냥 현명한 투자를 하고 싶다. 나는 빨리 부자가 되는 것에 관심이 없다. 나는 느리게 부자가 되고 싶다."</div>
+        <div class="quote-source">— 장기 복리 철학</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"모든 현명한 투자는 가치투자다. 당신이 얻는 것보다 더 많이 지불해야 한다는 건 투자가 아니다."</div>
+        <div class="quote-source">— Poor Charlie's Almanack</div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔬</div>
+          <div style="font-weight:600;margin-bottom:2px">다학문적 사고</div>
+          <div style="color:var(--text2)">심리학, 물리학, 경제학 등 다분야 모델로 분석</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🎯</div>
+          <div style="font-weight:600;margin-bottom:2px">집중 포트폴리오</div>
+          <div style="color:var(--text2)">분산투자 반대, 확신 있는 소수 종목 집중</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔄</div>
+          <div style="font-weight:600;margin-bottom:2px">역발상</div>
+          <div style="color:var(--text2)">문제를 뒤집어 생각, 시장 역방향 베팅</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🌏</div>
+          <div style="font-weight:600;margin-bottom:2px">글로벌 시각</div>
+          <div style="color:var(--text2)">BYD·알리바바 등 중국 우량기업 조기 발굴</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 주요 변동 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>말년 주요 투자 이슈</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">장기 보유</span>
+        <div><strong>BYD (비야디)</strong> — 2008년 약 $2,300만 투자 후 수십 배 수익. 중국 전기차 혁명을 누구보다 먼저 확신. 2022년부터 일부 차익 실현.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">논란 투자</span>
+        <div><strong>BABA (알리바바)</strong> — 중국 빅테크 규제 역풍으로 대규모 손실. "중국 최고의 기업"이라는 확신에도 불구하고 포지션 대폭 축소.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">지속 보유</span>
+        <div><strong>BAC·WFC (미국 대형은행)</strong> — 금융 위기 이후 저가 매수한 대형 은행주를 장기 보유. 안정적인 배당과 자사주 매입의 가치 인정.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《가난한 찰리의 연감》</strong> — 멍거의 다학제적 사고와 정신모형을 가장 잘 보여주는 대표작</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 DJCO(Daily Journal Corporation)의 SEC EDGAR 13F 보고서를 기반으로 합니다. 찰리 멍거는 2023년 11월 별세했으며, 버크셔 해서웨이 포트폴리오는 워런 버핏 페이지를 참고하세요. 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', t);
+}
+(function(){
+  const t = localStorage.getItem('theme');
+  if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
+})();
+
+const holdings = [
+  { ticker:'BAC',  name:'뱅크 오브 아메리카', sector:'금융', weight:28.4, value:'$114억', shares:'247만주', change:'same', changeLabel:'— 유지' },
+  { ticker:'WFC',  name:'웰스 파고', sector:'금융', weight:27.1, value:'$108억', shares:'160만주', change:'same', changeLabel:'— 유지' },
+  { ticker:'BYD',  name:'비야디 (ADR)', sector:'자동차', weight:15.8, value:'$63억', shares:'127만주', change:'down', changeLabel:'▼ 일부 매도' },
+  { ticker:'USB',  name:'US 방코프', sector:'금융', weight:8.7,  value:'$35억', shares:'55만주', change:'same', changeLabel:'— 유지' },
+  { ticker:'BABA', name:'알리바바', sector:'기술', weight:6.9,  value:'$28억', shares:'30만주', change:'down', changeLabel:'▼ 감소' },
+];
+
+const tbody = document.getElementById('holdingsBody');
+holdings.forEach((h, i) => {
+  const changeClass = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
+      <td>
+        <div class="ticker">${h.ticker}</div>
+        <div class="co-name">${h.name}</div>
+      </td>
+      <td>
+        <div class="weight-bar-wrap">
+          <div class="weight-bar" style="width:${h.weight * 2.8}px"></div>
+          <span class="weight-text">${h.weight}%</span>
+        </div>
+      </td>
+      <td class="col-value"><span class="amount">${h.value}</span></td>
+      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+      <td><span class="${changeClass}">${h.changeLabel}</span></td>
+    </tr>`;
+});
+
+const sectors = [
+  { name:'금융', pct:64.2, color:'#2563eb' },
+  { name:'자동차', pct:15.8, color:'#059669' },
+  { name:'기술', pct:6.9,  color:'#7c3aed' },
+  { name:'현금성', pct:13.1, color:'#6b7280' },
+];
+const sl = document.getElementById('sectorList');
+sectors.forEach(s => {
+  sl.innerHTML += `
+    <div class="sector-row">
+      <div class="sector-name">${s.name}</div>
+      <div class="sector-bar-bg">
+        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
+      </div>
+      <div class="sector-pct">${s.pct}%</div>
+    </div>`;
+});
+</script>
+</body>
+</html>

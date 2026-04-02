@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAN SLIM 전략 — FinQ</title>
+<meta name="description" content="실적 성장, 수급, 업종 리더십을 함께 보며 강한 성장주를 찾는 전략">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#16a34a;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:800px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+.hero{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.hero-icon{width:56px;height:56px;border-radius:14px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hero-badge{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;margin-bottom:.3rem}
+.hero h1{font-size:clamp(20px,4vw,28px);font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+.hero-lead{font-size:14px;color:var(--text2)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.content p{font-size:15px;line-height:1.85;word-break:keep-all;margin:0}.content p+p{margin-top:.6em}
+.content ul{font-size:15px;line-height:1.8;margin-bottom:.75rem;padding-left:1.5rem}
+.content li{margin-bottom:.25rem}
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+/* struct-grid */
+.struct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+@media(max-width:600px){.struct-grid{grid-template-columns:1fr}}
+.struct-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.struct-icon{font-size:24px;margin-bottom:.4rem}
+.struct-name{font-size:13px;font-weight:700;margin-bottom:.3rem}
+.struct-desc{font-size:12px;color:var(--text2);line-height:1.5;word-break:keep-all}
+/* etf-grid */
+.etf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:1rem 0}
+@media(max-width:600px){.etf-grid{grid-template-columns:1fr}}
+.etf-card{background:var(--bg2);border-radius:8px;padding:1rem;border:1px solid var(--border)}
+.etf-ticker{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.etf-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.etf-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.etf-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--accent);color:#fff;margin-top:6px}
+/* canslim-grid */
+.canslim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:.5rem}
+@media(max-width:500px){.canslim-grid{grid-template-columns:1fr}}
+.canslim-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;display:flex;align-items:flex-start;gap:.6rem}
+.canslim-item.full{grid-column:1/-1}
+.canslim-letter{width:28px;height:28px;border-radius:8px;background:rgba(37,99,235,.1);color:var(--accent);font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+[data-theme=dark] .canslim-letter{background:rgba(37,99,235,.2)}
+.canslim-body{}
+.canslim-title{font-size:13px;font-weight:700;margin-bottom:.2rem}
+.canslim-desc{font-size:12px;color:var(--text2);line-height:1.5;word-break:keep-all}
+/* flow */
+.flow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;margin-top:.5rem}
+@media(max-width:600px){.flow{flex-wrap:wrap;gap:6px}}
+.flow-item{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.flow-arrow{color:var(--text2);font-size:14px}
+.flow-blue{background:rgba(37,99,235,.1);color:#2563eb}
+.flow-green{background:rgba(22,163,74,.1);color:#16a34a}
+.flow-orange{background:rgba(217,119,6,.1);color:#d97706}
+.flow-red{background:rgba(220,38,38,.1);color:#dc2626}
+[data-theme=dark] .flow-blue{background:rgba(37,99,235,.2)}
+[data-theme=dark] .flow-green{background:rgba(22,163,74,.2)}
+[data-theme=dark] .flow-orange{background:rgba(217,119,6,.2)}
+[data-theme=dark] .flow-red{background:rgba(220,38,38,.2)}
+/* formula */
+.formula{background:var(--bg2);border-radius:8px;padding:1.25rem;margin:1rem 0;font-family:inherit;font-size:15px;line-height:2;text-align:center;border:1px solid var(--border)}
+.formula .var{color:var(--accent);font-weight:700}
+.formula .op{color:var(--text2)}
+/* risk-list */
+.risk-list{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.risk-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg2);border-radius:8px}
+.risk-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.risk-text{font-size:14px;line-height:1.6}
+.risk-text strong{color:var(--red)}
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-warn{background:#fef3c7;color:#92400e}
+[data-theme=dark] .callout-warn{background:#78350f;color:#fcd34d}
+.callout-source{background:var(--bg2);color:var(--text2)}
+/* etc */
+.fit-box{background:var(--bg2);border-radius:8px;padding:1rem 1.25rem;font-size:14px;line-height:1.8;word-break:keep-all}
+.cta-box{margin-top:1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);border:1px solid var(--border);transition:all .15s}
+.cta-btn:hover{border-color:var(--accent);color:var(--accent)}
+.disclaimer{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--bg2);border-radius:8px;margin-top:1.25rem;line-height:1.7}
+hr{border:none;border-top:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:title" content="CAN SLIM 전략 — FinQ">
+<meta property="og:description" content="실적 성장, 수급, 업종 리더십을 함께 보며 강한 성장주를 찾는 전략">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/strategy/method/can-slim/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/method/can-slim/">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/" class="active">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span>
+    <a href="../../../strategy/">투자 전략</a><span>›</span>
+    <a href="../">방법 기반 전략</a><span>›</span>
+    <span>CAN SLIM 전략</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">📊</div>
+    <div>
+      <div class="hero-badge">실행 방식</div>
+      <h1>CAN SLIM 전략</h1>
+      <div class="hero-lead">실적 성장, 수급, 업종 리더십을 함께 보며 강한 성장주를 찾는 전략</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">개요</div>
+    <div class="content">
+      <p>윌리엄 오닐이 개발한 7가지 선별 기준의 앞글자를 딴 전략.</p>
+      <p>재무 성장과 기술적 수급 신호를 동시에 확인해 강한 성장주 발굴.</p>
+      <p>강세장에서 폭발적인 수익을 낸 종목들의 공통 패턴을 체계화한 방식.</p>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 7가지 체크리스트 모두 통과 — 윌리엄 오닐의 성장주 발굴 공식
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">핵심 구조</div>
+    <div class="struct-grid">
+      <div class="struct-card">
+        <div class="struct-icon">📊</div>
+        <div class="struct-name">실적·이익 (C+A)</div>
+        <div class="struct-desc">분기 이익 25%+ 성장 &amp; 연간 이익 3년 연속 성장</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">🚀</div>
+        <div class="struct-name">수급·모멘텀 (N+S)</div>
+        <div class="struct-desc">신고가·신제품 등 새 모멘텀 + 거래량 급증 확인</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">🏆</div>
+        <div class="struct-name">리더십·시장 (L+I+M)</div>
+        <div class="struct-desc">업종 선도 + 기관 수급 유입 + 전체 시장 상승 추세</div>
+      </div>
+    </div>
+    <div class="canslim-grid">
+      <div class="canslim-item">
+        <div class="canslim-letter">C</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Current Earnings</div>
+          <div class="canslim-desc">최근 분기 이익 25% 이상 성장</div>
+        </div>
+      </div>
+      <div class="canslim-item">
+        <div class="canslim-letter">A</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Annual Earnings</div>
+          <div class="canslim-desc">연간 이익 3년 연속 성장</div>
+        </div>
+      </div>
+      <div class="canslim-item">
+        <div class="canslim-letter">N</div>
+        <div class="canslim-body">
+          <div class="canslim-title">New</div>
+          <div class="canslim-desc">신제품·신경영·신고가 등 새로운 모멘텀 존재</div>
+        </div>
+      </div>
+      <div class="canslim-item">
+        <div class="canslim-letter">S</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Supply &amp; Demand</div>
+          <div class="canslim-desc">거래량 급증과 함께 주가 상승</div>
+        </div>
+      </div>
+      <div class="canslim-item">
+        <div class="canslim-letter">L</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Leader</div>
+          <div class="canslim-desc">업종 내 상위 종목, 약한 종목 제외</div>
+        </div>
+      </div>
+      <div class="canslim-item">
+        <div class="canslim-letter">I</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Institutional</div>
+          <div class="canslim-desc">기관 수급 유입 확인</div>
+        </div>
+      </div>
+      <div class="canslim-item full">
+        <div class="canslim-letter">M</div>
+        <div class="canslim-body">
+          <div class="canslim-title">Market Direction</div>
+          <div class="canslim-desc">전체 시장이 상승 추세일 때만 진입 — 이 조건 불충족 시 전략 전체 비활성화</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">수익 구조</div>
+    <div class="formula">
+      <span class="var">CAN SLIM 조건 충족 수</span> <span class="op">=</span> <span class="var">7 / 7</span> <span class="op">(전 항목 통과 목표)</span>
+    </div>
+    <div class="content">
+      <ul>
+        <li><strong>기관 수급 선점</strong> — 성장 가속 초입 진입 → 기관 유입 → 급등 구간 차익 실현</li>
+        <li><strong>강세장 초과 수익</strong> — 성장 모멘텀 집중으로 시장 평균 큰 폭 상회 가능</li>
+        <li><strong>명확한 손절</strong> — 신고가 돌파 실패 즉시 매도, 손실 한도 사전 설정</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-icon">🎯</div>
+        <div class="risk-text"><strong>진입 타이밍 민감</strong><br>신고가 돌파 실패 시 즉각 손절 필요. 타이밍 오판 시 손실이 빠르게 확대.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📉</div>
+        <div class="risk-text"><strong>하락장 위험</strong><br>M(시장 방향) 조건 불충족 시 전략 전체 비활성화 필요. 하락장에서는 현금 100% 유지.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🔍</div>
+        <div class="risk-text"><strong>분석 복잡도</strong><br>7가지 기준을 모두 점검하는 시간과 노력 필요. 반자동화 스크리너 없이는 개인 운용 난이도 높음.</div>
+      </div>
+    </div>
+    <div class="callout callout-warn">
+      <strong>핵심 조건:</strong> M(시장 방향) 조건 충족 시에만 진입. 하락장에서는 현금 보유.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">대표 종목 / ETF</div>
+    <div class="etf-grid">
+      <div class="etf-card">
+        <div class="etf-ticker">NVDA</div>
+        <div class="etf-name">NVIDIA Corporation</div>
+        <div class="etf-desc">AI·반도체 주도 기업. 분기 이익 급증 + 기관 대규모 매집 시점에 CAN SLIM 조건 충족.</div>
+        <span class="etf-badge">사례 종목</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">META</div>
+        <div class="etf-name">Meta Platforms</div>
+        <div class="etf-desc">턴어라운드 후 이익 폭발 성장. 신고가 돌파 + 기관 매집 국면에서 CAN SLIM 조건 부합.</div>
+        <span class="etf-badge">사례 종목</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">CELH</div>
+        <div class="etf-name">Celsius Holdings</div>
+        <div class="etf-desc">신제품 주도 소비재 성장주. 매출 급성장 + 시장 신규 진입 구간에서 CAN SLIM 기준 적합.</div>
+        <span class="etf-badge">사례 종목</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">ASML</div>
+        <div class="etf-name">ASML Holding</div>
+        <div class="etf-desc">반도체 장비 독과점 기업. 분기 수주 급증 + 독보적 시장 지위 — 리더 기업 조건 충족 사례.</div>
+        <span class="etf-badge">사례 종목</span>
+      </div>
+    </div>
+    <div class="callout callout-source">
+      ※ 참고용이며, 투자 전 최신 데이터 직접 확인 필요. 특정 종목 추천 아님.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-box">재무 분석과 차트 분석을 함께 활용해 강한 성장주를 직접 발굴하는 적극적 투자자</div>
+  </div>
+
+  <div class="cta-box"><a href="../" class="cta-btn">← 방법 기반 전략 목록으로</a></div>
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+</main>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a></div>
+</footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('finq-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

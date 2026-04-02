@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>올웨더 포트폴리오 구조 분석 — FinQ 투자 인사이트</title>
+<meta name="description" content="경기와 물가 환경 변화에 대응할 수 있도록 여러 자산을 분산하는 대표 자산배분 전략. 환경 대응력과 장기 지속 가능성 중심의 포트폴리오 접근 방식.">
+<link rel="canonical" href="https://finq.kr/insight/strategy/all-weather/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+/* 경제 환경 2x2 그리드 */
+.env-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+@media (max-width: 500px) { .env-grid { grid-template-columns: 1fr; } }
+.env-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.env-label { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.4rem; letter-spacing: 0.04em; }
+.env-title { font-size: 14px; font-weight: 700; margin-bottom: 0.4rem; }
+.env-assets { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+.env-assets span { display: inline-block; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; font-size: 12px; margin: 2px 2px 0 0; }
+
+/* 자산 배분 바 */
+.alloc-list { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.alloc-item { display: flex; align-items: center; gap: 10px; }
+.alloc-label { font-size: 13px; font-weight: 600; width: 110px; flex-shrink: 0; word-break: keep-all; }
+.alloc-bar-wrap { flex: 1; background: var(--bg-secondary); border-radius: 6px; height: 22px; overflow: hidden; }
+.alloc-bar { height: 100%; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 12px; font-weight: 700; color: #fff; }
+.alloc-pct { font-size: 13px; font-weight: 700; color: var(--accent); width: 38px; text-align: right; flex-shrink: 0; }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="올웨더 포트폴리오 구조 분석 — FinQ 투자 인사이트">
+<meta property="og:description" content="경기와 물가 환경 변화에 대응할 수 있도록 여러 자산을 분산하는 대표 자산배분 전략. 환경 대응력과 장기 지속 가능성 중심의 포트폴리오 접근 방식.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/strategy/all-weather/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">전략 분석</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>올웨더 포트폴리오 구조 분석</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">ALL WEATHER</div>
+    <h1>올웨더 포트폴리오 구조 분석</h1>
+    <p class="hero-desc">경기와 물가 환경 변화에 대응할 수 있도록 여러 자산을 분산하는 대표 자산배분 전략<br>높은 수익률보다 환경 대응력과 장기 지속 가능성 중심의 포트폴리오 접근 방식</p>
+    <div class="hero-tags">
+      <span class="hero-tag">올웨더</span>
+      <span class="hero-tag">자산배분</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">대응</div>
+        <div class="summary-text">특정 시장 전망보다 다양한 경제 환경 대응 중심의 분산 전략</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">분산</div>
+        <div class="summary-text">주식·채권·금·원자재 등 상관관계가 낮은 자산 조합 구조</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">지속성</div>
+        <div class="summary-text">공격적 수익 극대화보다 변동성 완화와 장기 지속 가능성 중심</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 어떤 경제 환경에서도 포트폴리오 일부가 버텨주는 구조 — 예측이 아닌 대응 중심 설계
+    </div>
+  </div>
+
+  <!-- 전략 구조 -->
+  <div class="section">
+    <div class="sec-title">올웨더 포트폴리오의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>경제 환경을 4가지 국면으로 구분</strong>
+          <span>성장↑, 성장↓, 물가↑, 물가↓ 조합으로 네 가지 환경을 설정 → 각 환경에서 유리한 자산 파악</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>각 환경에 강한 자산군 배치</strong>
+          <span>성장 국면에는 주식·원자재, 침체 국면에는 채권, 물가 상승에는 금·원자재가 상대적으로 유리</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>상관관계가 낮은 자산 중심 분산 구성</strong>
+          <span>서로 반대로 움직이는 경향의 자산 혼합 → 한 자산 하락 시 다른 자산이 완충 역할</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>정기 점검과 리밸런싱 중심의 유지 구조</strong>
+          <span>연 1~2회 목표 비중 복원 → 자산 가격 변동으로 무너진 배분 구조를 원래대로 되돌림</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 — 4가지 경제 환경 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트 — 경제 환경별 대응 자산</div>
+    <div class="env-grid">
+      <div class="env-card">
+        <div class="env-label">성장↑ 물가↑</div>
+        <div class="env-title">인플레이션 성장기</div>
+        <div class="env-assets">
+          <span>원자재</span><span>금</span><span>물가연동채권</span>
+        </div>
+      </div>
+      <div class="env-card">
+        <div class="env-label">성장↑ 물가↓</div>
+        <div class="env-title">디플레이션 성장기</div>
+        <div class="env-assets">
+          <span>주식</span><span>회사채</span><span>국채</span>
+        </div>
+      </div>
+      <div class="env-card">
+        <div class="env-label">성장↓ 물가↑</div>
+        <div class="env-title">스태그플레이션기</div>
+        <div class="env-assets">
+          <span>금</span><span>원자재</span><span>물가연동채권</span>
+        </div>
+      </div>
+      <div class="env-card">
+        <div class="env-label">성장↓ 물가↓</div>
+        <div class="env-title">경기 침체기</div>
+        <div class="env-assets">
+          <span>장기 국채</span><span>금</span><span>현금성 자산</span>
+        </div>
+      </div>
+    </div>
+    <div class="sec-title" style="margin-top:1.25rem;">대표 자산 배분 비중</div>
+    <div class="alloc-list">
+      <div class="alloc-item">
+        <div class="alloc-label">장기 국채</div>
+        <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:40%;background:#2563eb;">40%</div></div>
+        <div class="alloc-pct">40%</div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-label">주식</div>
+        <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:30%;background:#16a34a;">30%</div></div>
+        <div class="alloc-pct">30%</div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-label">중기 국채</div>
+        <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:15%;background:#7c3aed;">15%</div></div>
+        <div class="alloc-pct">15%</div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-label">금</div>
+        <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:7.5%;background:#d97706;">7.5%</div></div>
+        <div class="alloc-pct">7.5%</div>
+      </div>
+      <div class="alloc-item">
+        <div class="alloc-label">원자재</div>
+        <div class="alloc-bar-wrap"><div class="alloc-bar" style="width:7.5%;background:#dc2626;">7.5%</div></div>
+        <div class="alloc-pct">7.5%</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:0.75rem;">※ 레이 달리오의 올웨더 포트폴리오 원형 기준 참고치 — 실제 적용 시 환경·목적에 따라 조정 가능</p>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🌦️</div>
+        <div class="point-body">
+          <strong>경제 환경 변화 대응력 기대</strong>
+          성장·침체·인플레이션·디플레이션 어떤 국면에서도 포트폴리오 일부가 완충 역할 수행
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🛡️</div>
+        <div class="point-body">
+          <strong>특정 자산 급락 영향 완화 가능성</strong>
+          낮은 상관관계 자산 혼합 → 주식 급락 시 채권·금이 일부 손실 상쇄
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🧘</div>
+        <div class="point-body">
+          <strong>장기 보유 과정의 심리적 부담 완화</strong>
+          변동성 낮은 분산 구조 → 급격한 손실 없이 장기 보유를 이어가기 쉬운 심리적 기반
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚖️</div>
+        <div class="point-body">
+          <strong>포트폴리오 안정성 중심의 운용 구조</strong>
+          예측보다 대응 중심 설계 → 시장 방향 예측 실패에 따른 리스크 완화
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">📈</div>
+        <div class="point-body caution">
+          <strong>강한 상승장에서 수익률 둔화 가능성</strong>
+          채권·금 비중이 높은 구조 → 주식 강세장 구간에서 전체 수익률이 주식 100% 대비 낮을 수 있음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📚</div>
+        <div class="point-body caution">
+          <strong>자산군 이해 부족 시 구조적 오해 가능성</strong>
+          단순 분산 포트폴리오와 올웨더 구조는 다름 → 자산 간 역할과 상관관계 이해가 전제 조건
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">💸</div>
+        <div class="point-body caution">
+          <strong>금리 환경 변화에 따른 채권 비중 부담 가능성</strong>
+          장기 국채 40% 비중 → 금리 상승 구간에서 채권 가격 하락으로 포트폴리오 성과 저하 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>단순 분산만으로 올웨더 효과 재현의 한계</strong>
+          자산 비중·리밸런싱 주기·편입 자산의 질이 모두 중요 → 형식만 따른 모방은 효과 차이 발생 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>안정성과 지속 가능성을 중시하는 장기 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>단일 자산 집중보다 분산 구조를 선호하는 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>시장 예측보다 자산배분 중심 접근을 원하는 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>공격적 고수익 추구 중심의 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>단기 매매 및 빠른 포지션 전환 중심 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 전략 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 전략</div>
+    <div class="related-cards">
+      <a href="../rebalancing/" class="related-card">
+        <span>⚖️ 리밸런싱이 필요한 이유</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../low-volatility/" class="related-card">
+        <span>📉 저변동성 전략은 왜 통하는가</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../market-regime/" class="related-card">
+        <span>📊 전략별 시장 국면 대응력 비교</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 전략 분석 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

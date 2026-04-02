@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>가치 투자 전략 — FinQ</title>
+<meta name="description" content="내재가치 대비 저평가된 기업을 찾아 할인 구간에서 매수하는 전략">
+<meta property="og:title" content="가치 투자 전략 — FinQ">
+<meta property="og:description" content="안전마진 기반으로 저평가 기업을 발굴하는 가치 투자 전략">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:800px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+.hero{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.hero-icon{width:56px;height:56px;border-radius:14px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hero-badge{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;margin-bottom:.3rem}
+.hero h1{font-size:clamp(20px,4vw,28px);font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+.hero-lead{font-size:14px;color:var(--text2)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.fit-box{background:var(--bg2);border-radius:8px;padding:1rem 1.25rem;font-size:14px;line-height:1.8;word-break:keep-all}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.content p{font-size:15px;line-height:1.8;margin-bottom:.75rem}
+.content ul{font-size:15px;line-height:1.8;margin-bottom:.75rem;padding-left:1.5rem}
+.content li{margin-bottom:.25rem}
+.flow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;margin-top:.5rem}
+@media(max-width:600px){.flow{flex-wrap:wrap;gap:6px}}
+.flow-item{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.flow-arrow{color:var(--text2);font-size:14px}
+.flow-blue{background:#dbeafe;color:#1e40af}.flow-green{background:#d1fae5;color:#065f46}.flow-orange{background:#fef3c7;color:#92400e}.flow-red{background:#fee2e2;color:#991b1b}
+[data-theme=dark] .flow-blue{background:#1e3a5f;color:#93c5fd}[data-theme=dark] .flow-green{background:#064e3b;color:#6ee7b7}[data-theme=dark] .flow-orange{background:#78350f;color:#fcd34d}[data-theme=dark] .flow-red{background:#7f1d1d;color:#fca5a5}
+.formula{background:var(--bg2);border-radius:8px;padding:1.25rem;margin:1rem 0;font-family:inherit;font-size:15px;line-height:2;text-align:center;border:1px solid var(--border)}
+.formula .var{color:var(--accent);font-weight:700}
+.formula .op{color:var(--text2)}
+.struct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.struct-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.struct-icon{font-size:24px;margin-bottom:.4rem}
+.struct-name{font-size:13px;font-weight:700;margin-bottom:.3rem}
+.struct-desc{font-size:12px;color:var(--text2);line-height:1.5;word-break:keep-all}
+@media(max-width:600px){.struct-grid{grid-template-columns:1fr}}
+.risk-list{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.risk-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg2);border-radius:8px}
+.risk-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.risk-text{font-size:14px;line-height:1.6}
+.risk-text strong{color:var(--red)}
+.etf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:1rem 0}
+.etf-card{background:var(--bg2);border-radius:8px;padding:1rem;border:1px solid var(--border)}
+.etf-ticker{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.etf-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.etf-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.etf-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--accent);color:#fff;margin-top:6px}
+@media(max-width:600px){.etf-grid{grid-template-columns:1fr}}
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+.callout-source{background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+.callout-warn{background:#fef3c7;color:#92400e}
+[data-theme=dark] .callout-warn{background:#78350f;color:#fcd34d}
+.cta-box{margin-top:1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);border:1px solid var(--border);transition:all .15s}
+.cta-btn:hover{border-color:var(--accent);color:var(--accent)}
+.disclaimer{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--bg2);border-radius:8px;margin-top:1.25rem;line-height:1.7}
+hr{border:none;border-top:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/method/value/">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/" class="active">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span>
+    <a href="../../../strategy/">투자 전략</a><span>›</span>
+    <a href="../">방법 기반 전략</a><span>›</span>
+    <span>가치 투자 전략</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">🔍</div>
+    <div>
+      <div class="hero-badge">전통 투자법</div>
+      <h1>가치 투자 전략</h1>
+      <div class="hero-lead">내재가치 대비 저평가된 기업을 찾아 할인 구간에서 매수하는 전략</div>
+    </div>
+  </div>
+
+  <!-- 1. 개요 -->
+  <div class="section">
+    <div class="sec-title">개요</div>
+    <div class="content">
+      <p>기업의 실제 가치보다 시장 가격이 낮을 때 진입.</p>
+      <p>시간이 지나면 가격은 결국 가치에 수렴한다는 원칙 기반.</p>
+      <p>단기 주가 흐름보다 기업의 본질 분석이 우선.</p>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 시장이 놓친 저평가 기업을 사서, 가격이 가치에 수렴할 때 파는 전략
+    </div>
+  </div>
+
+  <!-- 2. 핵심 구조 -->
+  <div class="section">
+    <div class="sec-title">핵심 구조</div>
+    <div class="struct-grid">
+      <div class="struct-card">
+        <div class="struct-icon">🔍</div>
+        <div class="struct-name">내재가치 계산</div>
+        <div class="struct-desc">자산·이익·현금흐름 기반<br>적정 가격 산출</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">🛡️</div>
+        <div class="struct-name">안전마진 확보</div>
+        <div class="struct-desc">내재가치 대비 20~40%<br>낮은 구간에서만 매수</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">⏰</div>
+        <div class="struct-name">장기 보유</div>
+        <div class="struct-desc">가격이 가치에 도달할 때까지<br>인내하며 대기</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-item flow-blue">저평가 종목 발굴</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-orange">내재가치 계산</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">안전마진 구간 매수</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">가격 수렴 대기</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">차익 실현</div>
+    </div>
+  </div>
+
+  <!-- 3. 수익 구조 -->
+  <div class="section">
+    <div class="sec-title">수익 구조</div>
+    <div class="formula">
+      <span class="var">수익</span> <span class="op">=</span> (<span class="var">내재가치</span> <span class="op">&minus;</span> <span class="var">매수가격</span>) <span class="op">+</span> <span class="var">보유기간 배당</span>
+    </div>
+    <div class="content">
+      <ul>
+        <li><strong>저평가 구간 매수</strong> — 시장 재평가 시 가격 상승 차익 실현</li>
+        <li><strong>배당 수익</strong> — 배당 지급 기업이면 보유 기간 중 추가 수익 확보 가능</li>
+        <li><strong>안전마진</strong> — 가격이 하락해도 손실 완충 역할</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-icon">⚠️</div>
+        <div class="risk-text"><strong>가치 함정</strong><br>저평가처럼 보여도 사업 자체가 악화 중인 경우 존재. 단순 숫자가 아닌 사업 본질 파악 필수.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">⏳</div>
+        <div class="risk-text"><strong>장기 대기 리스크</strong><br>시장이 재평가하기까지 수년이 걸릴 수 있음. 충분한 여유 자금으로만 접근.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📉</div>
+        <div class="risk-text"><strong>장세 역행</strong><br>성장주 주도 장세에서 상대적으로 부진 가능. 시장 전체가 성장주를 선호하는 구간에서 소외 위험.</div>
+      </div>
+    </div>
+    <div class="callout callout-warn">
+      <strong>핵심 조건:</strong> 사업 본질이 훼손되지 않고 단순히 저평가된 종목에만 적용.
+    </div>
+  </div>
+
+  <!-- 5. 대표 종목 / ETF -->
+  <div class="section">
+    <div class="sec-title">대표 종목 / ETF</div>
+    <div class="etf-grid">
+      <div class="etf-card">
+        <div class="etf-ticker">VTV</div>
+        <div class="etf-name">Vanguard Value ETF</div>
+        <div class="etf-desc">S&P500 가치주 중심. 저비용·광범위 분산으로 가치 팩터 추종.</div>
+        <span class="etf-badge">가치주</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">IVE</div>
+        <div class="etf-name">iShares S&P 500 Value ETF</div>
+        <div class="etf-desc">S&P500 내 저PBR·저PER 중심 가치 지수 추종.</div>
+        <span class="etf-badge">가치주</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">VONV</div>
+        <div class="etf-name">Vanguard Russell 1000 Value ETF</div>
+        <div class="etf-desc">러셀 1000 대형 가치주. 넓은 종목 풀로 분산.</div>
+        <span class="etf-badge">대형 가치</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">BRK.B</div>
+        <div class="etf-name">버크셔 해서웨이 B</div>
+        <div class="etf-desc">버핏의 가치투자 실사례. 다양한 기업 지분 보유 구조.</div>
+        <span class="etf-badge">종목 예시</span>
+      </div>
+    </div>
+    <div class="callout callout-source">
+      ※ 참고용이며, 투자 전 최신 데이터 직접 확인 필요. 특정 종목 추천 아님.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-box">기업 분석을 즐기며 저평가된 기업을 장기 보유하는 가치형 투자자</div>
+  </div>
+  <div class="cta-box"><a href="../" class="cta-btn">← 방법 기반 전략 목록으로</a></div>
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+</main>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a></div>
+</footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){if(localStorage.getItem('finq-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

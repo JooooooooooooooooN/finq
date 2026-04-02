@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>담보대출 리스크 시뮬레이터 — FinQ</title>
+<meta name="description" content="주가가 얼마나 떨어지면 반대매매 위험이 생길까? 담보비율, 반대매매 임계 주가, 위험 구간을 미리 확인하세요.">
+<meta name="keywords" content="반대매매 계산기, 담보유지비율, 레버리지 대출, 반대매매 위험, 주식담보대출, FinQ">
+<meta property="og:title" content="담보대출 리스크 시뮬레이터 — FinQ">
+<meta property="og:description" content="주가가 얼마나 떨어지면 반대매매 위험이 생길까? 위험 구간을 미리 확인하세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/simulation/loan/">
+<link rel="canonical" href="https://finq.kr/simulation/loan/">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --green: #059669;
+  --red: #dc2626;
+  --yellow: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.nav-links a:hover { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px;
+  cursor: pointer; font-size: 16px; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; gap: 4px;
+  }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+/* MAIN */
+.main {
+  max-width: 900px; margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+.page-header-row {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+.page-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 0.75rem; }
+.page-tag {
+  padding: 3px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 500;
+  background: var(--bg-secondary); color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.page-title {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700; letter-spacing: -0.5px;
+}
+.page-desc {
+  font-size: 15px; color: var(--text-secondary);
+  margin-bottom: 2rem; word-break: keep-all;
+}
+
+/* SECTION */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.sec-title {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* FORM */
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 4px;
+}
+.form-label em {
+  font-style: normal; font-weight: 400;
+  color: var(--text-secondary); opacity: 0.75;
+}
+.input-wrap {
+  display: flex; align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg);
+  overflow: hidden;
+}
+.input-wrap.error { border-color: var(--red); }
+.input-wrap input {
+  flex: 1; padding: 9px 12px; font-size: 14px;
+  border: none; background: transparent;
+  color: var(--text); outline: none; min-width: 0;
+}
+.input-unit {
+  padding: 0 12px; font-size: 13px;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--border);
+  white-space: nowrap; background: var(--bg-secondary);
+}
+.field-error {
+  font-size: 12px; color: var(--red);
+  margin-top: 4px; display: none;
+}
+.field-error.show { display: block; }
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* RESULTS */
+.result-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-bottom: 1rem;
+}
+.result-card {
+  background: var(--bg-secondary);
+  border-radius: 8px; padding: 1rem;
+  text-align: center;
+}
+.result-label {
+  font-size: 12px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.result-value {
+  font-size: 22px; font-weight: 700;
+}
+.result-sub {
+  font-size: 11px; color: var(--text-secondary);
+  margin-top: 3px; line-height: 1.4;
+}
+.safe { color: var(--green); }
+.warn { color: var(--yellow); }
+.danger { color: var(--red); }
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: repeat(2, 1fr); }
+  .result-value { font-size: 18px; }
+}
+
+/* STATUS BADGE */
+.status-badge {
+  display: inline-block;
+  padding: 4px 14px; border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+}
+.status-badge.safe { background: #dcfce7; color: #166534; }
+.status-badge.warn { background: #fef3c7; color: #92400e; }
+.status-badge.danger { background: #fee2e2; color: #991b1b; }
+[data-theme="dark"] .status-badge.safe { background: #14532d; color: #86efac; }
+[data-theme="dark"] .status-badge.warn { background: #451a03; color: #fcd34d; }
+[data-theme="dark"] .status-badge.danger { background: #450a0a; color: #fca5a5; }
+
+/* INTERPRET */
+.interpret {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 4px;
+}
+.interpret-text {
+  font-size: 14px; color: var(--text); line-height: 1.7; word-break: keep-all;
+}
+
+/* RISK BAR */
+.risk-bar-wrap {
+  margin-top: 4px;
+}
+.risk-bar-desc {
+  font-size: 13px; color: var(--text-secondary);
+  margin-bottom: 14px; line-height: 1.6; word-break: keep-all;
+}
+.risk-bar-track {
+  position: relative;
+  height: 20px; border-radius: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.risk-bar-danger-zone {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: rgba(220, 38, 38, 0.18);
+  border-radius: 10px 0 0 10px;
+}
+.risk-bar-warn-zone {
+  position: absolute; top: 0; height: 100%;
+  background: rgba(217, 119, 6, 0.18);
+}
+.risk-bar-marker {
+  position: absolute; top: 0; height: 100%;
+  width: 2px;
+}
+.risk-bar-marker.marker-current { background: var(--accent); }
+.risk-bar-marker.marker-warn { background: var(--yellow); }
+.risk-bar-marker.marker-danger { background: var(--red); }
+.risk-bar-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 0;
+}
+.rbi-block {
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+.rbi-accent {
+  height: 3px; border-radius: 2px;
+  width: 24px; margin-bottom: 8px;
+}
+.rbi-accent.danger { background: var(--red); }
+.rbi-accent.warn { background: var(--yellow); }
+.rbi-accent.current { background: var(--accent); }
+.rbi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
+.rbi-val { font-size: 14px; font-weight: 600; }
+.rbi-val.danger { color: var(--red); }
+.rbi-val.warn { color: var(--yellow); }
+.rbi-val.current { color: var(--accent); }
+@media (max-width: 480px) {
+  .risk-bar-info-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* DETAIL TABLE */
+.detail-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.detail-table th {
+  text-align: left; padding: 8px 10px;
+  color: var(--text-secondary); font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table tr:last-child td { border-bottom: none; }
+.detail-table td.val { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* CTA */
+.cta-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  transition: all 0.15s; cursor: pointer;
+  border: 1px solid var(--border);
+}
+.cta-btn-primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.cta-btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.cta-btn-secondary {
+  background: var(--bg-secondary); color: var(--text);
+}
+.cta-btn-secondary:hover { background: var(--border); }
+
+/* DISCLAIMER */
+.disclaimer {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  line-height: 1.7;
+}
+
+/* FOOTER */
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/" class="active">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-tags">
+    <span class="page-tag">담보비율</span>
+    <span class="page-tag">반대매매</span>
+    <span class="page-tag">위험구간</span>
+  </div>
+  <h1 class="page-title">담보대출 리스크 시뮬레이터</h1>
+  <p class="page-desc">주가가 얼마나 떨어지면 반대매매 위험이 생길까? 위험 구간을 미리 확인해 보세요.</p>
+
+  <!-- INPUT -->
+  <div class="section">
+    <div class="sec-title">조건 입력</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">보유 주식 수량 <em>(주)</em></label>
+        <div class="input-wrap" id="wrap_shares">
+          <input type="number" id="shares" value="1000" min="1" step="1" oninput="calc()">
+          <span class="input-unit">주</span>
+        </div>
+        <div class="field-error" id="err_shares">1주 이상 입력해 주세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">현재 주가 <em>(원)</em></label>
+        <div class="input-wrap" id="wrap_price">
+          <input type="number" id="price" value="50000" min="1" step="100" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+        <div class="field-error" id="err_price">0보다 큰 값을 입력해 주세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">대출 금액 <em>(원)</em></label>
+        <div class="input-wrap" id="wrap_loan">
+          <input type="number" id="loan" value="30000000" min="1" step="100000" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+        <div class="field-error" id="err_loan">0보다 큰 값을 입력해 주세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">담보유지비율 <em>(%)</em></label>
+        <div class="input-wrap" id="wrap_maintain">
+          <input type="number" id="maintain" value="120" min="1" max="500" step="1" oninput="calc()">
+          <span class="input-unit">%</span>
+        </div>
+        <div class="field-error" id="err_maintain">1 이상의 숫자를 입력해 주세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">경고 기준 비율 <em>(%) — 기본 140</em></label>
+        <div class="input-wrap" id="wrap_warn">
+          <input type="number" id="warn" value="140" min="1" max="500" step="1" oninput="calc()">
+          <span class="input-unit">%</span>
+        </div>
+        <div class="field-error" id="err_warn">담보유지비율 이상의 값을 입력해 주세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section">
+    <div class="sec-title">핵심 결과</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">현재 담보비율</div>
+        <div class="result-value" id="r_ratio">-</div>
+        <div class="result-sub" id="r_ratio_sub">자산 / 대출금</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">반대매매 임계 주가</div>
+        <div class="result-value danger" id="r_danger_price">-</div>
+        <div class="result-sub" id="r_danger_sub">이 가격 이하 시 위험</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">위험 도달 하락률</div>
+        <div class="result-value" id="r_drop">-</div>
+        <div class="result-sub" id="r_drop_sub">현재가 대비 하락</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">추가 담보 필요</div>
+        <div class="result-value" id="r_extra">-</div>
+        <div class="result-sub" id="r_extra_sub">현재 기준 부족분</div>
+      </div>
+    </div>
+    <div class="interpret">
+      <div class="interpret-text" id="interpretText">값을 입력하면 결과가 표시됩니다.</div>
+    </div>
+  </div>
+
+  <!-- RISK BAR -->
+  <div class="section">
+    <div class="sec-title">위험 구간 시각화</div>
+    <div class="risk-bar-wrap">
+      <p class="risk-bar-desc">파란선은 현재가, 주황선은 경고 임계가, 빨간선은 반대매매 임계가입니다. 현재가가 두 기준선보다 오른쪽에 있을수록 안전 여유가 큰 상태입니다.</p>
+      <div class="risk-bar-track" id="riskBarTrack">
+        <div class="risk-bar-danger-zone" id="dangerZone"></div>
+        <div class="risk-bar-warn-zone" id="warnZone"></div>
+        <div class="risk-bar-marker marker-danger" id="markerDanger" style="left:0%"></div>
+        <div class="risk-bar-marker marker-warn" id="markerWarn" style="left:0%"></div>
+        <div class="risk-bar-marker marker-current" id="markerCurrent" style="left:100%"></div>
+      </div>
+      <div class="risk-bar-info-grid">
+        <div class="rbi-block">
+          <div class="rbi-accent danger"></div>
+          <div class="rbi-label">반대매매 임계</div>
+          <div class="rbi-val danger" id="bar_danger_val">-</div>
+        </div>
+        <div class="rbi-block">
+          <div class="rbi-accent warn"></div>
+          <div class="rbi-label">경고 임계</div>
+          <div class="rbi-val warn" id="bar_warn_val">-</div>
+        </div>
+        <div class="rbi-block">
+          <div class="rbi-accent current"></div>
+          <div class="rbi-label">현재가</div>
+          <div class="rbi-val current" id="bar_current_val">-</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="section">
+    <div class="sec-title">상세 계산 결과</div>
+    <table class="detail-table">
+      <tbody>
+        <tr>
+          <td>현재 담보자산 가치</td>
+          <td class="val" id="d_asset">-</td>
+        </tr>
+        <tr>
+          <td>대출 금액</td>
+          <td class="val" id="d_loan">-</td>
+        </tr>
+        <tr>
+          <td>현재 담보비율</td>
+          <td class="val" id="d_ratio">-</td>
+        </tr>
+        <tr>
+          <td>담보유지비율</td>
+          <td class="val" id="d_maintain">-</td>
+        </tr>
+        <tr>
+          <td>경고 기준 비율</td>
+          <td class="val" id="d_warn">-</td>
+        </tr>
+        <tr>
+          <td>경고 임계 주가</td>
+          <td class="val" id="d_warn_price">-</td>
+        </tr>
+        <tr>
+          <td>반대매매 임계 주가</td>
+          <td class="val" id="d_danger_price">-</td>
+        </tr>
+        <tr>
+          <td>현재 상태</td>
+          <td class="val" id="d_status">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- GUIDE -->
+  <div class="section">
+    <div class="sec-title">해석 가이드</div>
+    <table class="detail-table">
+      <thead>
+        <tr>
+          <th>상태</th>
+          <th>조건</th>
+          <th>의미</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status-badge safe">안정</span></td>
+          <td>담보비율 ≥ 경고 기준 비율</td>
+          <td style="font-size:13px; color: var(--text-secondary)">현재 담보비율이 경고선 위. 여유 있는 상태.</td>
+        </tr>
+        <tr>
+          <td><span class="status-badge warn">경고</span></td>
+          <td>담보유지비율 ≤ 담보비율 &lt; 경고 기준</td>
+          <td style="font-size:13px; color: var(--text-secondary)">담보유지비율에 근접. 추가 하락 시 위험 구간 진입.</td>
+        </tr>
+        <tr>
+          <td><span class="status-badge danger">위험</span></td>
+          <td>담보비율 &lt; 담보유지비율</td>
+          <td style="font-size:13px; color: var(--text-secondary)">담보유지비율 미달. 반대매매 발생 가능 구간.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a href="/strategy/method/leverage-dividend/" class="cta-btn cta-btn-primary">레버리지 배당 전략 보기 →</a>
+    <a href="/simulation/" class="cta-btn cta-btn-secondary">시뮬레이션 목록으로</a>
+  </div>
+
+  <div class="disclaimer">
+    본 계산기는 단순 참고용 시뮬레이션입니다. 실제 반대매매 기준, 담보유지비율, 추가 증거금 요구 조건은 증권사 및 상품별로 다를 수 있습니다.
+    수수료, 이자, 세금, 장중 가격 변동 등은 반영하지 않으며, 모든 투자 판단과 책임은 이용자에게 있습니다.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+/* Theme */
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  var saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+/* Format */
+function fmtWon(n) {
+  var a = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (a >= 100000000) return sign + (a / 100000000).toFixed(2) + '억원';
+  if (a >= 10000000) return sign + (a / 10000000).toFixed(1) + '천만원';
+  if (a >= 10000) return sign + Math.round(a / 10000) + '만원';
+  return sign + Math.round(a).toLocaleString() + '원';
+}
+function fmtWonFull(n) {
+  return Math.round(n).toLocaleString() + '원';
+}
+function fmtPct(n) {
+  return n.toFixed(1) + '%';
+}
+
+/* Validate */
+function setErr(id, show) {
+  var wrap = document.getElementById('wrap_' + id);
+  var err = document.getElementById('err_' + id);
+  if (wrap) { wrap.classList.toggle('error', show); }
+  if (err)  { err.classList.toggle('show', show); }
+}
+
+function calc() {
+  var shares   = parseFloat(document.getElementById('shares').value);
+  var price    = parseFloat(document.getElementById('price').value);
+  var loan     = parseFloat(document.getElementById('loan').value);
+  var maintain = parseFloat(document.getElementById('maintain').value);
+  var warnRatio= parseFloat(document.getElementById('warn').value);
+
+  var errShares   = !shares   || shares   <= 0 || isNaN(shares);
+  var errPrice    = !price    || price    <= 0 || isNaN(price);
+  var errLoan     = !loan     || loan     <= 0 || isNaN(loan);
+  var errMaintain = !maintain || maintain <= 0 || isNaN(maintain);
+  var errWarn     = !warnRatio|| warnRatio< maintain || isNaN(warnRatio);
+
+  setErr('shares',   errShares);
+  setErr('price',    errPrice);
+  setErr('loan',     errLoan);
+  setErr('maintain', errMaintain);
+  setErr('warn',     errWarn);
+
+  if (errShares || errPrice || errLoan || errMaintain || errWarn) return;
+
+  // 계산
+  var asset        = shares * price;
+  var currentRatio = (asset / loan) * 100;
+
+  var dangerAsset  = loan * maintain / 100;
+  var dangerPrice  = dangerAsset / shares;
+
+  var warnAsset    = loan * warnRatio / 100;
+  var warnPrice    = warnAsset / shares;
+
+  var dropToWarn   = ((price - warnPrice)   / price) * 100;
+  var dropToDanger = ((price - dangerPrice) / price) * 100;
+
+  var extraNeeded  = Math.max(0, dangerAsset - asset);
+
+  // 상태 판정
+  var statusClass, statusText;
+  if (currentRatio >= warnRatio) {
+    statusClass = 'safe'; statusText = '안정';
+  } else if (currentRatio >= maintain) {
+    statusClass = 'warn'; statusText = '경고';
+  } else {
+    statusClass = 'danger'; statusText = '위험';
+  }
+
+  // 핵심 결과 카드
+  var ratioEl = document.getElementById('r_ratio');
+  ratioEl.textContent = fmtPct(currentRatio);
+  ratioEl.className = 'result-value ' + statusClass;
+
+  var dpEl = document.getElementById('r_danger_price');
+  dpEl.textContent = fmtWonFull(dangerPrice);
+  dpEl.className = 'result-value danger';
+
+  var dropEl = document.getElementById('r_drop');
+  dropEl.textContent = fmtPct(dropToDanger);
+  dropEl.className = 'result-value ' + (dropToDanger > 30 ? 'safe' : dropToDanger > 10 ? 'warn' : 'danger');
+
+  var extraEl = document.getElementById('r_extra');
+  extraEl.textContent = extraNeeded > 0 ? fmtWon(extraNeeded) : '없음';
+  extraEl.className = 'result-value ' + (extraNeeded > 0 ? 'danger' : 'safe');
+
+  document.getElementById('r_ratio_sub').textContent = statusText + ' 구간';
+  document.getElementById('r_danger_sub').textContent = fmtPct(dropToDanger) + ' 하락 시 도달';
+  document.getElementById('r_drop_sub').textContent = '현재가 대비 하락';
+  document.getElementById('r_extra_sub').textContent = extraNeeded > 0 ? '담보 부족 상태' : '현재 담보 충분';
+
+  // 해석 문장
+  var txt = '';
+  if (statusClass === 'safe') {
+    txt = '현재 담보비율은 ' + fmtPct(currentRatio) + '로 안정 구간입니다. '
+        + '현재 주가(' + fmtWonFull(price) + ')에서 약 ' + fmtPct(dropToWarn) + ' 이상 하락 시 경고 구간에 진입할 수 있습니다. '
+        + '반대매매 임계 주가는 약 ' + fmtWonFull(dangerPrice) + '(현재 대비 ' + fmtPct(dropToDanger) + ' 하락)입니다.';
+  } else if (statusClass === 'warn') {
+    txt = '현재 담보비율은 ' + fmtPct(currentRatio) + '로 경고 구간입니다. '
+        + '추가 하락 시 반대매매 구간(' + fmtWonFull(dangerPrice) + ')에 도달할 수 있습니다. '
+        + '현재 기준 약 ' + fmtPct(dropToDanger) + ' 더 하락하면 담보유지비율(' + fmtPct(maintain) + ')에 도달합니다.';
+  } else {
+    txt = '현재 담보비율은 ' + fmtPct(currentRatio) + '로 위험 구간입니다. '
+        + '현재 기준으로 담보유지비율(' + fmtPct(maintain) + ') 미달 상태입니다. '
+        + (extraNeeded > 0 ? '추가 담보 ' + fmtWon(extraNeeded) + ' 가 필요한 것으로 참고용 추산됩니다.' : '');
+  }
+  document.getElementById('interpretText').textContent = txt;
+
+  // 위험 바
+  var barMax = price * 1.2;
+  var barMin = 0;
+  var range = barMax - barMin;
+
+  function toBarPct(v) {
+    return Math.min(100, Math.max(0, ((v - barMin) / range) * 100));
+  }
+
+  var dangerPct  = toBarPct(dangerPrice);
+  var warnPct    = toBarPct(warnPrice);
+  var currentPct = toBarPct(price);
+
+  document.getElementById('dangerZone').style.width  = dangerPct + '%';
+  document.getElementById('warnZone').style.left     = dangerPct + '%';
+  document.getElementById('warnZone').style.width    = (warnPct - dangerPct) + '%';
+  document.getElementById('markerDanger').style.left  = dangerPct + '%';
+  document.getElementById('markerWarn').style.left    = warnPct + '%';
+  document.getElementById('markerCurrent').style.left = currentPct + '%';
+
+  document.getElementById('bar_danger_val').textContent  = fmtWonFull(dangerPrice);
+  document.getElementById('bar_warn_val').textContent    = fmtWonFull(warnPrice);
+  document.getElementById('bar_current_val').textContent = fmtWonFull(price);
+
+
+  // 상세 결과
+  document.getElementById('d_asset').textContent        = fmtWonFull(asset);
+  document.getElementById('d_loan').textContent         = fmtWonFull(loan);
+  document.getElementById('d_ratio').textContent        = fmtPct(currentRatio);
+  document.getElementById('d_maintain').textContent     = fmtPct(maintain);
+  document.getElementById('d_warn').textContent         = fmtPct(warnRatio);
+  document.getElementById('d_warn_price').textContent   = fmtWonFull(warnPrice);
+  document.getElementById('d_danger_price').textContent = fmtWonFull(dangerPrice);
+
+  var statusBadge = '<span class="status-badge ' + statusClass + '">' + statusText + '</span>';
+  document.getElementById('d_status').innerHTML = statusBadge;
+}
+
+calc();
+</script>
+
+</body>
+</html>

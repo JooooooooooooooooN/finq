@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GARP 전략 — FinQ</title>
+<meta name="description" content="성장성과 가격 부담을 함께 보며 적정 가격의 성장주에 투자하는 전략">
+<meta property="og:title" content="GARP 전략 — FinQ">
+<meta property="og:description" content="PEG 1 이하 성장주를 선별하는 GARP 전략">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:800px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+.hero{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.hero-icon{width:56px;height:56px;border-radius:14px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hero-badge{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;margin-bottom:.3rem}
+.hero h1{font-size:clamp(20px,4vw,28px);font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+.hero-lead{font-size:14px;color:var(--text2)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.fit-box{background:var(--bg2);border-radius:8px;padding:1rem 1.25rem;font-size:14px;line-height:1.8;word-break:keep-all}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.content p{font-size:15px;line-height:1.8;margin-bottom:.75rem}
+.content ul{font-size:15px;line-height:1.8;margin-bottom:.75rem;padding-left:1.5rem}
+.content li{margin-bottom:.25rem}
+.flow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;margin-top:.5rem}
+@media(max-width:600px){.flow{flex-wrap:wrap;gap:6px}}
+.flow-item{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.flow-arrow{color:var(--text2);font-size:14px}
+.flow-blue{background:#dbeafe;color:#1e40af}.flow-green{background:#d1fae5;color:#065f46}.flow-orange{background:#fef3c7;color:#92400e}.flow-red{background:#fee2e2;color:#991b1b}
+[data-theme=dark] .flow-blue{background:#1e3a5f;color:#93c5fd}[data-theme=dark] .flow-green{background:#064e3b;color:#6ee7b7}[data-theme=dark] .flow-orange{background:#78350f;color:#fcd34d}[data-theme=dark] .flow-red{background:#7f1d1d;color:#fca5a5}
+.formula{background:var(--bg2);border-radius:8px;padding:1.25rem;margin:1rem 0;font-family:inherit;font-size:15px;line-height:2;text-align:center;border:1px solid var(--border)}
+.formula .var{color:var(--accent);font-weight:700}
+.formula .op{color:var(--text2)}
+.struct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.struct-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.struct-icon{font-size:24px;margin-bottom:.4rem}
+.struct-name{font-size:13px;font-weight:700;margin-bottom:.3rem}
+.struct-desc{font-size:12px;color:var(--text2);line-height:1.5;word-break:keep-all}
+@media(max-width:600px){.struct-grid{grid-template-columns:1fr}}
+.risk-list{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.risk-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg2);border-radius:8px}
+.risk-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.risk-text{font-size:14px;line-height:1.6}
+.risk-text strong{color:var(--red)}
+.etf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:1rem 0}
+.etf-card{background:var(--bg2);border-radius:8px;padding:1rem;border:1px solid var(--border)}
+.etf-ticker{font-size:18px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.etf-name{font-size:13px;font-weight:600;margin-bottom:4px}
+.etf-desc{font-size:13px;color:var(--text2);line-height:1.5}
+.etf-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--accent);color:#fff;margin-top:6px}
+@media(max-width:600px){.etf-grid{grid-template-columns:1fr}}
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+.callout-source{background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+.callout-warn{background:#fef3c7;color:#92400e}
+[data-theme=dark] .callout-warn{background:#78350f;color:#fcd34d}
+.cta-box{margin-top:1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);border:1px solid var(--border);transition:all .15s}
+.cta-btn:hover{border-color:var(--accent);color:var(--accent)}
+.disclaimer{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--bg2);border-radius:8px;margin-top:1.25rem;line-height:1.7}
+hr{border:none;border-top:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/method/garp/">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/" class="active">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span>
+    <a href="../../../strategy/">투자 전략</a><span>›</span>
+    <a href="../">방법 기반 전략</a><span>›</span>
+    <span>GARP 전략</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">⚖️</div>
+    <div>
+      <div class="hero-badge">전통 투자법</div>
+      <h1>GARP 전략</h1>
+      <div class="hero-lead">성장성과 가격 부담을 함께 보며 적정 가격의 성장주에 투자하는 전략</div>
+    </div>
+  </div>
+
+  <!-- 1. 개요 -->
+  <div class="section">
+    <div class="sec-title">개요</div>
+    <div class="content">
+      <p>GARP는 Growth At a Reasonable Price의 줄임말.</p>
+      <p>성장주이지만 가격이 지나치게 비싸지 않은 기업 선별.</p>
+      <p>순수 성장 투자보다 안정적이고, 순수 가치 투자보다 역동적.</p>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> PEG 1 이하 성장주 — 성장성과 가격 부담을 동시에 검증
+    </div>
+  </div>
+
+  <!-- 2. 핵심 구조 -->
+  <div class="section">
+    <div class="sec-title">핵심 구조</div>
+    <div class="struct-grid">
+      <div class="struct-card">
+        <div class="struct-icon">⚖️</div>
+        <div class="struct-name">PEG 비율 ≤ 1</div>
+        <div class="struct-desc">PER ÷ EPS 성장률<br>1 이하면 매력적</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">📈</div>
+        <div class="struct-name">성장성 확인</div>
+        <div class="struct-desc">매출·이익이 꾸준히<br>성장하는 기업 선별</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">🚫</div>
+        <div class="struct-name">과열 기피</div>
+        <div class="struct-desc">PEG 2 초과 시<br>진입 보류</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-item flow-blue">성장주 스크리닝</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-orange">PEG 계산</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">1 이하 선별</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">진입</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">성장 모멘텀 유지 구간 보유</div>
+    </div>
+  </div>
+
+  <!-- 3. 수익 구조 -->
+  <div class="section">
+    <div class="sec-title">수익 구조</div>
+    <div class="formula">
+      <span class="var">PEG</span> <span class="op">=</span> <span class="var">PER</span> <span class="op">&divide;</span> <span class="var">EPS 성장률</span> &nbsp;&nbsp; <span class="op">[목표: 1 이하]</span>
+    </div>
+    <div class="content">
+      <ul>
+        <li><strong>성장 모멘텀 유지 구간</strong> — 주가 상승 차익 실현</li>
+        <li><strong>가치 기준 병행</strong> — 과도한 고점 매수 리스크 완화</li>
+        <li><strong>PEG 1~2 구간</strong> — 성장 프리미엄 감안해 보유 유지 가능</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-icon">📉</div>
+        <div class="risk-text"><strong>성장 둔화</strong><br>이익 성장이 꺾이면 밸류에이션도 빠르게 무너짐. 분기별 실적 모니터링 필수.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📊</div>
+        <div class="risk-text"><strong>금리 민감</strong><br>금리가 오르면 성장주 전반이 조정받는 경향. 금리 상승기 포지션 축소 고려.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">⚠️</div>
+        <div class="risk-text"><strong>지표 한계</strong><br>PEG는 미래 추정치 기반이라 오차 발생 가능. 애널리스트 컨센서스와 교차 검증 필요.</div>
+      </div>
+    </div>
+    <div class="callout callout-warn">
+      <strong>핵심 조건:</strong> 이익 성장이 지속되고 PEG 1.0 이하인 종목에서 가장 효과적.
+    </div>
+  </div>
+
+  <!-- 5. 대표 종목 / ETF -->
+  <div class="section">
+    <div class="sec-title">대표 종목 / ETF</div>
+    <div class="etf-grid">
+      <div class="etf-card">
+        <div class="etf-ticker">SCHG</div>
+        <div class="etf-name">Schwab U.S. Large-Cap Growth ETF</div>
+        <div class="etf-desc">미국 대형 성장주 중심. 저비용으로 성장 팩터 추종.</div>
+        <span class="etf-badge">성장주</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">VUG</div>
+        <div class="etf-name">Vanguard Growth ETF</div>
+        <div class="etf-desc">뱅가드 대형 성장주 ETF. GARP 성향 기업 다수 편입.</div>
+        <span class="etf-badge">성장주</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">MSFT</div>
+        <div class="etf-name">마이크로소프트</div>
+        <div class="etf-desc">꾸준한 이익 성장 + 합리적 밸류에이션 — GARP 대표 종목 사례.</div>
+        <span class="etf-badge">종목 예시</span>
+      </div>
+      <div class="etf-card">
+        <div class="etf-ticker">V</div>
+        <div class="etf-name">비자 (Visa)</div>
+        <div class="etf-desc">안정적 매출 성장 + 고ROE + 합리적 PEG — GARP 조건 부합.</div>
+        <span class="etf-badge">종목 예시</span>
+      </div>
+    </div>
+    <div class="callout callout-source">
+      ※ 참고용이며, 투자 전 최신 데이터 직접 확인 필요. 특정 종목 추천 아님.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-box">성장성과 적정 가격을 함께 보며 균형 잡힌 포트폴리오를 추구하는 투자자</div>
+  </div>
+  <div class="cta-box"><a href="../" class="cta-btn">← 방법 기반 전략 목록으로</a></div>
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+</main>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a></div>
+</footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){if(localStorage.getItem('finq-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

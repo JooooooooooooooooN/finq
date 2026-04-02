@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>종목 재무 요약 — FinQ</title>
+<meta name="description" content="PER, PBR, ROE 등 핵심 재무 지표를 바탕으로 국내 종목의 기본 체력을 빠르게 확인하는 페이지.">
+<meta property="og:title" content="종목 재무 요약 — FinQ">
+<meta property="og:description" content="PER, PBR, ROE 등 핵심 재무 지표를 바탕으로 종목의 기본 체력을 빠르게 확인하는 페이지">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+/* LAYOUT */
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+
+/* HERO */
+.hero{margin-bottom:2rem}
+.hero-badge{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:.6rem}
+.hero-lead{font-size:15px;color:var(--text2);line-height:1.7;word-break:keep-all;max-width:640px;margin-bottom:1rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.9rem}
+.hero-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.hero-update{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
+.hero-update::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+@media(max-width:700px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem}
+.summary-label{font-size:12px;color:var(--text2);margin-bottom:.35rem;word-break:keep-all}
+.summary-value{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.summary-sub{font-size:11px;color:var(--text2);margin-top:.2rem}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:16px;font-weight:700;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cal-table{width:100%;border-collapse:collapse;font-size:13px}
+.cal-table th{text-align:right;padding:9px 11px;font-size:11px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+.cal-table th:first-child,.cal-table th:nth-child(2){text-align:left}
+.cal-table td{padding:10px 11px;border-bottom:1px solid var(--border);vertical-align:middle;text-align:right;font-size:13px;white-space:nowrap}
+.cal-table td:first-child{text-align:left;font-weight:700}
+.cal-table td:nth-child(2){text-align:left}
+.cal-table tr:last-child td{border-bottom:none}
+.cal-table tr:hover td{background:var(--bg2)}
+.sector-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+/* 평가 뱃지 */
+.grade-cheap {display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46}
+.grade-fair  {display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:#fef3c7;color:#92400e}
+.grade-exp   {display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:#fee2e2;color:#991b1b}
+[data-theme=dark] .grade-cheap{background:#064e3b;color:#6ee7b7}
+[data-theme=dark] .grade-fair {background:#78350f;color:#fcd34d}
+[data-theme=dark] .grade-exp  {background:#7f1d1d;color:#fca5a5}
+.num-good{color:var(--green);font-weight:600}
+.num-warn{color:var(--red);font-weight:600}
+.num-neu {color:var(--text2)}
+.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+
+/* INDICATOR CARDS (섹션 2) */
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ind-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
+.ind-icon{font-size:20px;margin-bottom:.5rem}
+.ind-name{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.ind-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+.ind-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:.65rem}
+.ind-item{padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text2)}
+
+/* GUIDE CARDS */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.guide-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem}
+.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+.guide-title{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.guide-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.check-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:10px}
+.check-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.check-text{font-size:14px;line-height:1.65;word-break:keep-all}
+.check-text strong{font-weight:700;color:var(--text)}
+
+/* DISCLAIMER */
+.disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem}
+.disclaimer ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.disclaimer ul li{font-size:13px;color:var(--text2);padding-left:1.1em;position:relative;word-break:keep-all}
+.disclaimer ul li::before{content:"·";position:absolute;left:0;font-weight:700}
+
+hr{border:none;border-top:1px solid var(--border)}
+.divider{max-width:900px;margin:0 auto;padding:0 1.25rem}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/data/kr_fundamentals/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/" class="active">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="../../">홈</a>
+    <span>›</span>
+    <a href="../">마켓 데이터</a>
+    <span>›</span>
+    <span>종목 재무 요약</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">MARKET DATA</div>
+    <h1>종목 재무 요약</h1>
+    <p class="hero-lead">PER, PBR, ROE 등 핵심 재무 지표를 바탕으로 종목의 기본 체력을 빠르게 확인하는 페이지</p>
+    <div class="hero-tags">
+      <span class="hero-tag">재무지표</span>
+      <span class="hero-tag">PER</span>
+      <span class="hero-tag">ROE</span>
+      <span class="hero-tag">밸류에이션</span>
+    </div>
+    <div class="hero-update">최근 분기 실적 기준 주요 종목 재무 지표를 정리했습니다</div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">저평가 판단 종목</div>
+      <div class="summary-value" style="color:var(--green)">8</div>
+      <div class="summary-sub">PER 10 미만 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">고ROE 우량 종목</div>
+      <div class="summary-value" style="color:var(--accent)">11</div>
+      <div class="summary-sub">ROE 15% 이상 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">배당수익률 3% 이상</div>
+      <div class="summary-value" style="color:var(--orange)">14</div>
+      <div class="summary-sub">최근 배당 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">부채비율 200% 이상</div>
+      <div class="summary-value" style="color:var(--red)">5</div>
+      <div class="summary-sub">재무 점검 필요</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 주요 종목 재무 지표 -->
+  <div class="section">
+    <div class="sec-title">주요 종목 재무 지표</div>
+    <div class="table-wrap">
+      <table class="cal-table">
+        <thead>
+          <tr>
+            <th>기업명</th>
+            <th>업종</th>
+            <th>PER</th>
+            <th>PBR</th>
+            <th>ROE</th>
+            <th>영업이익률</th>
+            <th>부채비율</th>
+            <th>배당수익률</th>
+            <th>밸류 판단</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>삼성전자</td>
+            <td><span class="sector-tag">반도체</span></td>
+            <td class="num-good">9.2x</td>
+            <td class="num-neu">1.1x</td>
+            <td class="num-good">12.4%</td>
+            <td class="num-good">18.2%</td>
+            <td class="num-good">28%</td>
+            <td class="num-good">2.8%</td>
+            <td><span class="grade-cheap">저평가</span></td>
+          </tr>
+          <tr>
+            <td>SK하이닉스</td>
+            <td><span class="sector-tag">반도체</span></td>
+            <td class="num-good">7.8x</td>
+            <td class="num-neu">1.4x</td>
+            <td class="num-good">18.6%</td>
+            <td class="num-good">22.1%</td>
+            <td class="num-neu">54%</td>
+            <td class="num-neu">1.2%</td>
+            <td><span class="grade-cheap">저평가</span></td>
+          </tr>
+          <tr>
+            <td>현대차</td>
+            <td><span class="sector-tag">자동차</span></td>
+            <td class="num-good">6.4x</td>
+            <td class="num-neu">0.7x</td>
+            <td class="num-good">14.2%</td>
+            <td class="num-good">9.8%</td>
+            <td class="num-neu">112%</td>
+            <td class="num-good">3.4%</td>
+            <td><span class="grade-cheap">저평가</span></td>
+          </tr>
+          <tr>
+            <td>KB금융</td>
+            <td><span class="sector-tag">금융</span></td>
+            <td class="num-good">7.1x</td>
+            <td class="num-neu">0.6x</td>
+            <td class="num-good">10.8%</td>
+            <td class="num-neu">—</td>
+            <td class="num-warn">412%</td>
+            <td class="num-good">4.1%</td>
+            <td><span class="grade-fair">적정</span></td>
+          </tr>
+          <tr>
+            <td>삼성바이오로직스</td>
+            <td><span class="sector-tag">바이오</span></td>
+            <td class="num-warn">48.2x</td>
+            <td class="num-warn">6.8x</td>
+            <td class="num-good">15.4%</td>
+            <td class="num-good">28.6%</td>
+            <td class="num-good">22%</td>
+            <td class="num-neu">0.3%</td>
+            <td><span class="grade-exp">고평가</span></td>
+          </tr>
+          <tr>
+            <td>LG에너지솔루션</td>
+            <td><span class="sector-tag">2차전지</span></td>
+            <td class="num-warn">32.1x</td>
+            <td class="num-warn">3.2x</td>
+            <td class="num-neu">9.8%</td>
+            <td class="num-neu">6.4%</td>
+            <td class="num-neu">48%</td>
+            <td class="num-neu">0.5%</td>
+            <td><span class="grade-exp">고평가</span></td>
+          </tr>
+          <tr>
+            <td>NAVER</td>
+            <td><span class="sector-tag">인터넷</span></td>
+            <td class="num-neu">18.6x</td>
+            <td class="num-neu">1.8x</td>
+            <td class="num-good">10.2%</td>
+            <td class="num-good">14.1%</td>
+            <td class="num-good">35%</td>
+            <td class="num-neu">0.8%</td>
+            <td><span class="grade-fair">적정</span></td>
+          </tr>
+          <tr>
+            <td>한화에어로스페이스</td>
+            <td><span class="sector-tag">방산</span></td>
+            <td class="num-neu">14.3x</td>
+            <td class="num-neu">2.1x</td>
+            <td class="num-good">16.8%</td>
+            <td class="num-good">11.4%</td>
+            <td class="num-neu">68%</td>
+            <td class="num-neu">1.1%</td>
+            <td><span class="grade-fair">적정</span></td>
+          </tr>
+          <tr>
+            <td>코스트코코리아</td>
+            <td><span class="sector-tag">유통</span></td>
+            <td class="num-neu">16.2x</td>
+            <td class="num-neu">2.4x</td>
+            <td class="num-good">14.9%</td>
+            <td class="num-good">7.8%</td>
+            <td class="num-good">41%</td>
+            <td class="num-good">2.2%</td>
+            <td><span class="grade-fair">적정</span></td>
+          </tr>
+          <tr>
+            <td>에코프로비엠</td>
+            <td><span class="sector-tag">2차전지</span></td>
+            <td class="num-warn">41.7x</td>
+            <td class="num-warn">5.1x</td>
+            <td class="num-neu">12.1%</td>
+            <td class="num-neu">5.9%</td>
+            <td class="num-warn">182%</td>
+            <td class="num-neu">0.2%</td>
+            <td><span class="grade-exp">고평가</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-notice">* 재무 지표는 최근 분기 기준이며, PER·PBR은 현재 주가 기준입니다. 밸류 판단은 업종 평균 대비 상대적 수준을 단순 참고용으로 제시한 것입니다. 더미 데이터 기반 UI 예시입니다.</div>
+  </div>
+
+  <!-- SECTION 2: 지표별 해설 -->
+  <div class="section">
+    <div class="sec-title">지표별 해설</div>
+    <div class="ind-grid">
+      <div class="ind-card">
+        <div class="ind-icon">📊</div>
+        <div class="ind-name">PER (주가수익비율)</div>
+        <div class="ind-desc">현재 주가가 연간 순이익의 몇 배인지 나타낸다. 낮을수록 이익 대비 주가가 싸다는 의미이지만, 업종마다 기준이 다르다. 같은 업종 내에서 비교하는 것이 유의미하다.</div>
+        <div class="ind-items">
+          <span class="ind-item">낮을수록 상대적 저평가</span>
+          <span class="ind-item">업종 평균 비교 필수</span>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">📐</div>
+        <div class="ind-name">PBR (주가순자산비율)</div>
+        <div class="ind-desc">현재 주가가 순자산(장부가치)의 몇 배인지 나타낸다. 1배 미만이면 청산가치보다 싸게 거래되고 있다는 의미다. 자산 중심 업종(금융, 제조)에서 자주 활용된다.</div>
+        <div class="ind-items">
+          <span class="ind-item">1배 미만 주목</span>
+          <span class="ind-item">자산 중심 업종에 유용</span>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">💹</div>
+        <div class="ind-name">ROE (자기자본이익률)</div>
+        <div class="ind-desc">투입한 자본 대비 얼마나 효율적으로 이익을 창출했는지 나타낸다. 높을수록 수익성 좋은 기업으로 볼 수 있으며, 15% 이상이면 일반적으로 우량 수준으로 평가한다.</div>
+        <div class="ind-items">
+          <span class="ind-item">15% 이상 우량</span>
+          <span class="ind-item">지속성도 함께 확인</span>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">📉</div>
+        <div class="ind-name">영업이익률</div>
+        <div class="ind-desc">매출 대비 영업이익 비율로, 본업의 수익성을 나타낸다. 높을수록 원가 관리와 가격 경쟁력이 좋다는 신호다. 업종별로 기준치가 다르므로 동종 기업과 비교한다.</div>
+        <div class="ind-items">
+          <span class="ind-item">본업 수익성 지표</span>
+          <span class="ind-item">동종 업종 비교</span>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">⚖️</div>
+        <div class="ind-name">부채비율</div>
+        <div class="ind-desc">자기자본 대비 총부채 비율로, 재무 건전성을 파악하는 지표다. 200% 이하이면 일반적으로 안정적 수준으로 본다. 금융업은 특성상 부채비율이 높게 나오므로 별도 기준을 적용한다.</div>
+        <div class="ind-items">
+          <span class="ind-item">200% 기준 참고</span>
+          <span class="ind-item">금융업 별도 적용</span>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">💰</div>
+        <div class="ind-name">배당수익률</div>
+        <div class="ind-desc">현재 주가 대비 연간 배당금 비율이다. 3% 이상이면 일반적으로 배당 매력이 있는 종목으로 본다. 단, 배당이 지속 가능한지 실적 흐름과 함께 확인하는 것이 중요하다.</div>
+        <div class="ind-items">
+          <span class="ind-item">3% 이상 매력적</span>
+          <span class="ind-item">지속가능성 확인</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 이 데이터를 어떻게 읽어야 하나 -->
+  <div class="section">
+    <div class="sec-title">이 데이터를 어떻게 읽어야 하나</div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-num">POINT 01</div>
+        <div class="guide-title">단일 지표보다 여러 지표를 함께 본다</div>
+        <div class="guide-desc">PER만 낮아도 ROE가 낮거나 부채가 많으면 의미가 달라진다. PER·PBR·ROE를 함께 보면서 수익성, 자산 가치, 재무 건전성을 입체적으로 파악하는 것이 좋다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 02</div>
+        <div class="guide-title">같은 업종끼리 비교해야 유의미하다</div>
+        <div class="guide-desc">바이오주의 PER 40배와 금융주의 PER 7배는 서로 다른 기준으로 평가된다. 반드시 같은 업종 평균과 비교해야 저평가 또는 고평가 여부를 판단할 수 있다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 03</div>
+        <div class="guide-title">PER이 낮다고 반드시 좋은 것은 아니다</div>
+        <div class="guide-desc">실적이 급감하거나 구조적 문제가 있는 기업도 PER이 낮게 보일 수 있다. 이익이 지속 가능한지, 성장성은 있는지를 함께 확인해야 한다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 04</div>
+        <div class="guide-title">ROE는 부채를 이용한 레버리지 효과를 포함한다</div>
+        <div class="guide-desc">부채를 많이 쓸수록 ROE는 높게 나올 수 있다. ROE가 높은 기업이라면 부채비율도 함께 확인해 진짜 수익성인지 레버리지 효과인지 구분하는 것이 중요하다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 05</div>
+        <div class="guide-title">배당수익률은 지속가능성을 같이 본다</div>
+        <div class="guide-desc">배당수익률이 높아도 실적이 악화되면 배당이 줄거나 없어질 수 있다. 최근 3년 배당 이력과 배당성향(순이익 대비 배당 비율)을 함께 확인하는 것이 좋다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 체크 포인트 -->
+  <div class="section">
+    <div class="sec-title">체크 포인트</div>
+    <div class="check-grid">
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>PER·PBR·ROE를 동시에 확인</strong>한다. 세 지표가 모두 좋을 때 가장 신뢰도 높은 저평가 신호로 볼 수 있다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>같은 업종 평균과 비교</strong>한다. 숫자 자체보다 동종 업계 대비 위치가 더 중요한 기준이다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>부채비율 200% 초과 종목</strong>은 재무 건전성을 추가 점검한다. 특히 금리 상승기에 이자 부담 증가 여부를 확인한다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>배당수익률 높은 종목</strong>은 최근 3년 배당 이력과 배당성향도 함께 확인한다. 일시적 고배당인지 구조적 배당인지 구분이 중요하다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <ul>
+      <li>데이터는 출처 및 반영 시점에 따라 일부 차이가 있을 수 있습니다.</li>
+      <li>일부 해외 데이터는 현지 발표 기준 시각으로 제공될 수 있습니다.</li>
+      <li>본 페이지는 정보 제공 목적이며, 특정 투자 판단을 권유하지 않습니다.</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div style="font-size:13px;color:var(--text2)">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

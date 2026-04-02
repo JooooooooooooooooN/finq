@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>칼 아이칸 포트폴리오 — FinQ</title>
+<meta name="description" content="칼 아이칸의 Icahn Enterprises 13F 포트폴리오. 기업 사냥꾼에서 행동주의 투자자로, 보유 종목과 전략 분석.">
+<meta property="og:title" content="칼 아이칸 포트폴리오 — FinQ">
+<meta property="og:description" content="월가의 기업 사냥꾼 칼 아이칸. Icahn Enterprises 포트폴리오와 행동주의 투자 전략 분석.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2)}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.hero-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent);color:#fff;margin-bottom:1rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+.guru-profile{display:grid;grid-template-columns:1fr}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.link{cursor:pointer;transition:all .15s}.guru-chip.link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/icahn/">
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+<div class="main">
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span><a href="../../../strategy/">투자 전략</a><span>›</span><a href="../">투자자 기반 전략</a><span>›</span><span>칼 아이칸</span>
+  </div>
+  <h1 class="page-title">칼 아이칸</h1>
+  <p class="page-desc">월가의 전설적 기업 사냥꾼. 저평가 기업에 대규모 지분을 취득해 경영진 교체·분사·자사주매입을 압박하는 공격적 행동주의 투자자.</p>
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <span class="guru-chip active">칼 아이칸</span>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div></div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">칼 아이칸 Carl Icahn</div>
+        <div class="guru-sub">Icahn Enterprises 회장 겸 Icahn Capital Management 창립자 · 1980년대~현재</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">$150억+</div>
+            <div class="guru-stat-label">Icahn Enterprises 총자산</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">수십 년</div>
+            <div class="guru-stat-label">행동주의 투자 경력</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">행동주의</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1rem">
+      <span class="info-icon">ℹ️</span>
+      <span>2023년 힌덴버그 리서치의 공매도 보고서 이후 Icahn Enterprises(IEP) 주가가 크게 하락했습니다. 아이칸은 IEP 지분 약 85%를 보유하고 있어 포트폴리오의 대부분이 IEP에 집중되어 있습니다.</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>주요 보유 종목</div>
+      <span class="data-tag">2024년 Q2 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th><th>종목</th><th>비중</th>
+            <th class="col-value">평가액</th><th class="col-shares">보유 주수</th><th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>아이칸의 포트폴리오는 통상 5~8개 종목에 초집중되어 있습니다. 행동주의 포지션은 공개 전 대규모 누적 매입 후 13D/13G 공시로 알려지는 경우가 많습니다.</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
+      <span class="data-tag">2024년 Q2 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"내가 싸우는 이유는 단순하다. 나는 기업들이 주주를 위해 운영되어야 한다고 믿기 때문이다."</div>
+        <div class="quote-source">— 아이칸의 주주 권리 철학</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"기회는 준비된 자에게 온다. 나는 항상 다음 타깃을 연구하고 있다."</div>
+        <div class="quote-source">— 아이칸의 투자 준비 자세</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"회사를 사는 것이 아니라 회사를 고치는 것이다. 잠재력은 있지만 경영진이 무능한 기업을 찾는다."</div>
+        <div class="quote-source">— 행동주의 투자 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"좋은 투자는 위험하지 않다. 당신이 충분히 연구했다면 그것은 단순히 기다림의 문제다."</div>
+        <div class="quote-source">— 확신 기반 집중 투자</div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">아이칸식 행동주의 전략</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🎯</div>
+          <div style="font-weight:600;margin-bottom:2px">지분 대규모 취득</div>
+          <div style="color:var(--text2)">10% 이상 지분 확보 후 경영 압박권 확보</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⚔️</div>
+          <div style="font-weight:600;margin-bottom:2px">위임장 대결</div>
+          <div style="color:var(--text2)">이사회 교체를 위한 주주총회 위임장 경쟁</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">💰</div>
+          <div style="font-weight:600;margin-bottom:2px">자본 환원 요구</div>
+          <div style="color:var(--text2)">자사주매입·특별배당·분사 등 주주 환원 압박</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🏭</div>
+          <div style="font-weight:600;margin-bottom:2px">저평가 자산</div>
+          <div style="color:var(--text2)">청산가치 또는 분리가치 대비 할인된 기업 타깃</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>주요 역사적 행동주의 투자</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대성공</span>
+        <div><strong>TWA (트랜스월드 항공)</strong> — 1980년대 항공사 인수 후 자산 매각. 수억 달러 차익. 이후 항공사 파산으로 논란.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대성공</span>
+        <div><strong>AAPL (애플)</strong> — 2013년 지분 매입 후 $1,500억 규모 자사주매입 요구, 관철. 수십억 달러 수익 후 매도.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">성공</span>
+        <div><strong>Dell Technologies</strong> — 사모화 반대 후 협상, 더 높은 가격 획득. 행동주의로 주주 가치 증대 사례.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">논란</span>
+        <div><strong>IEP (아이칸 엔터프라이즈)</strong> — 2023년 힌덴버그의 공매도 보고서로 주가 60%+ 급락. 과도한 배당과 레버리지 구조 문제 지적.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>공개서한(Open Letters)</strong> — 행동주의 투자 방식과 기업 지배구조 압박 전략을 가장 잘 보여주는 자료</li>
+      <li style="font-size:14px;line-height:1.7"><strong>Icahn Enterprises 관련 서한 / 공시</strong> — 실제 투자 스타일과 주주행동주의 사례를 확인할 수 있는 자료</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 Icahn Capital Management의 SEC EDGAR 13F 보고서를 기반으로 합니다. 투자 권유가 아닙니다.
+  </div>
+</div>
+<script>
+function toggleTheme(){
+  const t=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',t==='dark'?'dark':'');
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+  localStorage.setItem('theme',t);
+}
+(function(){
+  const t=localStorage.getItem('theme');
+  if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
+})();
+
+const holdings=[
+  {ticker:'IEP', name:'아이칸 엔터프라이즈 LP', sector:'복합기업', weight:42.1, value:'$38억', shares:'1.97억주', change:'same', changeLabel:'— 유지'},
+  {ticker:'CVR', name:'CVR 에너지', sector:'에너지', weight:18.6, value:'$16.8억', shares:'7,100만주', change:'same', changeLabel:'— 유지'},
+  {ticker:'NWL', name:'뉴웰 브랜즈', sector:'소비재', weight:9.4, value:'$8.5억', shares:'7,200만주', change:'down', changeLabel:'▼ 감소'},
+  {ticker:'PARA',name:'파라마운트 글로벌', sector:'미디어', weight:8.2, value:'$7.4억', shares:'5,600만주', change:'down', changeLabel:'▼ 감소'},
+  {ticker:'SW',  name:'스타이너 월드와이드', sector:'서비스', weight:5.8, value:'$5.2억', shares:'2,800만주', change:'same', changeLabel:'— 유지'},
+];
+
+const tbody=document.getElementById('holdingsBody');
+holdings.forEach((h,i)=>{
+  const cc=h.change==='up'?'change-up':h.change==='down'?'change-down':h.change==='new'?'change-new':'change-same';
+  tbody.innerHTML+=`<tr>
+    <td><span class="rank-num ${i<3?'top3':''}">${i+1}</span></td>
+    <td><div class="ticker">${h.ticker}</div><div class="co-name">${h.name}</div></td>
+    <td><div class="weight-bar-wrap"><div class="weight-bar" style="width:${h.weight*2.0}px"></div><span class="weight-text">${h.weight}%</span></div></td>
+    <td class="col-value"><span class="amount">${h.value}</span></td>
+    <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+    <td><span class="${cc}">${h.changeLabel}</span></td>
+  </tr>`;
+});
+
+const sectors=[
+  {name:'복합기업',pct:42.1,color:'#2563eb'},
+  {name:'에너지',pct:18.6,color:'#d97706'},
+  {name:'소비재',pct:9.4,color:'#059669'},
+  {name:'미디어',pct:8.2,color:'#7c3aed'},
+  {name:'서비스',pct:5.8,color:'#db2777'},
+  {name:'현금성',pct:15.9,color:'#6b7280'},
+];
+const sl=document.getElementById('sectorList');
+sectors.forEach(s=>{
+  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
+});
+</script>
+</body>
+</html>

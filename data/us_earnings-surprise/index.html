@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>어닝 서프라이즈 분석 — FinQ</title>
+<meta name="description" content="실적이 예상치를 얼마나 웃돌거나 밑돌았는지와 발표 후 시장 반응을 함께 확인. EPS 서프라이즈율, 매출 비교, 주가 반응 정리.">
+<meta property="og:title" content="어닝 서프라이즈 분석 — FinQ">
+<meta property="og:description" content="실적이 예상치를 얼마나 웃돌거나 밑돌았는지와 발표 후 시장 반응을 함께 확인하는 페이지">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+/* LAYOUT */
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+
+/* HERO */
+.hero{margin-bottom:2rem}
+.hero-badge{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:.6rem}
+.hero-lead{font-size:15px;color:var(--text2);line-height:1.7;word-break:keep-all;max-width:640px;margin-bottom:1rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.9rem}
+.hero-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.hero-update{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
+.hero-update::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* SUMMARY */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+@media(max-width:700px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem}
+.summary-label{font-size:12px;color:var(--text2);margin-bottom:.35rem;word-break:keep-all}
+.summary-value{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.summary-sub{font-size:11px;color:var(--text2);margin-top:.2rem}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:16px;font-weight:700;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cal-table{width:100%;border-collapse:collapse;font-size:14px}
+.cal-table th{text-align:left;padding:9px 12px;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+.cal-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+.cal-table tr:last-child td{border-bottom:none}
+.cal-table tr:hover td{background:var(--bg2)}
+.company-name{font-weight:600}
+.ticker{font-size:12px;color:var(--text2);font-weight:600;font-family:monospace}
+.num-cell{font-size:13px;color:var(--text2)}
+.imp-high{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b}
+.imp-mid{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#fef3c7;color:#92400e}
+.imp-low{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .imp-high{background:#7f1d1d;color:#fca5a5}
+[data-theme=dark] .imp-mid{background:#78350f;color:#fcd34d}
+/* 서프라이즈율 색상 */
+.surp-pos{font-weight:700;color:var(--green)}
+.surp-neg{font-weight:700;color:var(--red)}
+/* 발표 후 반응 뱃지 */
+.react-pos{display:inline-block;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:700;background:#d1fae5;color:#065f46}
+.react-neg{display:inline-block;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:700;background:#fee2e2;color:#991b1b}
+.react-flat{display:inline-block;padding:2px 9px;border-radius:4px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+[data-theme=dark] .react-pos{background:#064e3b;color:#6ee7b7}
+[data-theme=dark] .react-neg{background:#7f1d1d;color:#fca5a5}
+.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+
+/* COMPARE GRID (섹션 2) */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:640px){.compare-grid{grid-template-columns:1fr}}
+.compare-card{border-radius:10px;padding:1.1rem 1.25rem}
+.compare-pos{background:rgba(5,150,105,.06);border:1px solid rgba(5,150,105,.2)}
+.compare-neg{background:rgba(220,38,38,.05);border:1px solid rgba(220,38,38,.2)}
+[data-theme=dark] .compare-pos{background:rgba(5,150,105,.1);border-color:rgba(5,150,105,.25)}
+[data-theme=dark] .compare-neg{background:rgba(220,38,38,.09);border-color:rgba(220,38,38,.25)}
+.compare-head{font-size:13px;font-weight:700;margin-bottom:.75rem;display:flex;align-items:center;gap:6px}
+.compare-head-pos{color:var(--green)}
+.compare-head-neg{color:var(--red)}
+.compare-row{font-size:13px;line-height:1.65;word-break:keep-all;padding:.35rem 0;display:flex;align-items:baseline;gap:6px}
+.compare-row::before{content:'•';font-size:10px;flex-shrink:0;margin-top:2px}
+.compare-pos .compare-row::before{color:var(--green)}
+.compare-neg .compare-row::before{color:var(--red)}
+.compare-bold{font-weight:700}
+.compare-sub{font-size:12px;color:var(--text2);word-break:keep-all}
+
+/* 해석 박스 */
+.interp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px;margin-top:1rem}
+.interp-card{background:var(--bg2);border-radius:8px;padding:.85rem 1rem;font-size:13px;line-height:1.65;word-break:keep-all;color:var(--text2)}
+.interp-card strong{color:var(--text);font-weight:700}
+
+/* GUIDE CARDS */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.guide-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem}
+.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+.guide-title{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.guide-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.check-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:10px}
+.check-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.check-text{font-size:14px;line-height:1.65;word-break:keep-all}
+.check-text strong{font-weight:700;color:var(--text)}
+
+/* DISCLAIMER */
+.disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem}
+.disclaimer ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.disclaimer ul li{font-size:13px;color:var(--text2);padding-left:1.1em;position:relative;word-break:keep-all}
+.disclaimer ul li::before{content:"·";position:absolute;left:0;font-weight:700}
+
+hr{border:none;border-top:1px solid var(--border)}
+.divider{max-width:900px;margin:0 auto;padding:0 1.25rem}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/data/us_earnings-surprise/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/" class="active">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="../../">홈</a>
+    <span>›</span>
+    <a href="../">마켓 데이터</a>
+    <span>›</span>
+    <span>어닝 서프라이즈 분석</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">MARKET DATA</div>
+    <h1>어닝 서프라이즈 분석</h1>
+    <p class="hero-lead">실적이 예상치를 얼마나 웃돌거나 밑돌았는지와 발표 후 시장 반응을 함께 확인하는 페이지</p>
+    <div class="hero-tags">
+      <span class="hero-tag">실적비교</span>
+      <span class="hero-tag">서프라이즈</span>
+      <span class="hero-tag">EPS</span>
+      <span class="hero-tag">주가반응</span>
+    </div>
+    <div class="hero-update">최근 발표 기업 기준 서프라이즈 결과를 정리했습니다</div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">최근 EPS 상회 기업</div>
+      <div class="summary-value" style="color:var(--green)">7</div>
+      <div class="summary-sub">Q1 2026 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">최근 EPS 하회 기업</div>
+      <div class="summary-value" style="color:var(--red)">3</div>
+      <div class="summary-sub">Q1 2026 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">평균 EPS 서프라이즈율</div>
+      <div class="summary-value" style="color:var(--accent)">+4.1%</div>
+      <div class="summary-sub">전체 집계 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">발표 후 상승 기업</div>
+      <div class="summary-value" style="color:var(--orange)">6</div>
+      <div class="summary-sub">발표일 +1일 기준</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 최근 발표 결과 -->
+  <div class="section">
+    <div class="sec-title">최근 발표 결과</div>
+    <div class="table-wrap">
+      <table class="cal-table">
+        <thead>
+          <tr>
+            <th>기업명</th>
+            <th>티커</th>
+            <th>예상 EPS</th>
+            <th>실제 EPS</th>
+            <th>서프라이즈율</th>
+            <th>예상 매출</th>
+            <th>실제 매출</th>
+            <th>발표 후 반응</th>
+            <th>중요도</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="company-name">Amazon</span></td>
+            <td><span class="ticker">AMZN</span></td>
+            <td class="num-cell">$1.37</td>
+            <td class="num-cell">$1.59</td>
+            <td><span class="surp-pos">+16.1%</span></td>
+            <td class="num-cell">$155.6B</td>
+            <td class="num-cell">$158.4B</td>
+            <td><span class="react-pos">+8.7%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">AMD</span></td>
+            <td><span class="ticker">AMD</span></td>
+            <td class="num-cell">$0.88</td>
+            <td class="num-cell">$0.96</td>
+            <td><span class="surp-pos">+9.1%</span></td>
+            <td class="num-cell">$7.4B</td>
+            <td class="num-cell">$7.7B</td>
+            <td><span class="react-pos">+5.2%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">NVIDIA</span></td>
+            <td><span class="ticker">NVDA</span></td>
+            <td class="num-cell">$0.91</td>
+            <td class="num-cell">$0.98</td>
+            <td><span class="surp-pos">+7.7%</span></td>
+            <td class="num-cell">$43.2B</td>
+            <td class="num-cell">$44.1B</td>
+            <td><span class="react-pos">+6.4%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Apple</span></td>
+            <td><span class="ticker">AAPL</span></td>
+            <td class="num-cell">$1.65</td>
+            <td class="num-cell">$1.72</td>
+            <td><span class="surp-pos">+4.2%</span></td>
+            <td class="num-cell">$94.2B</td>
+            <td class="num-cell">$96.5B</td>
+            <td><span class="react-pos">+3.8%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Microsoft</span></td>
+            <td><span class="ticker">MSFT</span></td>
+            <td class="num-cell">$3.12</td>
+            <td class="num-cell">$3.24</td>
+            <td><span class="surp-pos">+3.8%</span></td>
+            <td class="num-cell">$68.7B</td>
+            <td class="num-cell">$70.1B</td>
+            <td><span class="react-pos">+2.2%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">JPMorgan</span></td>
+            <td><span class="ticker">JPM</span></td>
+            <td class="num-cell">$4.52</td>
+            <td class="num-cell">$4.61</td>
+            <td><span class="surp-pos">+2.0%</span></td>
+            <td class="num-cell">$44.1B</td>
+            <td class="num-cell">$44.6B</td>
+            <td><span class="react-pos">+1.4%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Costco</span></td>
+            <td><span class="ticker">COST</span></td>
+            <td class="num-cell">$4.21</td>
+            <td class="num-cell">$4.33</td>
+            <td><span class="surp-pos">+2.9%</span></td>
+            <td class="num-cell">$63.8B</td>
+            <td class="num-cell">$64.2B</td>
+            <td><span class="react-flat">+0.4%</span></td>
+            <td><span class="imp-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Alphabet</span></td>
+            <td><span class="ticker">GOOGL</span></td>
+            <td class="num-cell">$2.13</td>
+            <td class="num-cell">$2.08</td>
+            <td><span class="surp-neg">-2.3%</span></td>
+            <td class="num-cell">$89.6B</td>
+            <td class="num-cell">$88.9B</td>
+            <td><span class="react-neg">-3.2%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Meta</span></td>
+            <td><span class="ticker">META</span></td>
+            <td class="num-cell">$5.65</td>
+            <td class="num-cell">$5.41</td>
+            <td><span class="surp-neg">-4.2%</span></td>
+            <td class="num-cell">$41.1B</td>
+            <td class="num-cell">$40.3B</td>
+            <td><span class="react-neg">-4.1%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td><span class="company-name">Tesla</span></td>
+            <td><span class="ticker">TSLA</span></td>
+            <td class="num-cell">$0.45</td>
+            <td class="num-cell">$0.38</td>
+            <td><span class="surp-neg">-15.6%</span></td>
+            <td class="num-cell">$22.4B</td>
+            <td class="num-cell">$21.3B</td>
+            <td><span class="react-neg">-9.3%</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-notice">* 서프라이즈율 = (실제 EPS − 예상 EPS) ÷ |예상 EPS| × 100. 발표 후 반응은 발표일 기준 +1거래일 종가 기준입니다. 더미 데이터 기반 UI 예시입니다.</div>
+  </div>
+
+  <!-- SECTION 2: 긍정/부정 서프라이즈 -->
+  <div class="section">
+    <div class="sec-title">긍정 서프라이즈 / 부정 서프라이즈</div>
+    <div class="compare-grid">
+
+      <!-- 긍정 -->
+      <div class="compare-card compare-pos">
+        <div class="compare-head compare-head-pos">↑ EPS 상회 상위</div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">Amazon +16.1%</span>
+            <div class="compare-sub">매출도 동반 상회. AWS 클라우드 성장이 예상을 넘어섰으며 다음 분기 가이던스 유지.</div>
+          </div>
+        </div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">AMD +9.1%</span>
+            <div class="compare-sub">데이터센터 수요 견조. AI 가속기 수요에 대한 긍정적 코멘터리로 발표 후 반응도 강세.</div>
+          </div>
+        </div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">NVIDIA +7.7%</span>
+            <div class="compare-sub">AI 칩 수요 지속 확인. 다음 분기 가이던스도 시장 기대에 부합하며 긍정적으로 해석됨.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 부정 -->
+      <div class="compare-card compare-neg">
+        <div class="compare-head compare-head-neg">↓ EPS 하회 상위</div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">Tesla -15.6%</span>
+            <div class="compare-sub">매출도 동반 하회. 가격 인하 지속에 따른 마진 악화, 다음 분기 가이던스도 추가 하향 조정.</div>
+          </div>
+        </div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">Meta -4.2%</span>
+            <div class="compare-sub">광고 수익 성장 둔화 언급. AI 투자 비용 확대로 영업마진이 예상보다 낮게 집계됨.</div>
+          </div>
+        </div>
+        <div class="compare-row">
+          <div>
+            <span class="compare-bold">Alphabet -2.3%</span>
+            <div class="compare-sub">클라우드 성장 속도 둔화. 유튜브 광고 수익도 예상치를 소폭 하회하며 전체 실망감으로 이어짐.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 해석 요약 3가지 -->
+    <div class="interp-grid">
+      <div class="interp-card">
+        <strong>숫자 상회 + 가이던스 유지</strong><br>가장 긍정적인 조합. 이번 실적도 좋고 다음 분기도 기대 이상일 가능성이 높다는 신호다.
+      </div>
+      <div class="interp-card">
+        <strong>숫자 상회 + 가이던스 약화</strong><br>주가 반응이 제한될 수 있다. 이번엔 잘 했지만 다음이 걱정된다는 해석이 먼저 나온다.
+      </div>
+      <div class="interp-card">
+        <strong>숫자 하회 + 가이던스 추가 하향</strong><br>가장 부정적인 조합. 단기 변동성이 확대되고 섹터 내 연쇄 반응으로 이어지는 경우도 많다.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 이 데이터를 어떻게 읽어야 하나 -->
+  <div class="section">
+    <div class="sec-title">이 데이터를 어떻게 읽어야 하나</div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-num">POINT 01</div>
+        <div class="guide-title">실적 상회가 곧 주가 상승은 아니다</div>
+        <div class="guide-desc">EPS가 예상을 웃돌아도 주가가 하락하는 경우는 자주 있다. 이미 좋은 실적이 선반영됐거나, 매출·가이던스가 기대에 못 미쳤을 때 발생한다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 02</div>
+        <div class="guide-title">시장은 숫자보다 "기대 차이"를 반영</div>
+        <div class="guide-desc">EPS가 $3.00이어도, 시장이 $3.20을 기대했다면 실망으로 해석된다. 절대 수치보다 컨센서스와의 차이가 더 중요하다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 03</div>
+        <div class="guide-title">EPS보다 매출·마진·가이던스가 더 중요할 때도 있다</div>
+        <div class="guide-desc">EPS는 일회성 항목으로 조정이 가능하다. 반면 매출 성장, 영업마진 방향, 다음 분기 가이던스는 기업의 실질 상태를 보여주는 경우가 많다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 04</div>
+        <div class="guide-title">기대가 높을수록 하락 위험도 크다</div>
+        <div class="guide-desc">이미 주가가 많이 오른 종목은 "좋은 실적"조차 "기대보다 살짝 부족"으로 해석되면 차익실현 매도가 쏟아질 수 있다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 05</div>
+        <div class="guide-title">발표 직후 1일 반응과 5일 반응은 다를 수 있다</div>
+        <div class="guide-desc">발표 당일 시장은 숫자에 즉각 반응하지만, 이후 3~5거래일 동안 실적 내용을 다시 해석하며 방향이 바뀌는 경우도 많다. 단기 반응만으로 판단하지 않는 것이 좋다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 체크 포인트 -->
+  <div class="section">
+    <div class="sec-title">체크 포인트</div>
+    <div class="check-grid">
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>EPS와 매출을 함께 확인</strong>한다. EPS만 상회하고 매출이 기대 이하라면 주가 반응이 약할 수 있다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>가이던스 변화 여부</strong>를 체크한다. 이번 분기 결과보다 다음 분기 전망이 주가 방향을 결정하는 경우가 더 많다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>발표 후 단기 반응과 며칠 뒤 흐름</strong>을 구분해서 본다. 발표 당일 급등 후 되돌림이 나오거나, 당일 급락 후 회복이 오는 패턴도 흔하다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>같은 섹터 기업들에 연쇄 영향</strong>이 있는지 확인한다. 대형 빅테크의 클라우드 실적이 동종 업체 주가를 끌어내리는 패턴이 자주 나타난다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <ul>
+      <li>데이터는 출처 및 반영 시점에 따라 일부 차이가 있을 수 있습니다.</li>
+      <li>일부 해외 데이터는 현지 발표 기준 시각으로 제공될 수 있습니다.</li>
+      <li>본 페이지는 정보 제공 목적이며, 특정 투자 판단을 권유하지 않습니다.</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div style="font-size:13px;color:var(--text2)">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>배당 성장 시뮬레이터 — FinQ</title>
+<meta name="description" content="초기 투자금과 추가 투자, 배당 성장률을 반영해 미래 배당 흐름을 계산합니다. 배당 재투자 효과를 연도별로 확인하세요.">
+<meta name="keywords" content="배당 성장 시뮬레이터, 배당 재투자 계산기, 배당금 계산, 배당 성장률, 현금흐름, 장기투자, FinQ">
+<meta property="og:title" content="배당 성장 시뮬레이터 — FinQ">
+<meta property="og:description" content="초기 투자금과 추가 투자, 배당 성장률을 반영해 미래 배당 흐름을 계산합니다.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/simulation/dividend-growth/">
+<link rel="canonical" href="https://finq.kr/simulation/dividend-growth/">
+<meta name="google-site-verification" content="h_hguo8DHy4-Z2dyWtN-GMTueCtW_4P6VsQSeHPgEdk" />
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --green: #059669;
+  --red: #dc2626;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.nav-links a:hover { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px;
+  cursor: pointer; font-size: 16px; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; gap: 4px;
+  }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+/* MAIN */
+.main {
+  max-width: 900px; margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+.page-title {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700; letter-spacing: -0.5px;
+  margin-bottom: 0.25rem;
+}
+.page-desc {
+  font-size: 15px; color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.page-tags {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.page-tag {
+  font-size: 12px; font-weight: 500;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* SECTION */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.sec-title {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* FORM */
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 4px;
+}
+.form-label em {
+  font-style: normal; font-weight: 400;
+  color: var(--text-secondary); opacity: 0.75;
+}
+.input-wrap {
+  display: flex; align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg);
+  overflow: hidden;
+}
+.input-wrap input {
+  flex: 1; padding: 9px 12px; font-size: 14px;
+  border: none; background: transparent;
+  color: var(--text); outline: none; min-width: 0;
+}
+.input-wrap.error { border-color: var(--red); }
+.input-unit {
+  padding: 0 12px; font-size: 13px;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--border);
+  white-space: nowrap; background: var(--bg-secondary);
+}
+.form-error {
+  font-size: 12px; color: var(--red);
+  margin-top: 4px; display: none;
+}
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* REINVEST TOGGLE */
+.reinvest-wrap {
+  display: flex; gap: 8px;
+}
+.reinvest-btn {
+  flex: 1; padding: 9px 12px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  background: none; color: var(--text-secondary);
+  cursor: pointer; text-align: center;
+  transition: all 0.15s;
+}
+.reinvest-btn.active {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.reinvest-btn:not(.active):hover { background: var(--bg-secondary); }
+
+/* RESULTS */
+.result-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  margin-bottom: 1rem;
+}
+.result-card {
+  background: var(--bg-secondary);
+  border-radius: 8px; padding: 1rem;
+  text-align: center;
+}
+.result-label {
+  font-size: 12px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.result-value {
+  font-size: 22px; font-weight: 700;
+}
+.result-sub {
+  font-size: 11px; color: var(--text-secondary);
+  margin-top: 3px; line-height: 1.4;
+}
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: repeat(2, 1fr); }
+  .result-value { font-size: 18px; }
+}
+
+/* INTERPRET */
+.interpret {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 4px;
+}
+.interpret-text {
+  font-size: 14px; color: var(--text); line-height: 1.7;
+}
+
+/* BREAKDOWN */
+.breakdown { margin: 1rem 0; }
+.bk-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px;
+}
+.bk-row:last-child { border-bottom: none; }
+.bk-row.bk-total {
+  font-weight: 700; font-size: 15px;
+  padding-top: 12px; margin-top: 4px;
+  border-top: 2px solid var(--border); border-bottom: none;
+}
+.bk-label { color: var(--text-secondary); }
+.bk-value { font-weight: 600; }
+
+/* REINVEST EFFECT */
+.effect-box {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px; padding: 1rem;
+  margin-top: 0.75rem;
+}
+.effect-icon { font-size: 22px; flex-shrink: 0; }
+.effect-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+.effect-text strong { color: var(--green); }
+
+/* CHART */
+.chart-wrap {
+  position: relative;
+  width: 100%; height: 240px;
+  margin-top: 4px;
+}
+.chart-wrap canvas {
+  display: block; width: 100%; height: 100%;
+}
+.chart-legend {
+  display: flex; gap: 18px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text-secondary);
+}
+.legend-line {
+  width: 20px; height: 2.5px; border-radius: 2px; flex-shrink: 0;
+}
+.legend-line.blue { background: var(--accent); }
+.legend-line.green { background: var(--green); }
+.legend-line.orange { background: #d97706; }
+
+/* DETAIL TABLE */
+.detail-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.detail-table th {
+  text-align: left; padding: 8px 10px;
+  color: var(--text-secondary); font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.detail-table th.num { text-align: right; }
+.detail-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table tr:last-child td { border-bottom: none; }
+.detail-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.detail-table tr.milestone td { background: var(--bg-secondary); }
+.detail-table tr.milestone td:first-child { font-weight: 700; }
+
+/* CTA */
+.cta-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  transition: all 0.15s; cursor: pointer;
+  border: 1px solid var(--border);
+}
+.cta-btn-primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.cta-btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.cta-btn-secondary {
+  background: var(--bg-secondary); color: var(--text);
+}
+.cta-btn-secondary:hover { background: var(--border); }
+
+/* DISCLAIMER */
+.disclaimer {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  line-height: 1.7;
+}
+
+/* FOOTER */
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/" class="active">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <h1 class="page-title">배당 성장 시뮬레이터</h1>
+  <p class="page-desc">초기 투자금과 추가 투자, 배당 성장률을 반영해 미래 배당 흐름을 계산합니다.</p>
+  <div class="page-tags">
+    <span class="page-tag">배당 재투자</span>
+    <span class="page-tag">배당 성장</span>
+    <span class="page-tag">현금흐름</span>
+  </div>
+
+  <!-- INPUT -->
+  <div class="section">
+    <div class="sec-title">투자 조건 설정</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">초기 투자금 <em>(만원)</em></label>
+        <div class="input-wrap" id="wrap_init">
+          <input type="number" id="initAmount" value="3000" min="0" step="100" oninput="calc()">
+          <span class="input-unit">만원</span>
+        </div>
+        <div class="form-error" id="err_init">0 이상의 숫자를 입력하세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">월 추가 투자금 <em>(만원)</em></label>
+        <div class="input-wrap" id="wrap_monthly">
+          <input type="number" id="monthlyAmount" value="30" min="0" step="10" oninput="calc()">
+          <span class="input-unit">만원</span>
+        </div>
+        <div class="form-error" id="err_monthly">0 이상의 숫자를 입력하세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">현재 배당수익률 <em>(%)</em></label>
+        <div class="input-wrap" id="wrap_yield">
+          <input type="number" id="divYield" value="4.0" min="0" max="30" step="0.1" oninput="calc()">
+          <span class="input-unit">%</span>
+        </div>
+        <div class="form-error" id="err_yield">0~30% 사이 값을 입력하세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">연 배당 성장률 <em>(%)</em></label>
+        <div class="input-wrap" id="wrap_divgrowth">
+          <input type="number" id="divGrowth" value="5.0" min="0" max="50" step="0.5" oninput="calc()">
+          <span class="input-unit">%</span>
+        </div>
+        <div class="form-error" id="err_divgrowth">0~50% 사이 값을 입력하세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">투자 기간 <em>(년)</em></label>
+        <div class="input-wrap" id="wrap_years">
+          <input type="number" id="years" value="20" min="1" max="50" step="1" oninput="calc()">
+          <span class="input-unit">년</span>
+        </div>
+        <div class="form-error" id="err_years">1~50년 사이 값을 입력하세요.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">배당 재투자 여부</label>
+        <div class="reinvest-wrap">
+          <button class="reinvest-btn active" id="btn_reinvest_yes" onclick="setReinvest(true)">재투자</button>
+          <button class="reinvest-btn" id="btn_reinvest_no" onclick="setReinvest(false)">미재투자</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SUMMARY -->
+  <div class="section">
+    <div class="sec-title">시뮬레이션 결과</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">최종 연간 배당금</div>
+        <div class="result-value pos" id="r_annualDiv">-</div>
+        <div class="result-sub" id="r_annualDivSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">최종 월 배당 환산</div>
+        <div class="result-value pos" id="r_monthlyDiv">-</div>
+        <div class="result-sub" id="r_monthlyDivSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">누적 배당금</div>
+        <div class="result-value pos" id="r_cumDiv">-</div>
+        <div class="result-sub" id="r_cumDivSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">최종 자산 규모</div>
+        <div class="result-value" id="r_finalAsset" style="color:var(--accent)">-</div>
+        <div class="result-sub" id="r_finalAssetSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">배당 재투자 효과</div>
+        <div class="result-value pos" id="r_reinvestEffect">-</div>
+        <div class="result-sub" id="r_reinvestEffectSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">총 투자원금</div>
+        <div class="result-value" id="r_totalPrincipal">-</div>
+        <div class="result-sub" id="r_totalPrincipalSub"></div>
+      </div>
+    </div>
+
+    <!-- 해석 문장 -->
+    <div class="interpret">
+      <div class="interpret-text" id="interpretText"></div>
+    </div>
+  </div>
+
+  <!-- 상세 항목 -->
+  <div class="section">
+    <div class="sec-title">상세 계산 내역</div>
+    <div class="breakdown">
+      <div class="bk-row">
+        <span class="bk-label">초기 투자금</span>
+        <span class="bk-value" id="bk_init">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">월 추가 투자금</span>
+        <span class="bk-value" id="bk_monthly">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">총 투자원금</span>
+        <span class="bk-value" id="bk_principal">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">현재 배당수익률</span>
+        <span class="bk-value" id="bk_yield">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">연 배당 성장률</span>
+        <span class="bk-value" id="bk_divgrowth">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">투자 기간</span>
+        <span class="bk-value" id="bk_years">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">배당 재투자 여부</span>
+        <span class="bk-value" id="bk_reinvest">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">최종 연간 배당금 (예상)</span>
+        <span class="bk-value pos" id="bk_annualDiv">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">최종 월 배당 환산 (예상)</span>
+        <span class="bk-value pos" id="bk_monthlyDiv">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">누적 배당금 합계</span>
+        <span class="bk-value pos" id="bk_cumDiv">-</span>
+      </div>
+      <div class="bk-row bk-total">
+        <span class="bk-label">최종 자산 (예상)</span>
+        <span class="bk-value" id="bk_finalAsset" style="color:var(--accent)">-</span>
+      </div>
+    </div>
+
+    <!-- 재투자 효과 박스 -->
+    <div class="effect-box" id="effectBox">
+      <div class="effect-icon">📈</div>
+      <div class="effect-text" id="effectText"></div>
+    </div>
+  </div>
+
+  <!-- CHART: 연도별 배당금 성장 -->
+  <div class="section">
+    <div class="sec-title">배당금 성장 흐름</div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line green"></div> 연간 배당금</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="divChart"></canvas>
+    </div>
+  </div>
+
+  <!-- CHART: 자산 구성 비교 -->
+  <div class="section">
+    <div class="sec-title">자산 구성 추이</div>
+    <div class="chart-legend">
+      <div class="legend-item"><div class="legend-line blue"></div> 누적 투자원금</div>
+      <div class="legend-item"><div class="legend-line orange"></div> 누적 배당금</div>
+      <div class="legend-item"><div class="legend-line green"></div> 최종 자산</div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="assetChart"></canvas>
+    </div>
+  </div>
+
+  <!-- YEAR TABLE -->
+  <div class="section">
+    <div class="sec-title">연도별 배당 성장</div>
+    <div style="overflow-x:auto">
+      <table class="detail-table" id="yearTable">
+        <thead>
+          <tr>
+            <th>연차</th>
+            <th class="num">연간 배당금</th>
+            <th class="num">배당수익률</th>
+            <th class="num">누적 배당금</th>
+            <th class="num">자산 규모</th>
+          </tr>
+        </thead>
+        <tbody id="yearBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a href="../lever-dividend/" class="cta-btn cta-btn-primary">레버리지 배당 시뮬레이터 →</a>
+    <a href="../../strategy/method/dividend-growth/" class="cta-btn cta-btn-secondary">배당 성장 전략 보기</a>
+  </div>
+
+  <div class="disclaimer">
+    본 계산기는 단순 시뮬레이션입니다. 실제 배당금, 배당 성장률, 주가 변동, 세금, 수수료는 반영되지 않거나 단순화될 수 있습니다. 배당 재투자 시 거래 비용, 세금 등은 고려되지 않았습니다. 모든 투자 판단과 책임은 이용자에게 있습니다.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+/* ---- Theme ---- */
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+  if (lastRows) { drawDivChart(lastRows); drawAssetChart(lastRows); }
+}
+(function() {
+  var saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+/* ---- State ---- */
+var reinvest = true;
+var lastRows = null;
+var MILESTONES = [5, 10, 15, 20, 25, 30];
+
+function setReinvest(v) {
+  reinvest = v;
+  document.getElementById('btn_reinvest_yes').classList.toggle('active', v);
+  document.getElementById('btn_reinvest_no').classList.toggle('active', !v);
+  calc();
+}
+
+/* ---- Format ---- */
+function fmtN(n, dec) {
+  if (dec === undefined) dec = 0;
+  return n.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function fmtKRW(n) {
+  var a = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (a >= 100000000) return sign + fmtN(a / 100000000, 1) + '억원';
+  if (a >= 10000) return sign + fmtN(a / 10000, 1) + '억원';
+  return sign + fmtN(a, 0) + '만원';
+}
+function fmtKRW2(n) {
+  // 만원 단위 그대로 (억 구분 없이)
+  var a = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (a >= 10000) return sign + fmtN(a / 10000, 2) + '억원';
+  return sign + fmtN(a, 0) + '만원';
+}
+function fmtChartY(n) {
+  if (n === 0) return '0';
+  if (n >= 10000) return (n / 10000).toFixed(0) + '억';
+  if (n >= 1000) return (n / 1000).toFixed(1) + '천';
+  return fmtN(n, 0);
+}
+
+/* ---- Validate ---- */
+function setError(id, wrapId, show) {
+  var el = document.getElementById(id);
+  var wrap = document.getElementById(wrapId);
+  if (el) el.style.display = show ? 'block' : 'none';
+  if (wrap) wrap.classList.toggle('error', show);
+}
+
+/* ---- Calc ---- */
+function calc() {
+  var init = parseFloat(document.getElementById('initAmount').value);
+  var monthly = parseFloat(document.getElementById('monthlyAmount').value);
+  var divYield = parseFloat(document.getElementById('divYield').value);
+  var divGrowth = parseFloat(document.getElementById('divGrowth').value);
+  var years = parseInt(document.getElementById('years').value);
+
+  // Validate
+  var hasError = false;
+  if (isNaN(init) || init < 0) { setError('err_init','wrap_init',true); hasError=true; } else setError('err_init','wrap_init',false);
+  if (isNaN(monthly) || monthly < 0) { setError('err_monthly','wrap_monthly',true); hasError=true; } else setError('err_monthly','wrap_monthly',false);
+  if (isNaN(divYield) || divYield < 0 || divYield > 30) { setError('err_yield','wrap_yield',true); hasError=true; } else setError('err_yield','wrap_yield',false);
+  if (isNaN(divGrowth) || divGrowth < 0 || divGrowth > 50) { setError('err_divgrowth','wrap_divgrowth',true); hasError=true; } else setError('err_divgrowth','wrap_divgrowth',false);
+  if (isNaN(years) || years < 1 || years > 50) { setError('err_years','wrap_years',true); hasError=true; } else setError('err_years','wrap_years',false);
+  if (hasError) return;
+
+  years = Math.min(50, Math.max(1, years));
+
+  var annualAdd = monthly * 12;
+  var totalPrincipal = init + annualAdd * years;
+
+  // 연도별 계산
+  var rows = [];
+  var asset = init;
+  var cumDiv = 0;
+
+  // 재투자 없는 경우도 병행 계산 (효과 비교용)
+  var assetNoReinvest = init;
+  var cumDivNoReinvest = 0;
+
+  for (var y = 1; y <= years; y++) {
+    // 해당 연도 배당수익률 = 초기 배당수익률 × (1 + 배당성장률)^(y-1)
+    var yieldRate = (divYield / 100) * Math.pow(1 + divGrowth / 100, y - 1);
+
+    // 해당 연간 배당금
+    var annualDiv = asset * yieldRate;
+
+    // 연말 자산 갱신
+    if (reinvest) {
+      asset = asset + annualAdd + annualDiv;
+    } else {
+      asset = asset + annualAdd;
+    }
+    cumDiv += annualDiv;
+
+    // 미재투자 비교용
+    var divNoReinvest = assetNoReinvest * yieldRate;
+    assetNoReinvest = assetNoReinvest + annualAdd;
+    cumDivNoReinvest += divNoReinvest;
+
+    rows.push({
+      year: y,
+      yieldRate: yieldRate * 100,
+      annualDiv: annualDiv,
+      cumDiv: cumDiv,
+      asset: asset
+    });
+  }
+
+  lastRows = rows;
+
+  var lastRow = rows[rows.length - 1];
+  var finalAnnualDiv = lastRow.annualDiv;
+  var finalMonthlyDiv = finalAnnualDiv / 12;
+  var finalAsset = lastRow.asset;
+
+  // 재투자 효과 = 재투자 자산 - 미재투자 자산
+  var reinvestEffect = reinvest ? (finalAsset - assetNoReinvest) : 0;
+
+  // 결과 카드
+  document.getElementById('r_annualDiv').textContent = fmtKRW(finalAnnualDiv);
+  document.getElementById('r_annualDivSub').textContent = years + '년차 예상 연간 배당금';
+  document.getElementById('r_monthlyDiv').textContent = fmtKRW(finalMonthlyDiv);
+  document.getElementById('r_monthlyDivSub').textContent = '연간 배당금 ÷ 12';
+  document.getElementById('r_cumDiv').textContent = fmtKRW(cumDiv);
+  document.getElementById('r_cumDivSub').textContent = years + '년 누적 배당금 합계';
+  document.getElementById('r_finalAsset').textContent = fmtKRW(finalAsset);
+  document.getElementById('r_finalAssetSub').textContent = reinvest ? '배당 재투자 포함' : '배당 미재투자';
+  document.getElementById('r_reinvestEffect').textContent = reinvest ? '+' + fmtKRW(reinvestEffect) : '-';
+  document.getElementById('r_reinvestEffectSub').textContent = reinvest ? '미재투자 대비 추가 자산' : '재투자 선택 시 비교 가능';
+  document.getElementById('r_totalPrincipal').textContent = fmtKRW(totalPrincipal);
+  document.getElementById('r_totalPrincipalSub').textContent = '초기 + 월 ' + fmtN(monthly, 0) + '만 × ' + years + '년';
+
+  // 해석 문장
+  var reinvestLabel = reinvest ? '배당 재투자 포함' : '배당 미재투자';
+  document.getElementById('interpretText').textContent =
+    '현재 조건 기준으로 ' + years + '년 후 예상 연간 배당금은 약 ' + fmtKRW(finalAnnualDiv) + '입니다. ' +
+    '매월 약 ' + fmtKRW(finalMonthlyDiv) + '의 배당 현금흐름이 예상되며, ' +
+    years + '년 누적 배당금 합계는 약 ' + fmtKRW(cumDiv) + '입니다. ' +
+    reinvestLabel + ' 기준 최종 자산은 약 ' + fmtKRW(finalAsset) + '으로 계산됩니다.';
+
+  // 상세 내역
+  document.getElementById('bk_init').textContent = fmtKRW(init) + '만원'.replace('만원만원','만원');
+  document.getElementById('bk_init').textContent = fmtN(init, 0) + '만원';
+  document.getElementById('bk_monthly').textContent = fmtN(monthly, 0) + '만원/월';
+  document.getElementById('bk_principal').textContent = fmtN(totalPrincipal, 0) + '만원';
+  document.getElementById('bk_yield').textContent = fmtN(divYield, 1) + '%';
+  document.getElementById('bk_divgrowth').textContent = '연 ' + fmtN(divGrowth, 1) + '%';
+  document.getElementById('bk_years').textContent = years + '년';
+  document.getElementById('bk_reinvest').textContent = reinvest ? '재투자' : '미재투자';
+  document.getElementById('bk_annualDiv').textContent = fmtN(finalAnnualDiv, 0) + '만원';
+  document.getElementById('bk_monthlyDiv').textContent = fmtN(finalMonthlyDiv, 0) + '만원';
+  document.getElementById('bk_cumDiv').textContent = fmtN(cumDiv, 0) + '만원';
+  document.getElementById('bk_finalAsset').textContent = fmtN(finalAsset, 0) + '만원';
+
+  // 재투자 효과 박스
+  var effectText = document.getElementById('effectText');
+  if (reinvest) {
+    effectText.innerHTML =
+      '배당 재투자 시 최종 자산은 미재투자 대비 <strong>약 ' + fmtKRW(reinvestEffect) + ' 더 큽니다.</strong> ' +
+      '복리 효과로 ' + years + '년차 배당수익률은 초기(' + fmtN(divYield, 1) + '%)에서 ' +
+      fmtN(lastRow.yieldRate, 2) + '%로 성장합니다.';
+  } else {
+    effectText.innerHTML =
+      '현재 미재투자 조건입니다. 재투자로 전환하면 배당금이 자산에 더해져 복리 효과를 누릴 수 있습니다. ' +
+      '초기 배당수익률 ' + fmtN(divYield, 1) + '%가 ' + years + '년차에 ' + fmtN(lastRow.yieldRate, 2) + '%로 성장합니다.';
+  }
+
+  // 테이블
+  var tbody = document.getElementById('yearBody');
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    var isMilestone = MILESTONES.indexOf(r.year) !== -1 ? 'milestone' : '';
+    html += '<tr class="' + isMilestone + '">';
+    html += '<td>' + r.year + '년</td>';
+    html += '<td class="num pos">' + fmtN(r.annualDiv, 0) + '만원</td>';
+    html += '<td class="num">' + fmtN(r.yieldRate, 2) + '%</td>';
+    html += '<td class="num pos">' + fmtN(r.cumDiv, 0) + '만원</td>';
+    html += '<td class="num" style="font-weight:600">' + fmtN(r.asset, 0) + '만원</td>';
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+
+  // 차트
+  drawDivChart(rows);
+  drawAssetChart(rows);
+}
+
+/* ---- Chart 공통 헬퍼 ---- */
+function setupCanvas(id) {
+  var canvas = document.getElementById(id);
+  if (!canvas) return null;
+  var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var dpr = window.devicePixelRatio || 1;
+  var W = canvas.offsetWidth;
+  var H = canvas.offsetHeight;
+  if (W === 0 || H === 0) return null;
+  canvas.width = Math.round(W * dpr);
+  canvas.height = Math.round(H * dpr);
+  var ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  return {
+    ctx: ctx, W: W, H: H, isDark: isDark,
+    textColor: isDark ? '#94a3b8' : '#9ca3af',
+    gridColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)'
+  };
+}
+
+function drawGridAndAxes(c, pad, maxVal, n, xLabel) {
+  var ctx = c.ctx;
+  var cW = c.W - pad.left - pad.right;
+  var cH = c.H - pad.top - pad.bottom;
+  ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+  var yTicks = 4;
+  for (var t = 0; t <= yTicks; t++) {
+    var gy = pad.top + cH - (t / yTicks) * cH;
+    ctx.strokeStyle = c.gridColor; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(pad.left, gy); ctx.lineTo(pad.left + cW, gy); ctx.stroke();
+    ctx.fillStyle = c.textColor; ctx.textAlign = 'right';
+    ctx.fillText(fmtChartY(maxVal * t / yTicks), pad.left - 6, gy + 4);
+  }
+  ctx.textAlign = 'center'; ctx.fillStyle = c.textColor;
+  var xStep = n <= 6 ? 1 : Math.ceil(n / 6);
+  for (var i = 0; i < n; i += xStep) {
+    ctx.fillText(xLabel(i), pad.left + (n > 1 ? (i / (n - 1)) * cW : cW / 2), pad.top + cH + 22);
+  }
+  if (n > 1 && (n - 1) % xStep !== 0) {
+    ctx.fillText(xLabel(n - 1), pad.left + cW, pad.top + cH + 22);
+  }
+}
+
+function drawLine(ctx, pad, rows, cW, cH, maxVal, getData, color) {
+  var n = rows.length;
+  ctx.beginPath();
+  ctx.strokeStyle = color; ctx.lineWidth = 2.5;
+  ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  for (var j = 0; j < n; j++) {
+    var x = pad.left + (n > 1 ? (j / (n - 1)) * cW : cW / 2);
+    var y = pad.top + cH - (getData(rows[j]) / maxVal) * cH;
+    if (j === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+/* ---- Chart 1: 연간 배당금 성장 ---- */
+function drawDivChart(rows) {
+  var c = setupCanvas('divChart');
+  if (!c || rows.length === 0) return;
+  var pad = { top: 16, right: 16, bottom: 36, left: 58 };
+  var cW = c.W - pad.left - pad.right;
+  var cH = c.H - pad.top - pad.bottom;
+  var maxVal = Math.max.apply(null, rows.map(function(r) { return r.annualDiv; }));
+  if (maxVal <= 0) maxVal = 1;
+  drawGridAndAxes(c, pad, maxVal, rows.length, function(i) { return rows[i].year + '년'; });
+  drawLine(c.ctx, pad, rows, cW, cH, maxVal, function(r) { return r.annualDiv; }, '#059669');
+}
+
+/* ---- Chart 2: 자산 구성 추이 ---- */
+function drawAssetChart(rows) {
+  var c = setupCanvas('assetChart');
+  if (!c || rows.length === 0) return;
+  var pad = { top: 16, right: 16, bottom: 36, left: 58 };
+  var cW = c.W - pad.left - pad.right;
+  var cH = c.H - pad.top - pad.bottom;
+  var maxVal = Math.max.apply(null, rows.map(function(r) { return r.asset; }));
+  if (maxVal <= 0) maxVal = 1;
+  drawGridAndAxes(c, pad, maxVal, rows.length, function(i) { return rows[i].year + '년'; });
+
+  // 누적 투자원금 (init + annualAdd * year)
+  var init = parseFloat(document.getElementById('initAmount').value) || 0;
+  var monthly = parseFloat(document.getElementById('monthlyAmount').value) || 0;
+  var annualAdd = monthly * 12;
+
+  // 누적 투자원금 선
+  drawLine(c.ctx, pad, rows, cW, cH, maxVal, function(r) { return init + annualAdd * r.year; }, '#2563eb');
+  // 누적 배당금 선
+  drawLine(c.ctx, pad, rows, cW, cH, maxVal, function(r) { return r.cumDiv; }, '#d97706');
+  // 총 자산 선
+  drawLine(c.ctx, pad, rows, cW, cH, maxVal, function(r) { return r.asset; }, '#059669');
+}
+
+/* ---- Resize ---- */
+var resizeTimer;
+window.addEventListener('resize', function() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function() {
+    if (lastRows) { drawDivChart(lastRows); drawAssetChart(lastRows); }
+  }, 120);
+});
+
+// 초기 실행
+calc();
+</script>
+
+</body>
+</html>

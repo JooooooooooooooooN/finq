@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레버리지 배당 전략 — FinQ</title>
+<meta name="description" content="배당 수익으로 이자를 상쇄하고 레버리지로 수익을 증폭하는 전략. 핵심 구조, 수익·리스크 분석, 근거까지 정리.">
+<meta property="og:title" content="레버리지 배당 전략 — FinQ">
+<meta property="og:description" content="증권담보대출 + 고배당 우선주로 수익을 증폭하는 레버리지 배당 전략">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:800px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+.hero{display:flex;align-items:center;gap:1rem;margin-bottom:2rem}
+.hero-icon{width:56px;height:56px;border-radius:14px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.hero-badge{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;margin-bottom:.3rem}
+.hero h1{font-size:clamp(20px,4vw,28px);font-weight:700;letter-spacing:-.5px;margin-bottom:.3rem}
+.hero-lead{font-size:14px;color:var(--text2)}
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.fit-box{background:var(--bg2);border-radius:8px;padding:1rem 1.25rem;font-size:14px;line-height:1.8;word-break:keep-all}
+.sec-title{font-size:15px;font-weight:700;margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+
+.content p{font-size:15px;line-height:1.8;margin-bottom:.75rem}
+.content ul{font-size:15px;line-height:1.8;margin-bottom:.75rem;padding-left:1.5rem}
+.content li{margin-bottom:.25rem}
+
+/* FLOW */
+.flow{display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;margin-top:.5rem}
+@media(max-width:600px){.flow{flex-wrap:wrap;gap:6px}}
+.flow-item{padding:5px 12px;border-radius:20px;font-size:13px;font-weight:600}
+.flow-arrow{color:var(--text2);font-size:14px}
+.flow-blue{background:#dbeafe;color:#1e40af}.flow-green{background:#d1fae5;color:#065f46}.flow-orange{background:#fef3c7;color:#92400e}.flow-red{background:#fee2e2;color:#991b1b}
+[data-theme=dark] .flow-blue{background:#1e3a5f;color:#93c5fd}[data-theme=dark] .flow-green{background:#064e3b;color:#6ee7b7}[data-theme=dark] .flow-orange{background:#78350f;color:#fcd34d}[data-theme=dark] .flow-red{background:#7f1d1d;color:#fca5a5}
+
+/* FORMULA */
+.formula{background:var(--bg2);border-radius:8px;padding:1.25rem;margin:1rem 0;font-family:inherit;font-size:15px;line-height:2;text-align:center;border:1px solid var(--border)}
+.formula .var{color:var(--accent);font-weight:700}
+.formula .op{color:var(--text2)}
+
+/* STRUCTURE CARDS */
+.struct-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.struct-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center}
+.struct-icon{font-size:24px;margin-bottom:.4rem}
+.struct-name{font-size:13px;font-weight:700;margin-bottom:.3rem}
+.struct-desc{font-size:12px;color:var(--text2);line-height:1.5;word-break:keep-all}
+@media(max-width:600px){.struct-grid{grid-template-columns:1fr}}
+
+/* RISK */
+.risk-list{display:flex;flex-direction:column;gap:10px;margin:1rem 0}
+.risk-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:var(--bg2);border-radius:8px}
+.risk-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.risk-text{font-size:14px;line-height:1.6}
+.risk-text strong{color:var(--red)}
+
+/* CALLOUT */
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+.callout-source{background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+.callout-warn{background:#fef3c7;color:#92400e}
+[data-theme=dark] .callout-warn{background:#78350f;color:#fcd34d}
+
+/* CTA */
+.cta-box{margin-top:1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;background:var(--bg2);color:var(--text);border:1px solid var(--border);transition:all .15s}
+.cta-btn:hover{border-color:var(--accent);color:var(--accent)}
+.disclaimer{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--bg2);border-radius:8px;margin-top:1.25rem;line-height:1.7}
+hr{border:none;border-top:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/method/leverage-dividend/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/" class="active">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<main class="main">
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span>
+    <a href="../../../strategy/">투자 전략</a><span>›</span>
+    <a href="../">방법 기반 전략</a><span>›</span>
+    <span>레버리지 배당 전략</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-icon">⚡</div>
+    <div>
+      <div class="hero-badge">구조 기반 전략</div>
+      <h1>레버리지 배당 전략</h1>
+      <div class="hero-lead">배당 수익으로 이자 비용을 상쇄하고, 레버리지를 활용해 투자 수익을 증폭하는 전략</div>
+    </div>
+  </div>
+
+  <!-- 1. 개요 -->
+  <div class="section">
+    <div class="sec-title">개요</div>
+    <div class="content">
+      <p>증권담보대출로 투자금을 늘리고, 고배당 종목(주로 우선주)에 집중 투자.</p>
+      <p>배당금이 대출 이자보다 크면 → 차액이 순수익.</p>
+      <p>주가 상승까지 더해지면 → 레버리지 효과로 수익 증폭.</p>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 연 4%로 빌려서, 연 7% 배당 주식에 넣으면, 3%가 남는 구조
+    </div>
+  </div>
+
+  <!-- 2. 핵심 구조 -->
+  <div class="section">
+    <div class="sec-title">핵심 구조</div>
+    <div class="struct-grid">
+      <div class="struct-card">
+        <div class="struct-icon">💰</div>
+        <div class="struct-name">배당 &rarr; 이자 커버</div>
+        <div class="struct-desc">배당금으로 대출 이자를 갚고<br>남은 금액이 순수익</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">📈</div>
+        <div class="struct-name">주가 상승 &rarr; 수익 창출</div>
+        <div class="struct-desc">주가가 오르면<br>레버리지만큼 이익 증폭</div>
+      </div>
+      <div class="struct-card">
+        <div class="struct-icon">⚡</div>
+        <div class="struct-name">레버리지 &rarr; 수익 증폭</div>
+        <div class="struct-desc">빌린 돈까지 투자하므로<br>내 돈 대비 수익률 상승</div>
+      </div>
+    </div>
+    <div class="flow">
+      <div class="flow-item flow-blue">내 자본</div>
+      <span class="flow-arrow">+</span>
+      <div class="flow-item flow-orange">대출</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">고배당 매수</div>
+      <span class="flow-arrow">&rarr;</span>
+      <div class="flow-item flow-green">배당 수령</div>
+      <span class="flow-arrow">&minus;</span>
+      <div class="flow-item flow-red">이자</div>
+      <span class="flow-arrow">=</span>
+      <div class="flow-item flow-green">순수익</div>
+    </div>
+  </div>
+
+  <!-- 3. 수익 구조 -->
+  <div class="section">
+    <div class="sec-title">수익 구조</div>
+    <div class="formula">
+      <span class="var">총 수익</span> <span class="op">=</span> <span class="var">주가 상승</span> <span class="op">+</span> <span class="var">배당</span> <span class="op">&minus;</span> <span class="var">이자</span>
+    </div>
+    <div class="content">
+      <ul>
+        <li><strong>주가 상승 (Capital Gain)</strong> — 총 투자금 x 주가 상승률</li>
+        <li><strong>배당 수익 (Dividend)</strong> — 총 투자금 x 배당수익률</li>
+        <li><strong>이자 비용 (Interest)</strong> — 대출금 x 이자율</li>
+        <li><strong>이자 역전 수익</strong> — 배당이 이자를 초과하면 주가 무관 수익, 주가 상승 시 레버리지 증폭</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 4. 리스크 구조 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="risk-list">
+      <div class="risk-item">
+        <div class="risk-icon">📉</div>
+        <div class="risk-text"><strong>주가 하락 시 손실 확대</strong><br>주가 하락 시 내 자본 대비 손실이 증폭. 담보유지비율(140%) 이하 시 반대매매(강제 청산) 발생.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">✂️</div>
+        <div class="risk-text"><strong>배당 감소 시 이자 부담 증가</strong><br>기업 실적 악화로 배당이 줄면 이자 비용 커버 불가. 분산 투자로 리스크 분산 필요.</div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📊</div>
+        <div class="risk-text"><strong>금리 상승 시 스프레드 축소</strong><br>대출 이자율 상승 시 배당-이자 스프레드 축소 또는 역전 가능. 스프레드가 0 이하이면 즉각 청산 검토.</div>
+      </div>
+    </div>
+    <div class="callout callout-warn">
+      <strong>핵심 조건:</strong> 배당수익률이 대출이자율을 초과할 때만 전략 유효.
+    </div>
+  </div>
+
+  <!-- 5. 근거 -->
+  <div class="section">
+    <div class="sec-title">근거</div>
+    <div class="content">
+      <p>실제 감사보고서 기반으로 레버리지 + 배당 + 자산 운용 구조를 분석·단순화한 투자 모델.</p>
+      <p>기업이 부채로 ROE를 높이는 원리를 개인 투자에 적용.</p>
+    </div>
+    <div class="callout callout-source">
+      ※ 참고용이며 세금·거래 비용·유동성 등은 별도 고려 필요. 모든 투자 판단의 책임은 이용자에게 있습니다.
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-box">배당 수익과 레버리지 증폭을 함께 활용하는 공격적 인컴 투자자</div>
+  </div>
+  <div class="cta-box"><a href="../" class="cta-btn">← 방법 기반 전략 목록으로</a></div>
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+</main>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links"><a href="../../../about/">소개</a><a href="../../../privacy/">개인정보처리방침</a></div>
+</footer>
+
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){if(localStorage.getItem('finq-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

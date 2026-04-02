@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시장/매크로 — FinQ 투자 인사이트</title>
+<meta name="description" content="금리, 경기, 인플레이션, 달러, 밸류에이션 등 시장 전체 흐름을 이해하는 핵심 매크로 인사이트를 정리합니다.">
+<link rel="canonical" href="https://finq.kr/insight/macro/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.breadcrumb { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.35; }
+
+.page-header { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem 2.5rem; }
+.page-label { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.page-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+.page-desc { font-size: 15px; color: var(--text-secondary); max-width: 600px; word-break: keep-all; margin-bottom: 1rem; line-height: 1.65; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+.section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.card-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .card-grid { grid-template-columns: 1fr; } }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.card p { word-break: keep-all; }
+.card:hover { box-shadow: var(--shadow-hover); border-color: var(--accent); transform: translateY(-2px) scale(1.02); }
+.card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 1rem; background: #f3e8ff; }
+[data-theme="dark"] .card-icon { background: #3b0764; }
+.card h3 { font-size: 17px; font-weight: 650; margin-bottom: 0.4rem; line-height: 1.45; }
+.card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; flex: 1; }
+.feature-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.75rem; }
+.feature-tag { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+.card-cta { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 0.85rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+
+.related { max-width: 1100px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+.related-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 1rem; }
+.related-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.related-link { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.related-link:hover { border-color: var(--accent); color: var(--accent); }
+.back-link { font-size: 13px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="시장/매크로 — FinQ 투자 인사이트">
+<meta property="og:description" content="금리, 경기, 인플레이션, 달러, 밸류에이션 등 시장 전체 흐름을 이해하는 핵심 매크로 인사이트를 정리합니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/macro/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/" class="active">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../../">FinQ</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="../">투자 인사이트</a>
+  <span class="breadcrumb-sep">/</span>
+  <span>시장/매크로</span>
+</div>
+
+<div class="page-header">
+  <div class="page-label">Macro</div>
+  <h1 class="page-title">시장/매크로</h1>
+  <p class="page-desc">금리, 경기, 인플레이션, 달러, 밸류에이션 등 시장 전체 흐름을 이해하는 핵심 매크로 인사이트를 정리합니다.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">금리</span>
+    <span class="hero-tag">매크로</span>
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+
+<section class="section" style="padding-top:2.5rem">
+  <div class="card-grid">
+
+    <a href="rates-and-stocks/" class="card">
+      <div class="card-icon">📈</div>
+      <h3>금리 인상과 주식시장 관계</h3>
+      <p>기준금리 변화가 자산 가격과 투자 심리에 미치는 영향 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">금리</span>
+        <span class="feature-tag">주식시장</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="why-cpi-matters/" class="card">
+      <div class="card-icon">📊</div>
+      <h3>CPI 발표가 중요한 이유</h3>
+      <p>인플레이션 지표가 시장 기대와 통화정책 전망에 주는 영향 해설</p>
+      <div class="feature-list">
+        <span class="feature-tag">CPI</span>
+        <span class="feature-tag">인플레이션</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="jobs-and-market/" class="card">
+      <div class="card-icon">💼</div>
+      <h3>고용지표와 증시 흐름 해석</h3>
+      <p>고용 데이터가 경기 판단과 금리 전망에 주는 신호 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">고용</span>
+        <span class="feature-tag">경기</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="bond-yields-and-growth/" class="card">
+      <div class="card-icon">📉</div>
+      <h3>국채금리와 성장주의 관계</h3>
+      <p>할인율 변화가 성장주 밸류에이션에 미치는 영향 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">국채금리</span>
+        <span class="feature-tag">성장주</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="strong-dollar-market/" class="card">
+      <div class="card-icon">💵</div>
+      <h3>달러 강세 시기 시장 흐름</h3>
+      <p>달러 인덱스와 글로벌 자산시장 사이의 관계 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">달러</span>
+        <span class="feature-tag">환율</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="fed-and-market/" class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>연준 정책과 시장 반응</h3>
+      <p>FOMC와 통화정책 변화가 시장에 주는 영향 해설</p>
+      <div class="feature-list">
+        <span class="feature-tag">연준</span>
+        <span class="feature-tag">FOMC</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="valuation-checkpoints/" class="card">
+      <div class="card-icon">🔍</div>
+      <h3>밸류에이션이 높을 때 볼 지표</h3>
+      <p>PER, CAPE, 금리 수준을 함께 보는 기본 시각 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">밸류에이션</span>
+        <span class="feature-tag">PER</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="slowdown-checkpoints/" class="card">
+      <div class="card-icon">⚠️</div>
+      <h3>경기 둔화 국면 투자 체크포인트</h3>
+      <p>침체 우려 구간에서 확인할 핵심 시장 신호 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">경기둔화</span>
+        <span class="feature-tag">체크포인트</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+    <a href="liquidity-and-assets/" class="card">
+      <div class="card-icon">💧</div>
+      <h3>유동성과 자산시장 관계</h3>
+      <p>시중 유동성 변화가 주식과 위험자산에 미치는 영향 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">유동성</span>
+        <span class="feature-tag">자산시장</span>
+      </div>
+      <div class="card-cta">&#8594; 분석 보기</div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<div class="related">
+  <div class="related-title">관련 카테고리</div>
+  <div class="related-grid">
+    <a href="../strategy/" class="related-link">📊 전략 분석</a>
+    <a href="../sector/" class="related-link">🔬 섹터/테마</a>
+    <a href="../beginner/why-13f/" class="related-link">🏛️ 기관/13F 분석</a>
+  </div>
+  <a href="../" class="back-link">← 투자 인사이트 전체로</a>
+</div>
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

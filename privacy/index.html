@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개인정보처리방침 — FinQ</title>
+<meta name="description" content="FinQ 개인정보처리방침. 수집하는 정보, 이용 목적, 제3자 제공, 쿠키 사용 등 안내.">
+<meta property="og:title" content="개인정보처리방침 — FinQ">
+<meta property="og:description" content="FinQ 개인정보처리방침">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/privacy/">
+<link rel="canonical" href="https://finq.kr/privacy/">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+  color: var(--accent);
+}
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.nav-links a:hover { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px;
+  cursor: pointer; font-size: 16px; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.theme-btn:hover { background: var(--bg-secondary); }
+
+/* MOBILE NAV */
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; gap: 4px;
+  }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+/* CONTENT */
+.content {
+  max-width: 760px; margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+.content h1 {
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 800; letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+.content .subtitle {
+  font-size: 15px; color: var(--text-secondary);
+  margin-bottom: 2.5rem;
+}
+.content h2 {
+  font-size: 20px; font-weight: 700;
+  margin: 2.5rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.content h2:first-of-type {
+  margin-top: 0;
+}
+.content p {
+  font-size: 15px; color: var(--text-secondary);
+  margin-bottom: 1rem; line-height: 1.7;
+}
+.content ul {
+  list-style: none; padding: 0; margin-bottom: 1.5rem;
+}
+.content ul li {
+  font-size: 15px; color: var(--text-secondary);
+  padding: 6px 0 6px 1.5rem;
+  position: relative; line-height: 1.6;
+}
+.content ul li::before {
+  content: '';
+  position: absolute; left: 0; top: 14px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+}
+.content strong {
+  color: var(--text); font-weight: 600;
+}
+.content .effective-date {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-top: 2rem;
+}
+.content .effective-date p {
+  margin: 0; font-size: 14px;
+}
+.content .contact-info {
+  margin-top: 1.5rem;
+}
+.content .contact-info a {
+  color: var(--accent); font-weight: 600;
+}
+.content .contact-info a:hover { text-decoration: underline; }
+
+/* DIVIDER */
+.divider {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+}
+.divider hr {
+  border: none; border-top: 1px solid var(--border);
+}
+
+/* FOOTER */
+.footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left {
+  font-size: 13px; color: var(--text-secondary);
+}
+.footer-links {
+  display: flex; gap: 20px;
+}
+.footer-links a {
+  font-size: 13px; color: var(--text-secondary);
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../strategy/">전략</a>
+      <a href="../data/">데이터</a>
+      <a href="../simulation/">시뮬레이션</a>
+      <a href="../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<section class="content">
+  <h1>개인정보처리방침</h1>
+  <p class="subtitle">FinQ(https://finq.kr)는 이용자의 개인정보를 중요시하며, 관련 법령을 준수합니다.</p>
+
+  <h2>1. 수집하는 정보</h2>
+  <p>FinQ는 별도의 회원가입 절차 없이 운영되며, 다음과 같은 정보가 자동으로 수집될 수 있습니다.</p>
+  <ul>
+    <li>방문 일시, 페이지 조회 기록, 체류 시간</li>
+    <li>브라우저 종류, 운영체제, 디바이스 정보</li>
+    <li>IP 주소, 접속 국가/지역</li>
+    <li>쿠키 및 유사 기술을 통해 수집되는 이용 패턴 정보</li>
+    <li>유입 경로 (검색엔진, 외부 링크 등)</li>
+  </ul>
+
+  <h2>2. 정보 이용 목적</h2>
+  <p>수집된 정보는 다음의 목적으로만 이용됩니다.</p>
+  <ul>
+    <li>서비스 이용 현황 분석 및 개선</li>
+    <li>콘텐츠 및 기능 최적화</li>
+    <li>광고 성과 측정 및 관련성 높은 광고 제공</li>
+    <li>서비스 안정성 확보 및 부정 이용 방지</li>
+  </ul>
+
+  <h2>3. 제3자 제공</h2>
+  <p>FinQ는 이용자의 개인정보를 외부에 판매하거나 공유하지 않습니다. 다만, 다음의 제3자 서비스를 이용하며 해당 서비스의 개인정보처리방침이 적용됩니다.</p>
+  <ul>
+    <li><strong>Google Analytics</strong> — 웹사이트 방문 통계 분석. 쿠키를 사용하여 익명화된 이용 데이터를 수집합니다. <a href="https://policies.google.com/privacy" style="color:var(--accent);">Google 개인정보처리방침</a></li>
+    <li><strong>Google AdSense</strong> — 맞춤형 광고 제공. 쿠키 및 웹 비콘을 사용하여 관심사 기반 광고를 표시합니다. <a href="https://policies.google.com/technologies/ads" style="color:var(--accent);">Google 광고 정책</a></li>
+  </ul>
+
+  <h2>4. 쿠키 사용</h2>
+  <p>FinQ는 서비스 제공 및 분석을 위해 쿠키(Cookie)를 사용합니다.</p>
+  <ul>
+    <li><strong>필수 쿠키</strong> — 테마 설정(다크모드) 등 기본 기능 유지에 사용됩니다.</li>
+    <li><strong>분석 쿠키</strong> — Google Analytics를 통해 방문자 행동을 분석하는 데 사용됩니다.</li>
+    <li><strong>광고 쿠키</strong> — Google AdSense를 통해 관련성 높은 광고를 표시하는 데 사용됩니다.</li>
+  </ul>
+  <p>이용자는 브라우저 설정에서 쿠키 저장을 거부하거나 삭제할 수 있습니다. 다만, 쿠키를 거부할 경우 일부 기능 이용이 제한될 수 있습니다.</p>
+
+  <h2>5. 이용자의 권리</h2>
+  <p>이용자는 다음의 권리를 행사할 수 있습니다.</p>
+  <ul>
+    <li>브라우저 설정을 통한 쿠키 수집 거부 및 삭제</li>
+    <li>Google 광고 설정 페이지(<a href="https://adssettings.google.com" style="color:var(--accent);">adssettings.google.com</a>)에서 맞춤 광고 비활성화</li>
+    <li>수집된 정보의 열람, 수정, 삭제 요청 (이메일 문의)</li>
+  </ul>
+
+  <h2>6. 방침 변경</h2>
+  <p>본 개인정보처리방침은 법령 변경 또는 서비스 변경에 따라 수정될 수 있습니다. 변경 사항이 있을 경우 본 페이지를 통해 공지합니다. 변경된 방침은 게시 즉시 효력이 발생합니다.</p>
+
+  <div class="effective-date">
+    <p><strong>시행일:</strong> 2026년 3월 22일</p>
+  </div>
+
+  <div class="contact-info">
+    <h2>7. 연락처</h2>
+    <p>개인정보처리방침에 대한 문의 사항은 아래로 연락해 주세요.</p>
+    <p><a href="mailto:contact@finq.kr">contact@finq.kr</a></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">
+    &copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.
+  </div>
+  <div class="footer-links">
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+
+</body>
+</html>

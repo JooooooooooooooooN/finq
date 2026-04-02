@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레버리지 배당 시뮬레이터 — FinQ</title>
+<meta name="description" content="자기자본, 레버리지 비율, 배당수익률을 입력하면 예상 수익과 리스크를 바로 확인합니다.">
+<meta property="og:title" content="레버리지 배당 시뮬레이터 — FinQ">
+<meta property="og:description" content="레버리지 배당 전략의 수익과 리스크를 시뮬레이션합니다.">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2)}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.page-title{font-size:clamp(22px,4vw,30px);font-weight:700;letter-spacing:-.5px;margin-bottom:.25rem}
+.page-desc{font-size:15px;color:var(--text2);margin-bottom:2rem}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.04em}
+
+/* INPUT GRID */
+.input-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-group{}
+.form-label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:4px}
+.input-wrap{display:flex;align-items:center;border:1px solid var(--border);border-radius:8px;background:var(--bg);overflow:hidden}
+.input-wrap input{flex:1;padding:9px 12px;font-size:14px;border:none;background:transparent;color:var(--text);outline:none;min-width:0}
+.input-unit{padding:0 12px;font-size:13px;color:var(--text2);border-left:1px solid var(--border);white-space:nowrap;background:var(--bg2)}
+@media(max-width:600px){.input-grid{grid-template-columns:1fr 1fr}}
+
+/* RESULT */
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1rem}
+.result-card{background:var(--bg2);border-radius:8px;padding:1rem;text-align:center}
+.result-label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.result-value{font-size:22px;font-weight:700}
+.result-sub{font-size:12px;color:var(--text2);margin-top:2px}
+@media(max-width:600px){.result-grid{grid-template-columns:1fr 1fr}}
+
+/* BREAKDOWN */
+.breakdown{margin:1rem 0}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);font-size:14px}
+.bk-row:last-child{border-bottom:none;font-weight:700;font-size:15px;padding-top:12px;margin-top:4px;border-top:2px solid var(--border)}
+.bk-label{color:var(--text)}
+.bk-value{font-weight:600}
+.bk-plus{color:var(--green)}.bk-minus{color:var(--red)}
+
+/* RISK */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1rem 0}
+.risk-card{padding:1rem;border-radius:8px;text-align:center}
+.risk-card-ok{background:#d1fae5;border:1px solid #a7f3d0;color:#065f46}
+.risk-card-warn{background:#fef3c7;border:1px solid #fde68a;color:#92400e}
+.risk-card-danger{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+[data-theme=dark] .risk-card-ok{background:#064e3b;border-color:#065f46;color:#6ee7b7}
+[data-theme=dark] .risk-card-warn{background:#78350f;border-color:#92400e;color:#fcd34d}
+[data-theme=dark] .risk-card-danger{background:#7f1d1d;border-color:#991b1b;color:#fca5a5}
+.risk-status{font-size:24px;margin-bottom:4px}
+.risk-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.risk-desc{font-size:12px;opacity:.85}
+
+/* SCENARIO */
+.scenario-table{width:100%;border-collapse:collapse;font-size:13px;margin:1rem 0}
+.scenario-table th{text-align:center;padding:8px 10px;color:var(--text2);font-weight:500;border-bottom:1px solid var(--border);background:var(--bg2)}
+.scenario-table td{text-align:center;padding:8px 10px;border-bottom:1px solid var(--border)}
+.scenario-table tr:last-child td{border-bottom:none}
+.scenario-table .current{background:var(--bg2);font-weight:600}
+
+/* INTERPRET */
+.interpret{padding:1rem 1.25rem;border-radius:8px;margin:1rem 0;font-size:14px;line-height:1.8;background:var(--bg2)}
+
+/* CTA */
+.cta-box{display:flex;gap:12px;flex-wrap:wrap;margin-top:1.5rem}
+.cta-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;transition:all .15s;border:none;cursor:pointer}
+.cta-primary{background:var(--accent);color:#fff}.cta-primary:hover{background:var(--accent-h)}
+.cta-secondary{background:var(--bg2);color:var(--text);border:1px solid var(--border)}.cta-secondary:hover{border-color:var(--accent);color:var(--accent)}
+
+/* RISK ALERT */
+.risk-alert{padding:1rem 1.25rem;border-radius:8px;margin:1rem 0;font-size:13px;line-height:1.7}
+.risk-alert-danger{background:#fee2e2;border:1px solid #fecaca;color:#991b1b}
+.risk-alert-warn{background:#fef3c7;border:1px solid #fde68a;color:#92400e}
+[data-theme=dark] .risk-alert-danger{background:#7f1d1d;border-color:#991b1b;color:#fca5a5}
+[data-theme=dark] .risk-alert-warn{background:#78350f;border-color:#92400e;color:#fcd34d}
+.risk-alert strong{font-weight:700}
+
+/* BEP FORMULA */
+.bep-formula{margin-top:.75rem;padding:.75rem 1rem;background:var(--bg2);border-radius:8px;font-size:13px;color:var(--text2);line-height:1.6}
+.bep-formula code{font-family:'Courier New',monospace;font-weight:600;color:var(--text)}
+
+/* LEVERAGE COMPARE */
+.lev-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:1rem 0}
+.lev-compare-card{padding:1rem;border-radius:8px;text-align:center;background:var(--bg2)}
+.lev-compare-label{font-size:12px;color:var(--text2);margin-bottom:4px}
+.lev-compare-value{font-size:20px;font-weight:700}
+.lev-compare-sub{font-size:11px;color:var(--text2);margin-top:2px}
+
+/* MODEL NOTE */
+.model-note{display:flex;align-items:flex-start;gap:10px;padding:1rem;border-radius:8px;background:var(--bg2);border:1px solid var(--border);margin-top:1rem;font-size:12px;color:var(--text2);line-height:1.6}
+.model-note-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+
+/* ADV RISK INDICATOR */
+.adv-risk{margin-top:.75rem;padding:.75rem 1rem;border-radius:8px;font-size:13px;font-weight:600;text-align:center}
+.adv-risk-low{background:#d1fae5;color:#065f46;border:1px solid #a7f3d0}
+.adv-risk-mid{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.adv-risk-high{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+[data-theme=dark] .adv-risk-low{background:#064e3b;color:#6ee7b7;border-color:#065f46}
+[data-theme=dark] .adv-risk-mid{background:#78350f;color:#fcd34d;border-color:#92400e}
+[data-theme=dark] .adv-risk-high{background:#7f1d1d;color:#fca5a5;border-color:#991b1b}
+
+/* MODE TOGGLE */
+.mode-tabs{display:flex;gap:4px;margin-bottom:1.25rem;background:var(--bg2);border-radius:8px;padding:3px}
+.mode-tab{flex:1;padding:8px 16px;border-radius:6px;font-size:13px;font-weight:600;text-align:center;cursor:pointer;border:none;background:none;color:var(--text2);transition:all .15s}
+.mode-tab.active{background:var(--card);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.mode-panel{display:none}.mode-panel.active{display:block}
+
+/* STOCK TABLE (고급 모드) */
+.adv-table{width:100%;border-collapse:collapse;font-size:13px;margin:.75rem 0}
+.adv-table th{text-align:left;padding:8px 10px;color:var(--text2);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap}
+.adv-table td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.adv-table tr:last-child td{border-bottom:none}
+.adv-table input[type=text],.adv-table input[type=number]{width:100%;padding:6px 8px;font-size:13px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text)}
+.adv-add{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 16px;font-size:13px;color:var(--text2);cursor:pointer;margin-top:.5rem}.adv-add:hover{background:var(--bg2)}
+.adv-del{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:0 4px}.adv-del:hover{color:var(--red)}
+.adv-fetch{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;background:var(--accent);color:#fff;border:none;cursor:pointer;margin-top:.5rem;margin-left:.5rem}.adv-fetch:hover{background:var(--accent-h)}
+.adv-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
+.adv-sum-card{background:var(--bg2);border-radius:8px;padding:.75rem;text-align:center}
+.adv-sum-label{font-size:11px;color:var(--text2);margin-bottom:2px}
+.adv-sum-value{font-size:16px;font-weight:700}
+@media(max-width:600px){.adv-summary{grid-template-columns:1fr 1fr}}
+
+/* SEARCH DROPDOWN */
+#searchDropdown{display:none;position:fixed;z-index:9999;background:var(--card);border:1px solid var(--border);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.15);max-height:200px;overflow-y:auto;min-width:220px}
+#searchDropdown.open{display:block}
+.search-item{padding:8px 12px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border);transition:background .1s}
+.search-item:last-child{border-bottom:none}
+.search-item:hover{background:var(--bg2)}
+.search-item .si-symbol{font-weight:600;color:var(--accent)}
+.search-item .si-name{color:var(--text);margin-left:6px}
+.search-item .si-exchange{color:var(--text2);font-size:11px;margin-left:4px}
+.search-loading{padding:10px 12px;font-size:12px;color:var(--text2);text-align:center}
+
+.disclaimer{font-size:12px;color:var(--text2);padding:10px 14px;background:var(--bg2);border-radius:8px;margin-top:1.5rem;line-height:1.7}
+.divider{max-width:1100px;margin:0 auto;padding:0 1.25rem}.divider hr{border:none;border-top:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:2.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-left{font-size:13px;color:var(--text2)}.footer-links{display:flex;gap:20px}.footer-links a{font-size:13px;color:var(--text2)}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/simulation/lever-dividend/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/" class="active">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+  <h1 class="page-title">레버리지 배당 시뮬레이터</h1>
+  <p class="page-desc">자기자본, 레버리지, 예상 수익률을 입력하면 수익과 리스크를 바로 확인합니다.</p>
+
+  <!-- 입력값 -->
+  <div class="section">
+    <div class="sec-title">입력값</div>
+
+    <!-- 모드 전환 -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" onclick="switchMode('basic')">기본 모드</button>
+      <button class="mode-tab" onclick="switchMode('advanced')">고급 모드 (종목 기반)</button>
+    </div>
+
+    <!-- 기본 모드 -->
+    <div class="mode-panel active" id="basicPanel">
+      <div class="input-grid">
+        <div class="form-group">
+          <label class="form-label">자기자본 (E)</label>
+          <div class="input-wrap">
+            <input type="number" id="capital" value="5000" min="0" oninput="calc()">
+            <span class="input-unit">만원</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">레버리지 비율 (L)</label>
+          <div class="input-wrap">
+            <input type="number" id="leverage" value="50" min="0" max="200" step="1" oninput="calc()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">대출 이자율 (r)</label>
+          <div class="input-wrap">
+            <input type="number" id="intRate" value="4.5" min="0" max="20" step="0.1" oninput="calc()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">주가 상승률 (g)</label>
+          <div class="input-wrap">
+            <input type="number" id="growth" value="5" min="-50" max="100" step="0.1" oninput="calc()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">배당수익률 (d)</label>
+          <div class="input-wrap">
+            <input type="number" id="divYield" value="6.5" min="0" max="30" step="0.1" oninput="calc()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 고급 모드 -->
+    <div class="mode-panel" id="advPanel">
+      <div class="input-grid" style="margin-bottom:1rem">
+        <div class="form-group">
+          <label class="form-label">자기자본 (E)</label>
+          <div class="input-wrap">
+            <input type="number" id="advCapital" value="5000" min="0" oninput="calcAdv()">
+            <span class="input-unit">만원</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">레버리지 비율 (L)</label>
+          <div class="input-wrap">
+            <input type="number" id="advLeverage" value="50" min="0" max="200" step="1" oninput="calcAdv()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">대출 이자율 (r)</label>
+          <div class="input-wrap">
+            <input type="number" id="advIntRate" value="4.5" min="0" max="20" step="0.1" oninput="calcAdv()">
+            <span class="input-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:.5rem">포트폴리오 구성</div>
+      <table class="adv-table">
+        <thead>
+          <tr>
+            <th style="width:35%">종목 검색</th>
+            <th style="width:15%">비중</th>
+            <th style="width:18%">배당수익률</th>
+            <th style="width:18%">예상 상승률</th>
+            <th style="width:14%"></th>
+          </tr>
+        </thead>
+        <tbody id="advTableBody"></tbody>
+      </table>
+      <div style="display:flex;align-items:center">
+        <button class="adv-add" onclick="addAdvRow()">+ 종목 추가</button>
+        <button class="adv-fetch" onclick="fetchAllDividends()">📊 배당률 자동 조회</button>
+      </div>
+
+      <!-- 가중평균 요약 -->
+      <div class="adv-summary">
+        <div class="adv-sum-card">
+          <div class="adv-sum-label">가중평균 배당수익률</div>
+          <div class="adv-sum-value" id="advAvgDiv">-</div>
+        </div>
+        <div class="adv-sum-card">
+          <div class="adv-sum-label">가중평균 예상 상승률</div>
+          <div class="adv-sum-value" id="advAvgGrowth">-</div>
+        </div>
+        <div class="adv-sum-card">
+          <div class="adv-sum-label">총 비중</div>
+          <div class="adv-sum-value" id="advTotalWeight">0%</div>
+        </div>
+      </div>
+      <div class="adv-risk" id="advRisk" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- 예상 결과 요약 -->
+  <div class="section">
+    <div class="sec-title">예상 결과 요약</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">총 투자금</div>
+        <div class="result-value" id="r_total" style="color:var(--accent)">0</div>
+        <div class="result-sub" id="r_total_sub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">순수익</div>
+        <div class="result-value" id="r_net">0</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">내 자본 대비 수익률</div>
+        <div class="result-value" id="r_return">0%</div>
+      </div>
+    </div>
+
+    <!-- 수익 분해 -->
+    <div class="breakdown">
+      <div class="bk-row">
+        <span class="bk-label">총 투자금</span>
+        <span class="bk-value" id="bk_total">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">자본이익 (주가 상승)</span>
+        <span class="bk-value bk-plus" id="bk_gain">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">배당수익</span>
+        <span class="bk-value bk-plus" id="bk_div">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">이자비용</span>
+        <span class="bk-value bk-minus" id="bk_int">-</span>
+      </div>
+      <div class="bk-row">
+        <span class="bk-label">순수익 (Net Profit)</span>
+        <span class="bk-value" id="bk_net">-</span>
+      </div>
+    </div>
+
+    <!-- 해석형 요약 -->
+    <div class="interpret" id="interpret"></div>
+  </div>
+
+  <!-- 리스크 분석 -->
+  <div class="section">
+    <div class="sec-title">위험 분석</div>
+    <div class="risk-grid">
+      <div class="risk-card" id="riskBEP">
+        <div class="risk-status" id="riskBEP_icon">-</div>
+        <div class="risk-title">손익분기점</div>
+        <div class="risk-desc" id="riskBEP_desc">-</div>
+      </div>
+      <div class="risk-card" id="riskCover">
+        <div class="risk-status" id="riskCover_icon">-</div>
+        <div class="risk-title">이자 커버</div>
+        <div class="risk-desc" id="riskCover_desc">-</div>
+      </div>
+    </div>
+
+    <!-- 리스크 경고 (이자 미충족 시 표시) -->
+    <div class="risk-alert" id="riskAlert" style="display:none"></div>
+
+    <!-- 손익분기점 공식 -->
+    <div class="bep-formula" id="bepFormula"></div>
+
+    <!-- 주가 하락 시나리오 -->
+    <div style="margin-top:1rem">
+      <div style="font-size:13px;font-weight:600;color:var(--text2);margin-bottom:.5rem">주가 하락 시 손실 시나리오</div>
+      <table class="scenario-table">
+        <thead>
+          <tr>
+            <th>주가 변동</th>
+            <th>자본이익</th>
+            <th>배당</th>
+            <th>이자</th>
+            <th>순수익</th>
+            <th>수익률</th>
+          </tr>
+        </thead>
+        <tbody id="scenarioBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 레버리지 비교 -->
+  <div class="section">
+    <div class="sec-title">레버리지 효과 비교</div>
+    <div class="lev-compare">
+      <div class="lev-compare-card">
+        <div class="lev-compare-label">레버리지 없이 투자</div>
+        <div class="lev-compare-value" id="cmp_noLev">-</div>
+        <div class="lev-compare-sub" id="cmp_noLev_sub"></div>
+      </div>
+      <div class="lev-compare-card">
+        <div class="lev-compare-label">레버리지 적용 투자</div>
+        <div class="lev-compare-value" id="cmp_withLev">-</div>
+        <div class="lev-compare-sub" id="cmp_withLev_sub"></div>
+      </div>
+    </div>
+    <div class="interpret" id="cmpInterpret" style="margin-top:.75rem"></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="section">
+    <div class="sec-title">다음 단계</div>
+    <div class="cta-box">
+      <button class="cta-btn cta-primary" onclick="document.getElementById('capital').focus();window.scrollTo({top:0,behavior:'smooth'})">조건 바꿔서 다시 계산 &uarr;</button>
+      <button class="cta-btn cta-secondary" onclick="testScenario(10)">주가 +10% 시나리오 테스트</button>
+      <button class="cta-btn cta-secondary" onclick="testScenario(-10)">주가 -10% 시나리오 테스트</button>
+      <a href="../../strategy/method/leverage-dividend/" class="cta-btn cta-secondary">전략 설명 보기 &rarr;</a>
+    </div>
+
+    <!-- 전략 근거 -->
+    <div class="model-note">
+      <span class="model-note-icon"></span>
+      <div>이 시뮬레이터는 <strong>재무제표 기반 레버리지 수익 모델</strong>(자기자본이익률 분해)에 근거합니다. 실제 투자에서는 세금(배당소득세 15.4%), 거래 비용, 환율 변동, 배당 변동성 등 추가 변수가 존재합니다. 시뮬레이션 결과는 의사결정 참고용이며, 투자 권유가 아닙니다.</div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ※ 본 서비스에서 제공되는 모든 정보 및 계산 결과는 참고용이며, 모든 투자 판단과 책임은 이용자에게 있습니다.
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links"><a href="/about/">소개</a><a href="/privacy/">개인정보처리방침</a></div>
+</footer>
+
+<div id="searchDropdown"></div>
+<script src="../dividend/kr-stocks.js"></script>
+<script>
+/* ── 모드 전환 ── */
+let currentMode='basic';
+function switchMode(mode){
+  currentMode=mode;
+  document.querySelectorAll('.mode-tab').forEach((t,i)=>t.classList.toggle('active',i===(mode==='basic'?0:1)));
+  document.getElementById('basicPanel').classList.toggle('active',mode==='basic');
+  document.getElementById('advPanel').classList.toggle('active',mode==='advanced');
+  if(mode==='advanced'){if(!document.querySelectorAll('#advTableBody tr').length)addAdvRow();calcAdv();}
+  else{calc();}
+}
+
+/* ── 고급 모드: 종목 테이블 ── */
+let advRowId=0;
+function addAdvRow(){
+  advRowId++;
+  const tr=document.createElement('tr');
+  tr.id='advRow_'+advRowId;
+  tr.innerHTML=`
+    <td><input type="text" placeholder="종목명 검색" data-rid="${advRowId}" oninput="onSearchInput(this)" onfocus="onSearchInput(this)"></td>
+    <td><input type="number" value="100" min="0" max="100" step="1" class="adv-weight" oninput="calcAdv()"><span style="font-size:12px;color:var(--text2)">%</span></td>
+    <td><input type="number" value="" step="0.1" class="adv-div" placeholder="자동" oninput="calcAdv()"><span style="font-size:12px;color:var(--text2)">%</span></td>
+    <td><input type="number" value="5" step="0.1" class="adv-growth" oninput="calcAdv()"><span style="font-size:12px;color:var(--text2)">%</span></td>
+    <td><button class="adv-del" onclick="delAdvRow('advRow_${advRowId}')">&times;</button></td>`;
+  document.getElementById('advTableBody').appendChild(tr);
+}
+
+function delAdvRow(id){
+  const row=document.getElementById(id);
+  if(row)row.remove();
+  calcAdv();
+}
+
+/* ── 고급 모드: 가중평균 계산 → 기존 calc() 연동 ── */
+function calcAdv(){
+  const rows=document.querySelectorAll('#advTableBody tr');
+  let totalW=0, wDiv=0, wGrowth=0;
+  rows.forEach(tr=>{
+    const w=+(tr.querySelector('.adv-weight')?.value||0);
+    const d=+(tr.querySelector('.adv-div')?.value||0);
+    const g=+(tr.querySelector('.adv-growth')?.value||0);
+    totalW+=w;
+    wDiv+=w*d;
+    wGrowth+=w*g;
+  });
+  const avgDiv=totalW>0?(wDiv/totalW):0;
+  const avgGrowth=totalW>0?(wGrowth/totalW):0;
+
+  document.getElementById('advAvgDiv').textContent=avgDiv.toFixed(2)+'%';
+  document.getElementById('advAvgGrowth').textContent=avgGrowth.toFixed(2)+'%';
+  const tw=document.getElementById('advTotalWeight');
+  tw.textContent=totalW.toFixed(0)+'%';
+  tw.style.color=Math.abs(totalW-100)<0.1?'var(--green)':'var(--orange)';
+
+  // 고급 모드 위험도 자동 표시
+  const advR=document.getElementById('advRisk');
+  const advLev=+(document.getElementById('advLeverage').value||0)/100;
+  const advInt=+(document.getElementById('advIntRate').value||0)/100;
+  const advBepThreshold=advLev>0?(advInt*advLev/(1+advLev)):0;
+  const advSum=avgDiv/100+avgGrowth/100;
+  if(totalW>0){
+    advR.style.display='block';
+    if(avgDiv>advInt*100&&advSum>advBepThreshold){
+      advR.textContent='종합 위험도: 낮음 — 배당이 이자를 커버하고 손익분기 조건 충족';
+      advR.className='adv-risk adv-risk-low';
+    }else if(advSum>advBepThreshold){
+      advR.textContent='종합 위험도: 보통 — 손익분기 충족이나 배당만으로 이자 커버 불충분';
+      advR.className='adv-risk adv-risk-mid';
+    }else{
+      advR.textContent='종합 위험도: 높음 — 손익분기 미충족, 손실 가능성 큼';
+      advR.className='adv-risk adv-risk-high';
+    }
+  }else{advR.style.display='none';}
+
+  // 고급 모드 값을 기본 모드 필드에 반영 → calc() 호출
+  document.getElementById('capital').value=document.getElementById('advCapital').value;
+  document.getElementById('leverage').value=document.getElementById('advLeverage').value;
+  document.getElementById('intRate').value=document.getElementById('advIntRate').value;
+  document.getElementById('growth').value=avgGrowth.toFixed(2);
+  document.getElementById('divYield').value=avgDiv.toFixed(2);
+  calc();
+}
+
+/* ── 종목 검색 (투자 수익 시뮬레이터 패턴) ── */
+let activeSearchInput=null;
+function isKorean(t){return/[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(t)}
+function searchLocal(q){
+  if(typeof KR_STOCKS==='undefined')return[];
+  q=q.toLowerCase();
+  return KR_STOCKS.filter(s=>s.name.includes(q)||s.symbol.toLowerCase().includes(q)).slice(0,15);
+}
+
+function onSearchInput(el){
+  activeSearchInput=el;
+  const q=el.value.trim();
+  if(!q){hideDropdown();return;}
+  if(isKorean(q)){
+    const r=searchLocal(q);
+    showDropdown(r,el);
+  }else{
+    showDropdown([],el);// 로딩
+    const dd=document.getElementById('searchDropdown');
+    dd.innerHTML='<div class="search-loading">검색 중...</div>';
+    positionDropdown(el);
+    dd.classList.add('open');
+    fetch('/.netlify/functions/yahoo-search?q='+encodeURIComponent(q))
+      .then(r=>r.json()).then(data=>{
+        const items=(data.quotes||[]).filter(i=>i.quoteType==='EQUITY').slice(0,10).map(i=>{
+          const local=typeof KR_STOCKS!=='undefined'?KR_STOCKS.find(s=>s.symbol===i.symbol):null;
+          return{symbol:i.symbol,name:local?local.name:i.shortname||i.longname||i.symbol,exchange:i.exchange||''};
+        });
+        if(activeSearchInput===el)showDropdown(items,el);
+      }).catch(()=>hideDropdown());
+  }
+}
+
+function positionDropdown(el){
+  const dd=document.getElementById('searchDropdown');
+  const rect=el.getBoundingClientRect();
+  dd.style.left=rect.left+'px';
+  dd.style.top=(rect.bottom+2)+'px';
+  dd.style.width=Math.max(rect.width,250)+'px';
+}
+
+function showDropdown(items,el){
+  const dd=document.getElementById('searchDropdown');
+  if(!items.length){dd.classList.remove('open');return;}
+  let html='';
+  items.forEach(it=>{
+    html+=`<div class="search-item" onmousedown="selectStock('${it.symbol}','${it.name.replace(/'/g,"\\'")}',this)">
+      <span class="si-symbol">${it.symbol}</span>
+      <span class="si-name">${it.name}</span>
+      <span class="si-exchange">${it.exchange}</span>
+    </div>`;
+  });
+  dd.innerHTML=html;
+  positionDropdown(el);
+  dd.classList.add('open');
+}
+
+function hideDropdown(){document.getElementById('searchDropdown').classList.remove('open');activeSearchInput=null;}
+
+function selectStock(symbol,name,itemEl){
+  if(activeSearchInput){
+    activeSearchInput.value=name+' ('+symbol+')';
+    activeSearchInput.dataset.symbol=symbol;
+  }
+  hideDropdown();
+  // 배당수익률 자동 조회
+  fetchDividendForRow(symbol);
+}
+
+function fetchDividendForRow(symbol){
+  if(!activeSearchInput)return;
+  const tr=activeSearchInput.closest('tr');
+  if(!tr)return;
+  const divInput=tr.querySelector('.adv-div');
+  if(!divInput)return;
+  divInput.value='';
+  divInput.placeholder='조회중...';
+  fetch('/.netlify/functions/yahoo-finance?symbol='+encodeURIComponent(symbol))
+    .then(r=>r.json()).then(data=>{
+      const dy=data.dividendYield||data.trailingAnnualDividendYield||0;
+      divInput.value=(dy*100).toFixed(2);
+      divInput.placeholder='자동';
+      calcAdv();
+    }).catch(()=>{divInput.placeholder='수동입력';});
+}
+
+function fetchAllDividends(){
+  const rows=document.querySelectorAll('#advTableBody tr');
+  rows.forEach(tr=>{
+    const inp=tr.querySelector('input[type=text]');
+    const sym=inp?.dataset?.symbol;
+    if(!sym)return;
+    const divInput=tr.querySelector('.adv-div');
+    if(!divInput)return;
+    divInput.value='';divInput.placeholder='조회중...';
+    fetch('/.netlify/functions/yahoo-finance?symbol='+encodeURIComponent(sym))
+      .then(r=>r.json()).then(data=>{
+        const dy=data.dividendYield||data.trailingAnnualDividendYield||0;
+        divInput.value=(dy*100).toFixed(2);
+        divInput.placeholder='자동';
+        calcAdv();
+      }).catch(()=>{divInput.placeholder='수동입력';});
+  });
+}
+
+document.addEventListener('click',e=>{if(!e.target.closest('#searchDropdown')&&!e.target.closest('.adv-table input[type=text]'))hideDropdown();});
+
+function fmtW(n){
+  const a=Math.abs(n),sign=n<0?'-':'';
+  if(a>=10000)return sign+(a/10000).toFixed(1)+'억원';
+  if(a>=1)return sign+a.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',')+'만원';
+  return sign+Math.round(a*10000).toLocaleString()+'원';
+}
+
+function calc(){
+  const E=+document.getElementById('capital').value; // 만원
+  const L=+document.getElementById('leverage').value/100; // 비율
+  const r=+document.getElementById('intRate').value/100;
+  const g=+document.getElementById('growth').value/100;
+  const d=+document.getElementById('divYield').value/100;
+
+  const total=E*(1+L);
+  const loan=total-E;
+  const capGain=total*g;
+  const dividend=total*d;
+  const interest=loan*r;
+  const netProfit=capGain+dividend-interest;
+  const returnRate=E>0?(netProfit/E*100):0;
+
+  // 결과 요약
+  document.getElementById('r_total').textContent=fmtW(total);
+  document.getElementById('r_total_sub').textContent='내 자본 '+fmtW(E)+' + 대출 '+fmtW(loan);
+
+  const rNet=document.getElementById('r_net');
+  rNet.textContent=(netProfit>=0?'+':'')+fmtW(netProfit);
+  rNet.style.color=netProfit>=0?'var(--green)':'var(--red)';
+
+  const rReturn=document.getElementById('r_return');
+  rReturn.textContent=(returnRate>=0?'+':'')+returnRate.toFixed(2)+'%';
+  rReturn.style.color=returnRate>=0?'var(--green)':'var(--red)';
+
+  // 분해
+  document.getElementById('bk_total').textContent=fmtW(total);
+  document.getElementById('bk_gain').textContent='+'+ fmtW(capGain);
+  document.getElementById('bk_gain').className='bk-value '+(capGain>=0?'bk-plus':'bk-minus');
+  if(capGain<0)document.getElementById('bk_gain').textContent=fmtW(capGain);
+  document.getElementById('bk_div').textContent='+'+fmtW(dividend);
+  document.getElementById('bk_int').textContent='-'+fmtW(interest);
+  const bkNet=document.getElementById('bk_net');
+  bkNet.textContent=(netProfit>=0?'+':'')+fmtW(netProfit);
+  bkNet.style.color=netProfit>=0?'var(--green)':'var(--red)';
+
+  // 해석형 요약 (원인 분석 포함)
+  const interp=document.getElementById('interpret');
+  const levPct=(L*100).toFixed(0);
+  const noLevProfit=E*g+E*d;
+  const noLevReturn=E>0?(noLevProfit/E*100):0;
+  const diff=netProfit-noLevProfit;
+  const divCoverInt=dividend>=interest;
+  if(netProfit>=0){
+    let reason='';
+    if(divCoverInt&&capGain>=0)reason='배당이 이자를 커버하고 주가도 상승하여 이중 수익이 발생합니다.';
+    else if(divCoverInt&&capGain<0)reason='주가는 하락했지만 배당수익이 이자+주가손실을 상쇄하여 흑자입니다.';
+    else reason='배당만으로는 이자를 감당하지 못하지만, 주가 상승이 이를 만회합니다.';
+    interp.innerHTML=`자기자본 <strong>${fmtW(E)}</strong>에 레버리지 <strong>${levPct}%</strong>를 적용 → 총 <strong>${fmtW(total)}</strong> 투자.<br>
+    <strong style="color:var(--green)">순수익 ${fmtW(netProfit)}, 수익률 ${returnRate.toFixed(2)}%</strong><br>
+    <span style="font-size:13px;color:var(--text2)">${reason}</span>`;
+  }else{
+    let reason='';
+    if(!divCoverInt&&capGain<0)reason='배당이 이자를 감당하지 못하고, 주가 하락까지 겹쳐 손실이 확대됩니다.';
+    else if(!divCoverInt)reason='배당수익보다 이자비용이 커서 레버리지가 오히려 수익을 깎고 있습니다.';
+    else reason='배당이 이자를 커버하지만, 주가 하락폭이 너무 커서 손실이 발생합니다.';
+    interp.innerHTML=`자기자본 <strong>${fmtW(E)}</strong>에 레버리지 <strong>${levPct}%</strong>를 적용했지만,<br>
+    <strong style="color:var(--red)">순손실 ${fmtW(netProfit)}, 수익률 ${returnRate.toFixed(2)}%</strong><br>
+    <span style="font-size:13px;color:var(--text2)">${reason}</span>`;
+  }
+
+  // 레버리지 비교 카드
+  const cmpNoLev=document.getElementById('cmp_noLev');
+  cmpNoLev.textContent=(noLevReturn>=0?'+':'')+noLevReturn.toFixed(2)+'%';
+  cmpNoLev.style.color=noLevReturn>=0?'var(--green)':'var(--red)';
+  document.getElementById('cmp_noLev_sub').textContent='순수익 '+(noLevProfit>=0?'+':'')+fmtW(noLevProfit);
+  const cmpWithLev=document.getElementById('cmp_withLev');
+  cmpWithLev.textContent=(returnRate>=0?'+':'')+returnRate.toFixed(2)+'%';
+  cmpWithLev.style.color=returnRate>=0?'var(--green)':'var(--red)';
+  document.getElementById('cmp_withLev_sub').textContent='순수익 '+(netProfit>=0?'+':'')+fmtW(netProfit);
+  const cmpI=document.getElementById('cmpInterpret');
+  if(diff>0){
+    cmpI.innerHTML=`레버리지로 <strong style="color:var(--green)">${fmtW(diff)} 추가 수익</strong> (수익률 ${(returnRate-noLevReturn).toFixed(2)}%p 상승). 배당이 이자를 충분히 커버하므로 레버리지 효과가 긍정적입니다.`;
+  }else if(diff<0){
+    cmpI.innerHTML=`레버리지로 <strong style="color:var(--red)">${fmtW(Math.abs(diff))} 수익 감소</strong> (수익률 ${(returnRate-noLevReturn).toFixed(2)}%p 하락). 현재 조건에서는 레버리지가 오히려 손해입니다.`;
+  }else{
+    cmpI.innerHTML='레버리지 효과 없음 (이자와 추가 수익이 동일)';
+  }
+
+  // 리스크: 손익분기점
+  const bepThreshold=L>0?(r*L/(1+L)):0;
+  const bepOk=(g+d)>bepThreshold;
+  const riskBEP=document.getElementById('riskBEP');
+  document.getElementById('riskBEP_icon').textContent=bepOk?'충족':'미충족';
+  riskBEP.className='risk-card '+(bepOk?'risk-card-ok':'risk-card-danger');
+  document.getElementById('riskBEP_desc').textContent=bepOk
+    ?`상승률+배당 ${((g+d)*100).toFixed(1)}% > 최소 ${(bepThreshold*100).toFixed(1)}% → 충족`
+    :`상승률+배당 ${((g+d)*100).toFixed(1)}% < 최소 ${(bepThreshold*100).toFixed(1)}% → 미충족`;
+
+  // 리스크: 이자 커버
+  const coverage=interest>0?(dividend/interest):999;
+  const coverOk=coverage>=1.5;
+  const coverWarn=coverage>=1.0;
+  const riskCover=document.getElementById('riskCover');
+  document.getElementById('riskCover_icon').textContent=coverOk?'안전':coverWarn?'주의':'위험';
+  riskCover.className='risk-card '+(coverOk?'risk-card-ok':coverWarn?'risk-card-warn':'risk-card-danger');
+  document.getElementById('riskCover_desc').textContent=
+    `배당/이자 = ${coverage>=100?'∞':coverage.toFixed(2)}배`
+    +(coverOk?' (안전)':coverWarn?' (주의)':' (위험: 배당 < 이자)');
+
+  // 손익분기점 공식 표시
+  document.getElementById('bepFormula').innerHTML=
+    `<strong>손익분기 조건:</strong> 주가 상승률 + 배당수익률 ≥ 대출 이자율 × 레버리지 비율/(1+레버리지 비율)<br>
+    <strong>${(g*100).toFixed(1)}% + ${(d*100).toFixed(1)}% = ${((g+d)*100).toFixed(1)}%</strong> ${bepOk?'≥':'<'} <strong>${(bepThreshold*100).toFixed(1)}%</strong>
+    → ${bepOk?'수익 조건 충족':'손실 위험 — 기준 미달'}`;
+
+  // 리스크 경고 (미충족 시)
+  const alertEl=document.getElementById('riskAlert');
+  if(!bepOk||!coverWarn){
+    let alertHtml='';
+    if(!bepOk)alertHtml+=`<strong>손익분기 미충족:</strong> 현재 조건(g+d=${((g+d)*100).toFixed(1)}%)으로는 이자 부담(${(bepThreshold*100).toFixed(1)}%)을 넘지 못합니다. 배당수익률이 ${((bepThreshold-g)*100).toFixed(1)}% 이상이거나, 주가가 ${((bepThreshold-d)*100).toFixed(1)}% 이상 올라야 손익분기입니다.<br>`;
+    if(!coverWarn)alertHtml+=`<strong>배당 < 이자:</strong> 연간 배당(${fmtW(dividend)})이 이자(${fmtW(interest)})보다 적습니다. 주가가 오르지 않으면 매년 현금이 빠져나갑니다.`;
+    alertEl.innerHTML=alertHtml;
+    alertEl.className='risk-alert '+(!coverWarn?'risk-alert-danger':'risk-alert-warn');
+    alertEl.style.display='block';
+  }else{
+    alertEl.style.display='none';
+  }
+
+  // 시나리오 테이블
+  const scenarios=[-30,-20,-10,0,g*100,10,20];
+  if(!scenarios.includes(0)&&g!==0)scenarios.push(0);
+  const unique=[...new Set(scenarios)].sort((a,b)=>a-b);
+  const tbody=document.getElementById('scenarioBody');
+  let html='';
+  unique.forEach(gPct=>{
+    const sg=gPct/100;
+    const sCG=total*sg;
+    const sDiv=dividend;
+    const sInt=interest;
+    const sNet=sCG+sDiv-sInt;
+    const sRet=E>0?(sNet/E*100):0;
+    const isCurrent=Math.abs(gPct-g*100)<0.01;
+    const cls=isCurrent?' class="current"':'';
+    const color=sNet>=0?'var(--green)':'var(--red)';
+    html+=`<tr${cls}>
+      <td>${gPct>=0?'+':''}${gPct.toFixed(1)}%</td>
+      <td style="color:${sCG>=0?'var(--green)':'var(--red)'}">${sCG>=0?'+':''}${fmtW(sCG)}</td>
+      <td style="color:var(--green)">+${fmtW(sDiv)}</td>
+      <td style="color:var(--red)">-${fmtW(sInt)}</td>
+      <td style="color:${color};font-weight:600">${sNet>=0?'+':''}${fmtW(sNet)}</td>
+      <td style="color:${color};font-weight:600">${sRet>=0?'+':''}${sRet.toFixed(1)}%</td>
+    </tr>`;
+  });
+  tbody.innerHTML=html;
+}
+
+function testScenario(delta){
+  // 현재값에서 delta만큼 누적
+  const growthEl=document.getElementById('growth');
+  const newVal=Math.round((parseFloat(growthEl.value||0)+delta)*10)/10;
+  growthEl.value=newVal;
+  if(currentMode==='advanced'){
+    document.querySelectorAll('#advTableBody tr').forEach(tr=>{
+      const gi=tr.querySelector('.adv-growth');
+      if(gi)gi.value=Math.round((parseFloat(gi.value||0)+delta)*10)/10;
+    });
+    calcAdv();
+  }else{calc();}
+}
+
+function toggleTheme(){const h=document.documentElement;const isDark=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',isDark?'light':'dark');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';localStorage.setItem('finq-theme',isDark?'light':'dark')}
+(function(){if(localStorage.getItem('finq-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+
+calc();
+</script>
+</body>
+</html>

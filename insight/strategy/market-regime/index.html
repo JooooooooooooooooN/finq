@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전략별 시장 국면 대응력 비교 — FinQ 투자 인사이트</title>
+<meta name="description" content="상승장, 하락장, 횡보장 등 시장 환경에 따라 어떤 전략이 상대적으로 강한지 비교하는 전략 해설. 전략과 시장 환경의 궁합 이해 중심의 접근 방식.">
+<link rel="canonical" href="https://finq.kr/insight/strategy/market-regime/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 22px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+/* 시장 국면 비교 카드 */
+.regime-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 600px) { .regime-grid { grid-template-columns: 1fr; } }
+.regime-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.regime-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.75rem; }
+.regime-icon { font-size: 20px; }
+.regime-title { font-size: 14px; font-weight: 800; }
+.regime-strong { margin-bottom: 0.5rem; }
+.regime-strong-label { font-size: 11px; font-weight: 700; color: var(--green); letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.regime-weak-label { font-size: 11px; font-weight: 700; color: var(--red); letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+.regime-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.regime-tag { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: 500; }
+.regime-tag.good { background: rgba(22,163,74,.1); color: var(--green); }
+.regime-tag.bad { background: rgba(220,38,38,.1); color: var(--red); }
+[data-theme="dark"] .regime-tag.good { background: rgba(22,163,74,.2); }
+[data-theme="dark"] .regime-tag.bad { background: rgba(220,38,38,.2); }
+
+/* 전략 비교 테이블 */
+.compare-table { width: 100%; border-collapse: collapse; margin-top: 0.25rem; font-size: 13px; }
+.compare-table th { background: var(--bg-secondary); padding: 8px 10px; font-weight: 700; text-align: left; border-bottom: 2px solid var(--border); }
+.compare-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; word-break: keep-all; }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table .strategy-name { font-weight: 700; white-space: nowrap; }
+.badge { display: inline-block; padding: 2px 7px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+.badge-strong { background: rgba(22,163,74,.1); color: var(--green); }
+.badge-weak { background: rgba(220,38,38,.1); color: var(--red); }
+.badge-mid { background: rgba(217,119,6,.1); color: var(--orange); }
+[data-theme="dark"] .badge-strong { background: rgba(22,163,74,.2); }
+[data-theme="dark"] .badge-weak { background: rgba(220,38,38,.2); }
+[data-theme="dark"] .badge-mid { background: rgba(217,119,6,.2); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="전략별 시장 국면 대응력 비교 — FinQ 투자 인사이트">
+<meta property="og:description" content="상승장, 하락장, 횡보장 등 시장 환경에 따라 어떤 전략이 상대적으로 강한지 비교하는 전략 해설. 전략과 시장 환경의 궁합 이해 중심의 접근 방식.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/strategy/market-regime/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">전략 분석</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>전략별 시장 국면 대응력 비교</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">MARKET REGIME</div>
+    <h1>전략별 시장 국면 대응력 비교</h1>
+    <p class="hero-desc">상승장, 하락장, 횡보장 등 시장 환경에 따라 어떤 전략이 상대적으로 강한지 비교하는 전략 해설 페이지<br>단일 전략 우열보다 전략과 시장 환경의 궁합 이해 중심의 접근 방식</p>
+    <div class="hero-tags">
+      <span class="hero-tag">전략비교</span>
+      <span class="hero-tag">시장국면</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">환경 의존</div>
+        <div class="summary-text">모든 전략에 항상 같은 성과를 기대하기 어려운 시장 구조</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">전략 차이</div>
+        <div class="summary-text">시장 환경에 따라 상대적으로 강한 전략이 달라지는 흐름</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">정합성</div>
+        <div class="summary-text">전략 선택보다 전략과 환경의 정합성 판단이 중요한 투자 관점</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 어떤 전략이 좋은가보다 — 지금 환경에 어떤 전략이 맞는가가 더 중요한 질문
+    </div>
+  </div>
+
+  <!-- 전략 구조 -->
+  <div class="section">
+    <div class="sec-title">시장 국면 비교의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>시장을 상승장·하락장·횡보장으로 구분</strong>
+          <span>지수 추세, 변동성 수준, 경기 흐름 등을 기준으로 현재 시장 국면 파악</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>각 국면에서 강점이 드러나는 전략 유형 정리</strong>
+          <span>국면별로 상대적으로 유리한 전략 구조 파악 → 전략 선택의 기준으로 활용</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>전략별 수익·리스크 구조 비교</strong>
+          <span>각 전략이 어떤 국면에서 강하고 어떤 국면에서 약한지 구조적으로 파악</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>투자 성향에 맞는 전략 선택 또는 조합 판단</strong>
+          <span>단일 국면 대응보다 여러 환경을 아우를 수 있는 전략 조합 구성 고려</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 — 국면별 전략 카드 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트 — 시장 국면별 전략 대응</div>
+    <div class="regime-grid">
+      <div class="regime-card">
+        <div class="regime-header">
+          <div class="regime-icon">📈</div>
+          <div class="regime-title">상승장</div>
+        </div>
+        <div class="regime-strong">
+          <div class="regime-strong-label">상대적 강점</div>
+          <div class="regime-tags">
+            <span class="regime-tag good">CAN SLIM</span>
+            <span class="regime-tag good">성장주</span>
+            <span class="regime-tag good">모멘텀</span>
+          </div>
+        </div>
+        <div>
+          <div class="regime-weak-label">상대적 약점</div>
+          <div class="regime-tags">
+            <span class="regime-tag bad">저변동성</span>
+            <span class="regime-tag bad">올웨더</span>
+          </div>
+        </div>
+      </div>
+      <div class="regime-card">
+        <div class="regime-header">
+          <div class="regime-icon">📉</div>
+          <div class="regime-title">하락장</div>
+        </div>
+        <div class="regime-strong">
+          <div class="regime-strong-label">상대적 강점</div>
+          <div class="regime-tags">
+            <span class="regime-tag good">저변동성</span>
+            <span class="regime-tag good">퀄리티</span>
+            <span class="regime-tag good">올웨더</span>
+          </div>
+        </div>
+        <div>
+          <div class="regime-weak-label">상대적 약점</div>
+          <div class="regime-tags">
+            <span class="regime-tag bad">CAN SLIM</span>
+            <span class="regime-tag bad">레버리지</span>
+          </div>
+        </div>
+      </div>
+      <div class="regime-card">
+        <div class="regime-header">
+          <div class="regime-icon">➡️</div>
+          <div class="regime-title">횡보장</div>
+        </div>
+        <div class="regime-strong">
+          <div class="regime-strong-label">상대적 강점</div>
+          <div class="regime-tags">
+            <span class="regime-tag good">적립식 매수</span>
+            <span class="regime-tag good">배당 전략</span>
+            <span class="regime-tag good">리밸런싱</span>
+          </div>
+        </div>
+        <div>
+          <div class="regime-weak-label">상대적 약점</div>
+          <div class="regime-tags">
+            <span class="regime-tag bad">모멘텀</span>
+            <span class="regime-tag bad">추세 전략</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-top:1.5rem;">전략별 국면 대응력 요약</div>
+    <div style="overflow-x:auto;">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>전략</th>
+            <th>상승장</th>
+            <th>하락장</th>
+            <th>횡보장</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="strategy-name">적립식 매수</td>
+            <td><span class="badge badge-mid">보통</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">리밸런싱</td>
+            <td><span class="badge badge-mid">보통</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">퀄리티</td>
+            <td><span class="badge badge-mid">보통</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">저변동성</td>
+            <td><span class="badge badge-weak">약점</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">매직 포뮬러</td>
+            <td><span class="badge badge-mid">보통</span></td>
+            <td><span class="badge badge-mid">보통</span></td>
+            <td><span class="badge badge-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">CAN SLIM</td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-weak">약점</span></td>
+            <td><span class="badge badge-weak">약점</span></td>
+          </tr>
+          <tr>
+            <td class="strategy-name">올웨더</td>
+            <td><span class="badge badge-weak">약점</span></td>
+            <td><span class="badge badge-strong">강점</span></td>
+            <td><span class="badge badge-mid">보통</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-top:0.75rem;">※ 상대적 경향 기준의 참고 비교표. 실제 성과는 적용 방식·기간·종목에 따라 다를 수 있음.</p>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🎯</div>
+        <div class="point-body">
+          <strong>전략 선택 기준의 명확화</strong>
+          시장 환경과 전략의 특성을 연결 → 막연한 전략 선택보다 구조적 판단 기준 확보
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body">
+          <strong>시장 환경별 기대치 조정 가능성</strong>
+          국면에 따라 성과 기대치를 현실적으로 조정 → 전략 이탈 없이 장기 운용 지속 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🧘</div>
+        <div class="point-body">
+          <strong>단일 전략 집착 완화 효과</strong>
+          하나의 전략이 모든 환경에서 통하지 않는다는 구조적 이해 → 유연한 포트폴리오 관점 형성
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔗</div>
+        <div class="point-body">
+          <strong>분산적 사고와 전략 조합 관점 강화</strong>
+          국면별 강점이 다른 전략들의 조합 → 상호 보완적 포트폴리오 구성의 근거 마련
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🌫️</div>
+        <div class="point-body caution">
+          <strong>시장 국면 판단 자체의 모호성</strong>
+          상승·하락·횡보의 경계는 명확하지 않음 → 국면 판단 오류가 전략 선택 오류로 이어질 수 있음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔄</div>
+        <div class="point-body caution">
+          <strong>지나친 전략 전환에 따른 비효율 가능성</strong>
+          국면 전환마다 전략을 바꾸면 거래비용·세금·타이밍 오류 누적 → 일관성 유지가 더 유리한 경우 많음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📖</div>
+        <div class="point-body caution">
+          <strong>과거 국면 기준의 단순 반복 해석 위험</strong>
+          과거 패턴이 미래에 동일하게 반복되지 않을 수 있음 → 참고 기준으로만 활용 필요
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>거시 환경 오판 시 전략 선택 오류 가능성</strong>
+          금리·경기·유동성 판단이 틀리면 전략 정합성도 어긋남 → 단일 시나리오 과신 위험
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>여러 전략의 차이를 비교하며 이해하고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>시장 상황에 따라 유연한 대응 기준을 갖고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>전략 하나보다 포트폴리오 관점의 판단을 중시하는 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>단일 전략만 장기간 고정 운용하려는 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>시장 환경 변화보다 개별 종목 선택만 중시하는 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 전략 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 전략</div>
+    <div class="related-cards">
+      <a href="../dca/" class="related-card">
+        <span>📈 적립식 매수 전략의 핵심 구조</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../all-weather/" class="related-card">
+        <span>🌦️ 올웨더 포트폴리오 구조 분석</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../../macro/" class="related-card">
+        <span>🌐 시장/매크로 인사이트</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 전략 분석 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "finq",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "C:/Users/Azzcom/Desktop/클로드코드/finq", "-l", "3456", "--no-clipboard"],
+      "port": 3456
+    }
+  ]
+}

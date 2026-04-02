@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>하워드 막스 포트폴리오 — FinQ</title>
+<meta name="description" content="하워드 막스의 오크트리 캐피탈 포트폴리오. 리스크 관리와 시장 사이클 투자 철학을 한눈에 확인하세요.">
+<meta property="og:title" content="하워드 막스 포트폴리오 — FinQ">
+<meta property="og:description" content="오크트리 캐피탈 공동 창립자 하워드 막스. 리스크를 먼저 생각하는 투자자의 포트폴리오 분석.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap;transition:all .15s}
+.guru-chip.link{cursor:pointer}.guru-chip.link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/marks/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span><a href="../../../strategy/">투자 전략</a><span>›</span><a href="../">투자자 기반 전략</a><span>›</span><span>하워드 막스</span>
+  </div>
+
+  <h1 class="page-title">하워드 막스</h1>
+  <p class="page-desc">오크트리 캐피탈 공동 창립자. 리스크를 먼저 생각하고, 시장 사이클을 읽으며, 손실 회피를 수익보다 앞세우는 투자자.</p>
+
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <span class="guru-chip active">하워드 막스</span>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div></div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">하워드 막스 Howard Marks</div>
+        <div class="guru-sub">오크트리 캐피탈(Oaktree Capital Management) 공동 창립자 겸 공동 회장 · 1995년~현재</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">$1,900억+</div>
+            <div class="guru-stat-label">오크트리 운용자산(AUM)</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">연 ~19%</div>
+            <div class="guru-stat-label">고수익채권 전략 장기 수익률(추정)</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">리스크 우선</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1rem">
+      <span class="info-icon">ℹ️</span>
+      <span>오크트리 캐피탈은 주로 부실채권, 고수익 채권, 사모 크레딧에 집중하는 대체투자 운용사입니다. 13F에 공시되는 주식 롱 포지션은 전체 운용 규모 대비 소규모이며, 핵심 전략인 크레딧·채권 포지션은 포함되지 않습니다. 막스는 2019년 브룩필드 자산운용에 오크트리 지분을 매각했으나 공동 회장직은 유지하고 있습니다.</span>
+    </div>
+  </div>
+
+  <!-- 2. 상위 보유 종목 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>주요 보유 종목 (주식 롱)</div>
+      <span class="data-tag">2024년 Q3 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th><th>종목</th><th>비중</th>
+            <th class="col-value">평가액</th><th class="col-shares">보유 주수</th><th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>오크트리의 주식 포트폴리오는 크레딧·채권 전략의 부수적 포지션으로, 주로 부실기업의 전환사채·워런트가 주식으로 전환된 경우나 특수상황 투자가 포함됩니다. 13F 공시는 전체 전략의 일부만을 반영합니다.</span>
+    </div>
+  </div>
+
+  <!-- 3. 섹터 배분 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분 (공개 주식 기준)</div>
+      <span class="data-tag">2024년 Q3 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <!-- 4. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"탁월한 투자는 훌륭한 자산을 사는 것이 아니다. 어떤 자산이든 좋은 가격에 사는 것이다."</div>
+        <div class="quote-source">— The Most Important Thing (2011)</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"리스크 관리란 손실을 피하는 것이 아니다. 감수하는 리스크에 비해 충분한 보상을 받는 것이다."</div>
+        <div class="quote-source">— 오크트리 투자 메모</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"시장이 과열됐을 때 신중하고, 시장이 침체됐을 때 공격적으로 나서는 것. 이것이 사이클 투자의 핵심이다."</div>
+        <div class="quote-source">— Mastering the Market Cycle (2018)</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"큰 수익보다 큰 실수를 피하는 것이 먼저다. 장기 복리는 손실을 줄이는 데서 쌓인다."</div>
+        <div class="quote-source">— 막스의 리스크 우선 원칙</div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⚖️</div>
+          <div style="font-weight:600;margin-bottom:2px">리스크 우선 사고</div>
+          <div style="color:var(--text2)">수익보다 리스크를 먼저 계산. 보상이 리스크를 초과할 때만 투자</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔄</div>
+          <div style="font-weight:600;margin-bottom:2px">사이클 인식</div>
+          <div style="color:var(--text2)">시장의 낙관·비관 흐름을 읽고 과열 구간에서 수비, 침체 구간에서 공격</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">💡</div>
+          <div style="font-weight:600;margin-bottom:2px">가격 vs 가치</div>
+          <div style="color:var(--text2)">좋은 자산도 비싸면 나쁜 투자. 가치 대비 가격이 낮을 때만 매력적</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🛡️</div>
+          <div style="font-weight:600;margin-bottom:2px">손실 회피 규율</div>
+          <div style="color:var(--text2)">큰 손실 한 번이 여러 해의 수익을 지운다. 하방 보호를 최우선</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 주요 투자 이력 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>주요 투자 이력 및 특징</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">사이클 판단</span>
+        <div><strong>2007~2008년 금융위기 경고</strong> — 위기 전 메모를 통해 시장 과열과 크레딧 버블을 공개 경고. 사전에 리스크를 축소하고 현금 여력을 확보.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">위기 매수</span>
+        <div><strong>2008~2009년 부실자산 대규모 매입</strong> — 위기 직후 6주 만에 $60억 규모 부실채권 집중 매수. 패닉 구간을 기회로 전환한 대표적 사례.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">고수익 채권</span>
+        <div><strong>정크본드(고수익 채권) 투자 개척</strong> — 1978년 씨티코프 시절부터 하이일드 채권 펀드를 운용. 이후 오크트리를 통해 대체투자 크레딧의 선두 주자로 자리잡음.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">수비 포지션</span>
+        <div><strong>2021~2022년 제로금리 과열 구간</strong> — 저금리 버블과 크레딧 스프레드 압착 경고. 공격적 확장보다 방어적 포지션 유지. 2022년 금리 급등 시 상대적 강세.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《투자에 대한 생각》</strong> — 리스크, 가격, 심리, 사이클에 대한 막스의 핵심 철학</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《하워드 막스 투자와 마켓 사이클의 법칙》</strong> — 시장 반복 패턴과 투자자 대응 원칙을 다룬 국내 출간서</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《오크트리 메모》</strong> — 실제 시장 상황 판단을 보여주는 대표 자료</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 Oaktree Capital Management의 SEC EDGAR 13F 보고서를 기반으로 합니다. 13F는 주식 롱 포지션만 포함하며, 오크트리의 핵심 전략인 부실채권·고수익 채권·사모 크레딧 포지션은 반영되지 않습니다. 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const t=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',t==='dark'?'dark':'');
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+  localStorage.setItem('theme',t);
+}
+(function(){
+  const t=localStorage.getItem('theme');
+  if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
+})();
+
+const holdings=[
+  {ticker:'ALLY',  name:'알라이 파이낸셜', sector:'금융', weight:24.1, value:'$8.3억', shares:'3,210만주', change:'up', changeLabel:'▲ 증가'},
+  {ticker:'OXY',   name:'옥시덴탈 페트롤리엄', sector:'에너지', weight:18.6, value:'$6.4억', shares:'1,050만주', change:'same', changeLabel:'— 유지'},
+  {ticker:'MGM',   name:'MGM 리조트', sector:'호텔/카지노', weight:14.2, value:'$4.9억', shares:'1,380만주', change:'up', changeLabel:'▲ 증가'},
+  {ticker:'VTRS',  name:'비아트리스', sector:'헬스케어', weight:11.8, value:'$4.1억', shares:'3,920만주', change:'same', changeLabel:'— 유지'},
+  {ticker:'PARA',  name:'파라마운트 글로벌', sector:'미디어', weight:9.3, value:'$3.2억', shares:'2,740만주', change:'new', changeLabel:'★ 신규'},
+  {ticker:'RRR',   name:'레드락 리조트', sector:'호텔/카지노', weight:7.4, value:'$2.5억', shares:'490만주', change:'down', changeLabel:'▼ 감소'},
+  {ticker:'PBF',   name:'PBF 에너지', sector:'에너지', weight:5.6, value:'$1.9억', shares:'620만주', change:'same', changeLabel:'— 유지'},
+];
+
+const tbody=document.getElementById('holdingsBody');
+holdings.forEach((h,i)=>{
+  const cc=h.change==='up'?'change-up':h.change==='down'?'change-down':h.change==='new'?'change-new':'change-same';
+  tbody.innerHTML+=`<tr>
+    <td><span class="rank-num ${i<3?'top3':''}">${i+1}</span></td>
+    <td><div class="ticker">${h.ticker}</div><div class="co-name">${h.name}</div></td>
+    <td><div class="weight-bar-wrap"><div class="weight-bar" style="width:${h.weight*2.8}px"></div><span class="weight-text">${h.weight}%</span></div></td>
+    <td class="col-value"><span class="amount">${h.value}</span></td>
+    <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+    <td><span class="${cc}">${h.changeLabel}</span></td>
+  </tr>`;
+});
+
+const sectors=[
+  {name:'금융',        pct:24.1, color:'#2563eb'},
+  {name:'에너지',      pct:23.9, color:'#d97706'},
+  {name:'호텔/카지노', pct:21.6, color:'#7c3aed'},
+  {name:'헬스케어',    pct:11.8, color:'#059669'},
+  {name:'미디어',      pct:9.3,  color:'#db2777'},
+  {name:'기타/현금',   pct:9.3,  color:'#6b7280'},
+];
+const sl=document.getElementById('sectorList');
+sectors.forEach(s=>{
+  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
+});
+</script>
+</body>
+</html>

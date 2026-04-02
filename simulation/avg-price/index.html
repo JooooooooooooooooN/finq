@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>평균단가 시뮬레이터 — FinQ</title>
+<meta name="description" content="추가 매수 후 평균단가와 손익분기점이 어떻게 바뀌는지 한눈에 확인하세요. 기존 보유분과 추가 매수를 합산해 새로운 평균단가, 손익률을 바로 계산합니다.">
+<meta name="keywords" content="평균단가 계산기, 물타기 계산기, 추매 계산, 평균매수가, 손익분기점, FinQ">
+<meta property="og:title" content="평균단가 시뮬레이터 — FinQ">
+<meta property="og:description" content="추가 매수 후 평균단가와 손익분기점이 어떻게 바뀌는지 한눈에 확인하세요.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/simulation/avg-price/">
+<link rel="canonical" href="https://finq.kr/simulation/avg-price/">
+<meta name="google-site-verification" content="h_hguo8DHy4-Z2dyWtN-GMTueCtW_4P6VsQSeHPgEdk" />
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --green: #059669;
+  --red: #dc2626;
+  --yellow: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.nav-links a:hover { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px;
+  cursor: pointer; font-size: 16px; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; gap: 4px;
+  }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+/* MAIN */
+.main {
+  max-width: 900px; margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+.page-header { margin-bottom: 2rem; }
+.page-tags { display: flex; gap: 6px; margin-bottom: 0.75rem; flex-wrap: wrap; }
+.page-tag {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+.page-title {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700; letter-spacing: -0.5px;
+  margin-bottom: 0.25rem;
+}
+.page-desc {
+  font-size: 15px; color: var(--text-secondary);
+}
+
+/* SECTION */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.sec-title {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* FORM */
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-divider {
+  grid-column: 1 / -1;
+  border: none; border-top: 1px solid var(--border);
+  margin: 4px 0;
+}
+.form-section-label {
+  grid-column: 1 / -1;
+  font-size: 12px; font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: -4px;
+}
+.form-label {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 4px;
+}
+.form-label em {
+  font-style: normal; font-weight: 400;
+  color: var(--text-secondary); opacity: 0.75;
+}
+.input-wrap {
+  display: flex; align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg);
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.input-wrap:focus-within { border-color: var(--accent); }
+.input-wrap.error { border-color: var(--red); }
+.input-wrap input {
+  flex: 1; padding: 9px 12px; font-size: 14px;
+  border: none; background: transparent;
+  color: var(--text); outline: none; min-width: 0;
+}
+.input-unit {
+  padding: 0 12px; font-size: 13px;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--border);
+  white-space: nowrap; background: var(--bg-secondary);
+  align-self: stretch;
+  display: flex; align-items: center;
+}
+.input-error {
+  font-size: 12px; color: var(--red); margin-top: 4px; display: none;
+}
+.input-error.show { display: block; }
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .form-divider { grid-column: 1; }
+  .form-section-label { grid-column: 1; }
+}
+
+/* RESULTS */
+.result-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-bottom: 1rem;
+}
+.result-card {
+  background: var(--bg-secondary);
+  border-radius: 8px; padding: 1rem;
+  text-align: center;
+}
+.result-label {
+  font-size: 12px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.result-value {
+  font-size: 20px; font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.result-value.lg { font-size: 22px; }
+.result-sub {
+  font-size: 11px; color: var(--text-secondary);
+  margin-top: 3px; line-height: 1.4;
+}
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+.neutral { color: var(--text-secondary); }
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: repeat(2, 1fr); }
+  .result-value { font-size: 17px; }
+  .result-value.lg { font-size: 18px; }
+}
+
+/* INTERPRET */
+.interpret {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 4px;
+}
+.interpret-text {
+  font-size: 14px; color: var(--text); line-height: 1.7;
+}
+.status-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 12px; font-weight: 600;
+  padding: 2px 10px; border-radius: 20px;
+  margin-top: 8px;
+}
+.status-badge.profit { background: rgba(5,150,105,0.12); color: var(--green); }
+.status-badge.loss   { background: rgba(220,38,38,0.12);  color: var(--red); }
+.status-badge.even   { background: rgba(107,114,128,0.12); color: var(--text-secondary); }
+
+/* DETAIL TABLE */
+.detail-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.detail-table th {
+  text-align: left; padding: 8px 10px;
+  color: var(--text-secondary); font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table tr:last-child td { border-bottom: none; }
+.detail-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+.detail-table tr.highlight td { background: var(--bg-secondary); font-weight: 600; }
+.detail-table td.label-col { color: var(--text-secondary); font-size: 13px; }
+
+/* PRICE COMPARE */
+.price-bar-wrap { margin-top: 4px; }
+.price-bar-desc {
+  font-size: 13px; color: var(--text-secondary);
+  margin-bottom: 14px; line-height: 1.6; word-break: keep-all;
+}
+.price-bar-track {
+  position: relative;
+  height: 20px; border-radius: 10px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.price-bar-zone {
+  position: absolute; left: 0; top: 0; height: 100%;
+  background: rgba(5,150,105,0.12);
+  border-radius: 10px 0 0 10px;
+}
+.price-bar-zone.loss {
+  background: rgba(220,38,38,0.12);
+}
+.price-bar-marker {
+  position: absolute; top: 0; height: 100%;
+  width: 2px;
+}
+.price-bar-marker.marker-old  { background: var(--text-secondary); }
+.price-bar-marker.marker-new  { background: var(--accent); }
+.price-bar-marker.marker-cur  { background: var(--green); }
+.price-bar-marker.marker-cur.loss { background: var(--red); }
+.price-bar-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pbi-block {
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+.pbi-accent {
+  height: 3px; border-radius: 2px;
+  width: 24px; margin-bottom: 8px;
+}
+.pbi-accent.old { background: var(--text-secondary); }
+.pbi-accent.new { background: var(--accent); }
+.pbi-accent.cur { background: var(--green); }
+.pbi-accent.cur.loss { background: var(--red); }
+.pbi-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
+.pbi-val { font-size: 14px; font-weight: 600; }
+.pbi-val.old  { color: var(--text-secondary); }
+.pbi-val.new  { color: var(--accent); }
+.pbi-val.cur  { color: var(--green); }
+.pbi-val.cur.loss { color: var(--red); }
+.pbi-sub { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+@media (max-width: 480px) {
+  .price-bar-info-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* CTA */
+.cta-row {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 18px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  transition: all 0.15s; cursor: pointer;
+  border: 1px solid var(--border);
+}
+.cta-btn-primary {
+  background: var(--accent); color: #fff; border-color: var(--accent);
+}
+.cta-btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.cta-btn-secondary {
+  background: var(--bg-secondary); color: var(--text);
+}
+.cta-btn-secondary:hover { background: var(--border); }
+
+/* DISCLAIMER */
+.disclaimer {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  line-height: 1.7;
+}
+
+/* FOOTER */
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/" class="active">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-tags">
+      <span class="page-tag">평균단가</span>
+      <span class="page-tag">물타기</span>
+      <span class="page-tag">추매 계산</span>
+    </div>
+    <h1 class="page-title">평균단가 시뮬레이터</h1>
+    <p class="page-desc">추가 매수 후 평균단가와 손익분기점이 어떻게 바뀌는지 한눈에 확인</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="section">
+    <div class="sec-title">보유 현황 입력</div>
+    <div class="form-grid">
+
+      <div class="form-section-label">기존 보유분</div>
+
+      <div class="form-group">
+        <label class="form-label">기존 보유 수량</label>
+        <div class="input-wrap" id="wrap_holdQty">
+          <input type="number" id="holdQty" value="100" min="0" step="1" oninput="calc()">
+          <span class="input-unit">주</span>
+        </div>
+        <div class="input-error" id="err_holdQty">0보다 큰 수를 입력해 주세요.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">기존 평균단가</label>
+        <div class="input-wrap" id="wrap_holdPrice">
+          <input type="number" id="holdPrice" value="50000" min="0" step="100" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+        <div class="input-error" id="err_holdPrice">0보다 큰 수를 입력해 주세요.</div>
+      </div>
+
+      <hr class="form-divider">
+      <div class="form-section-label">추가 매수</div>
+
+      <div class="form-group">
+        <label class="form-label">추가 매수 수량</label>
+        <div class="input-wrap" id="wrap_addQty">
+          <input type="number" id="addQty" value="50" min="0" step="1" oninput="calc()">
+          <span class="input-unit">주</span>
+        </div>
+        <div class="input-error" id="err_addQty">0보다 큰 수를 입력해 주세요.</div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">추가 매수 가격</label>
+        <div class="input-wrap" id="wrap_addPrice">
+          <input type="number" id="addPrice" value="40000" min="0" step="100" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+        <div class="input-error" id="err_addPrice">0보다 큰 수를 입력해 주세요.</div>
+      </div>
+
+      <hr class="form-divider">
+      <div class="form-section-label">현재가</div>
+
+      <div class="form-group full">
+        <label class="form-label">현재가 <em>(손익 계산 기준)</em></label>
+        <div class="input-wrap" id="wrap_curPrice">
+          <input type="number" id="curPrice" value="43000" min="0" step="100" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+        <div class="input-error" id="err_curPrice">0보다 큰 수를 입력해 주세요.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RESULT SUMMARY -->
+  <div class="section">
+    <div class="sec-title">핵심 결과</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">새로운 평균단가</div>
+        <div class="result-value lg" id="r_newAvg">—</div>
+        <div class="result-sub" id="r_newAvgSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">총 보유 수량</div>
+        <div class="result-value" id="r_totalQty">—</div>
+        <div class="result-sub" id="r_totalQtySub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">총 투자금</div>
+        <div class="result-value" id="r_totalInvest">—</div>
+        <div class="result-sub" id="r_totalInvestSub"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">현재가 기준 손익률</div>
+        <div class="result-value" id="r_returnRate">—</div>
+        <div class="result-sub" id="r_returnRateSub"></div>
+      </div>
+    </div>
+
+    <div class="interpret">
+      <div class="interpret-text" id="interpretText">입력값을 확인 중입니다.</div>
+      <div id="statusBadgeWrap" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <!-- PRICE COMPARE -->
+  <div class="section">
+    <div class="sec-title">단가 비교</div>
+    <div class="price-bar-wrap">
+      <p class="price-bar-desc" id="barDesc">현재가가 새 평균단가보다 오른쪽에 있으면 수익 구간, 왼쪽에 있으면 손실 구간입니다. 기존 평균단가와 새 평균단가를 함께 비교해 추가 매수 효과를 확인하세요.</p>
+      <div class="price-bar-track" id="priceBarTrack">
+        <div class="price-bar-zone" id="priceBarZone"></div>
+        <div class="price-bar-marker marker-old" id="markerOld" style="left:0%"></div>
+        <div class="price-bar-marker marker-new" id="markerNew" style="left:50%"></div>
+        <div class="price-bar-marker marker-cur" id="markerCur" style="left:100%"></div>
+      </div>
+      <div class="price-bar-info-grid">
+        <div class="pbi-block">
+          <div class="pbi-accent cur" id="bar_cur_accent"></div>
+          <div class="pbi-label">현재가</div>
+          <div class="pbi-val cur" id="bar_cur_val">—</div>
+          <div class="pbi-sub" id="bar_cur_sub">—</div>
+        </div>
+        <div class="pbi-block">
+          <div class="pbi-accent new"></div>
+          <div class="pbi-label">새로운 평균단가</div>
+          <div class="pbi-val new" id="bar_new_val">—</div>
+          <div class="pbi-sub">손익분기점 (추매 후)</div>
+        </div>
+        <div class="pbi-block">
+          <div class="pbi-accent old"></div>
+          <div class="pbi-label">기존 평균단가</div>
+          <div class="pbi-val old" id="bar_old_val">—</div>
+          <div class="pbi-sub">손익분기점 (추매 전)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="section">
+    <div class="sec-title">상세 계산 결과</div>
+    <table class="detail-table">
+      <tbody>
+        <tr>
+          <td class="label-col">기존 투자금</td>
+          <td class="num" id="d_holdInvest">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">추가 투자금</td>
+          <td class="num" id="d_addInvest">—</td>
+        </tr>
+        <tr class="highlight">
+          <td class="label-col">총 투자금</td>
+          <td class="num" id="d_totalInvest">—</td>
+        </tr>
+        <tr style="height:4px;"><td colspan="2"></td></tr>
+        <tr>
+          <td class="label-col">기존 평균단가</td>
+          <td class="num" id="d_oldAvg">—</td>
+        </tr>
+        <tr class="highlight">
+          <td class="label-col">새로운 평균단가</td>
+          <td class="num" id="d_newAvg">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">평균단가 변화</td>
+          <td class="num" id="d_avgChange">—</td>
+        </tr>
+        <tr style="height:4px;"><td colspan="2"></td></tr>
+        <tr>
+          <td class="label-col">손익분기점</td>
+          <td class="num" id="d_bep">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">현재 평가금액</td>
+          <td class="num" id="d_evalAmt">—</td>
+        </tr>
+        <tr>
+          <td class="label-col">평가손익</td>
+          <td class="num" id="d_evalPnl">—</td>
+        </tr>
+        <tr class="highlight">
+          <td class="label-col">현재 상태</td>
+          <td class="num" id="d_status">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-row">
+    <a href="/simulation/dca/" class="cta-btn cta-btn-primary">복리 투자 시뮬레이터 →</a>
+    <a href="../../simulation/" class="cta-btn cta-btn-secondary">시뮬레이션 전체 보기</a>
+  </div>
+
+  <div class="disclaimer">
+    본 계산기는 단순 시뮬레이션입니다. 실제 수수료, 세금, 분할 매수 시점 차이 등은 반영하지 않을 수 있습니다. 투자 판단의 참고용으로만 활용해 주세요.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+/* ── Theme ── */
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+  drawCompare();
+}
+(function() {
+  var saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+/* ── Format ── */
+function fmtNum(n, dec) {
+  if (dec === undefined) dec = 0;
+  return n.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+function fmtWon(n) {
+  var a = Math.abs(n);
+  var sign = n < 0 ? '-' : '';
+  if (a >= 100000000) return sign + fmtNum(a / 100000000, 2) + '억원';
+  if (a >= 10000)     return sign + fmtNum(a / 10000, 1) + '만원';
+  return sign + fmtNum(a, 0) + '원';
+}
+function fmtWonFull(n) {
+  return (n < 0 ? '-' : '') + fmtNum(Math.abs(n), 0) + '원';
+}
+function fmtPct(n, sign) {
+  var s = sign ? (n >= 0 ? '+' : '') : '';
+  return s + fmtNum(n, 2) + '%';
+}
+
+/* ── Validation ── */
+function getVal(id, errId, wrapId) {
+  var el = document.getElementById(id);
+  var v = parseFloat(el.value);
+  var err = document.getElementById(errId);
+  var wrap = document.getElementById(wrapId);
+  if (!isFinite(v) || v <= 0) {
+    err.classList.add('show');
+    wrap.classList.add('error');
+    return null;
+  }
+  err.classList.remove('show');
+  wrap.classList.remove('error');
+  return v;
+}
+
+/* ── Compare bar ── */
+var lastCalc = null;
+
+function drawCompare() {
+  var d = lastCalc;
+  if (!d) return;
+
+  var isProfit = d.curPrice >= d.newAvg;
+
+  // 바 범위: 3개 값 중 최솟값~최댓값에 10% 여백
+  var prices = [d.oldAvg, d.newAvg, d.curPrice];
+  var minP = Math.min.apply(null, prices);
+  var maxP = Math.max.apply(null, prices);
+  var margin = (maxP - minP) * 0.15 || minP * 0.1 || 1;
+  var barMin = Math.max(0, minP - margin);
+  var barMax = maxP + margin;
+  var range = barMax - barMin;
+
+  function toPct(v) {
+    return Math.min(100, Math.max(0, ((v - barMin) / range) * 100)).toFixed(2);
+  }
+
+  // 마커 위치
+  document.getElementById('markerOld').style.left = toPct(d.oldAvg) + '%';
+  document.getElementById('markerNew').style.left = toPct(d.newAvg) + '%';
+
+  var markerCur = document.getElementById('markerCur');
+  markerCur.style.left = toPct(d.curPrice) + '%';
+  if (isProfit) {
+    markerCur.className = 'price-bar-marker marker-cur';
+  } else {
+    markerCur.className = 'price-bar-marker marker-cur loss';
+  }
+
+  // 수익/손실 구간 배경: 새 평균단가 ~ 현재가
+  var zone = document.getElementById('priceBarZone');
+  var zoneLeft = Math.min(toPct(d.newAvg), toPct(d.curPrice));
+  var zoneWidth = Math.abs(toPct(d.newAvg) - toPct(d.curPrice));
+  zone.style.left  = zoneLeft + '%';
+  zone.style.width = zoneWidth + '%';
+  zone.style.borderRadius = '0';
+  zone.className = isProfit ? 'price-bar-zone' : 'price-bar-zone loss';
+
+  // 하단 정보 블록
+  document.getElementById('bar_old_val').textContent = fmtWonFull(d.oldAvg);
+  document.getElementById('bar_new_val').textContent = fmtWonFull(d.newAvg);
+
+  var curValEl     = document.getElementById('bar_cur_val');
+  var curAccentEl  = document.getElementById('bar_cur_accent');
+  var curSubEl     = document.getElementById('bar_cur_sub');
+
+  curValEl.textContent = fmtWonFull(d.curPrice);
+  if (isProfit) {
+    curValEl.className    = 'pbi-val cur';
+    curAccentEl.className = 'pbi-accent cur';
+    curSubEl.textContent  = '수익 구간 (' + fmtPct(d.returnRate, true) + ')';
+  } else {
+    curValEl.className    = 'pbi-val cur loss';
+    curAccentEl.className = 'pbi-accent cur loss';
+    curSubEl.textContent  = '손실 구간 (' + fmtPct(d.returnRate, true) + ')';
+  }
+}
+
+/* ── Main calc ── */
+function calc() {
+  var holdQty   = getVal('holdQty',   'err_holdQty',   'wrap_holdQty');
+  var holdPrice = getVal('holdPrice', 'err_holdPrice', 'wrap_holdPrice');
+  var addQty    = getVal('addQty',    'err_addQty',    'wrap_addQty');
+  var addPrice  = getVal('addPrice',  'err_addPrice',  'wrap_addPrice');
+  var curPrice  = getVal('curPrice',  'err_curPrice',  'wrap_curPrice');
+
+  if (holdQty === null || holdPrice === null || addQty === null || addPrice === null || curPrice === null) {
+    lastCalc = null;
+    return;
+  }
+
+  // 계산
+  var holdInvest  = holdQty * holdPrice;
+  var addInvest   = addQty * addPrice;
+  var totalQty    = holdQty + addQty;
+  var totalInvest = holdInvest + addInvest;
+  var newAvg      = totalInvest / totalQty;
+  var evalAmt     = totalQty * curPrice;
+  var evalPnl     = evalAmt - totalInvest;
+  var returnRate  = (evalPnl / totalInvest) * 100;
+  var avgChange   = newAvg - holdPrice;
+  var avgChangePct = (avgChange / holdPrice) * 100;
+
+  // 상태 판정
+  var avgStatus, priceStatus;
+  if (Math.abs(avgChange) < 0.01) {
+    avgStatus = 'even';
+  } else if (newAvg < holdPrice) {
+    avgStatus = 'down';
+  } else {
+    avgStatus = 'up';
+  }
+
+  if (curPrice > newAvg) {
+    priceStatus = 'profit';
+  } else if (Math.abs(curPrice - newAvg) < 0.01) {
+    priceStatus = 'even';
+  } else {
+    priceStatus = 'loss';
+  }
+
+  lastCalc = {
+    holdQty: holdQty, holdPrice: holdPrice,
+    addQty: addQty, addPrice: addPrice,
+    curPrice: curPrice,
+    holdInvest: holdInvest, addInvest: addInvest,
+    totalQty: totalQty, totalInvest: totalInvest,
+    newAvg: newAvg, evalAmt: evalAmt,
+    evalPnl: evalPnl, returnRate: returnRate,
+    avgChange: avgChange, avgChangePct: avgChangePct,
+    oldAvg: holdPrice,
+    avgStatus: avgStatus, priceStatus: priceStatus
+  };
+
+  // ── 결과 카드 ──
+  var newAvgEl = document.getElementById('r_newAvg');
+  newAvgEl.textContent = fmtWonFull(newAvg);
+  newAvgEl.className = 'result-value lg';
+
+  document.getElementById('r_newAvgSub').textContent =
+    avgStatus === 'down' ? '기존 대비 ' + fmtNum(Math.abs(avgChangePct), 2) + '% 하락' :
+    avgStatus === 'up'   ? '기존 대비 ' + fmtNum(avgChangePct, 2) + '% 상승' :
+    '변화 없음';
+
+  document.getElementById('r_totalQty').textContent = fmtNum(totalQty, 0) + '주';
+  document.getElementById('r_totalQtySub').textContent = holdQty + '주 + ' + addQty + '주';
+
+  document.getElementById('r_totalInvest').textContent = fmtWon(totalInvest);
+  document.getElementById('r_totalInvestSub').textContent = fmtWon(holdInvest) + ' + ' + fmtWon(addInvest);
+
+  var rrEl = document.getElementById('r_returnRate');
+  rrEl.textContent = fmtPct(returnRate, true);
+  rrEl.className = 'result-value ' + (returnRate > 0 ? 'pos' : returnRate < 0 ? 'neg' : 'neutral');
+  document.getElementById('r_returnRateSub').textContent = '현재가 ' + fmtWonFull(curPrice) + ' 기준';
+
+  // ── 해석 문장 ──
+  var txt = '';
+  if (avgStatus === 'down') {
+    txt = '추가 매수 후 평균단가는 ' + fmtWonFull(holdPrice) + '에서 약 ' + fmtWonFull(newAvg) + '으로 낮아집니다.';
+  } else if (avgStatus === 'up') {
+    txt = '추가 매수 후 평균단가는 ' + fmtWonFull(holdPrice) + '에서 약 ' + fmtWonFull(newAvg) + '으로 높아집니다.';
+  } else {
+    txt = '추가 매수 가격이 기존 평균단가와 같아 평균단가 변화가 없습니다.';
+  }
+  txt += ' 현재가 기준 손익률은 약 ' + fmtPct(returnRate, true) + '입니다.';
+  document.getElementById('interpretText').textContent = txt;
+
+  var badgeMap = {
+    profit: ['profit', '수익 구간'],
+    even:   ['even',   '본전 구간'],
+    loss:   ['loss',   '손실 구간']
+  };
+  var bInfo = badgeMap[priceStatus];
+  document.getElementById('statusBadgeWrap').innerHTML =
+    '<span class="status-badge ' + bInfo[0] + '">' + bInfo[1] + '</span>';
+
+  // ── 상세 테이블 ──
+  document.getElementById('d_holdInvest').textContent   = fmtWon(holdInvest);
+  document.getElementById('d_addInvest').textContent    = fmtWon(addInvest);
+  document.getElementById('d_totalInvest').textContent  = fmtWon(totalInvest);
+  document.getElementById('d_oldAvg').textContent       = fmtWonFull(holdPrice);
+  document.getElementById('d_newAvg').textContent       = fmtWonFull(newAvg);
+
+  var changeEl = document.getElementById('d_avgChange');
+  var changeSign = avgChange >= 0 ? '+' : '';
+  changeEl.textContent = changeSign + fmtWonFull(avgChange) + '  (' + fmtPct(avgChangePct, true) + ')';
+  changeEl.className   = 'num ' + (avgChange < 0 ? 'pos' : avgChange > 0 ? 'neg' : 'neutral');
+
+  document.getElementById('d_bep').textContent     = fmtWonFull(newAvg) + ' (새로운 평균단가)';
+  document.getElementById('d_evalAmt').textContent = fmtWon(evalAmt);
+
+  var pnlEl = document.getElementById('d_evalPnl');
+  pnlEl.textContent = (evalPnl >= 0 ? '+' : '') + fmtWon(evalPnl) + '  (' + fmtPct(returnRate, true) + ')';
+  pnlEl.className   = 'num ' + (evalPnl > 0 ? 'pos' : evalPnl < 0 ? 'neg' : 'neutral');
+
+  var statusMap = { profit: '수익 구간', even: '본전 구간', loss: '손실 구간' };
+  var statusClsMap = { profit: 'pos', even: 'neutral', loss: 'neg' };
+  var statusEl = document.getElementById('d_status');
+  statusEl.textContent = statusMap[priceStatus];
+  statusEl.className   = 'num ' + statusClsMap[priceStatus];
+
+  // ── 비교 바 ──
+  drawCompare();
+}
+
+// 초기 계산
+calc();
+</script>
+
+</body>
+</html>

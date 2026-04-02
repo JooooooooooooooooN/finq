@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 수익 시뮬레이터 — FinQ</title>
+<meta name="description" content="종목별 평가손익과 세후 배당 실수령액을 시뮬레이션합니다. 한국·미국·일본 주식 지원, 국가별 세율 자동 적용.">
+<meta name="keywords" content="투자 수익 시뮬레이터, 배당수익률 계산기, 배당금 계산, 세후 배당, 평가손익, 포트폴리오, FinQ">
+<meta property="og:title" content="투자 수익 시뮬레이터 — FinQ">
+<meta property="og:description" content="종목별 평가손익과 세후 배당 실수령액을 시뮬레이션합니다.">
+<meta property="og:type" content="website">
+<meta name="google-site-verification" content="h_hguo8DHy4-Z2dyWtN-GMTueCtW_4P6VsQSeHPgEdk" />
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-secondary: #f8f9fb;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #6b7280;
+  --border: #e5e7eb;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --green: #059669;
+  --red: #dc2626;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14;
+  --bg-secondary: #111827;
+  --bg-card: #1a1f2e;
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+
+/* NAV */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 56px;
+}
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a {
+  padding: 6px 14px; border-radius: 8px;
+  font-size: 14px; font-weight: 500; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.nav-links a:hover { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px;
+  cursor: pointer; font-size: 16px; color: var(--text-secondary);
+  transition: all 0.15s;
+}
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: absolute; top: 56px; left: 0; right: 0;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; gap: 4px;
+  }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+/* MAIN */
+.main {
+  max-width: 900px; margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+.page-title {
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 700; letter-spacing: -0.5px;
+  margin-bottom: 0.25rem;
+}
+.page-desc {
+  font-size: 15px; color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* SECTION */
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.sec-title {
+  font-size: 14px; font-weight: 600; color: var(--text-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+/* COUNTRY TABS */
+.country-tabs {
+  display: flex; gap: 6px; margin-bottom: 1.25rem;
+}
+.country-tab {
+  padding: 8px 20px; border-radius: 8px;
+  font-size: 14px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--border);
+  color: var(--text-secondary); background: none;
+  transition: all 0.15s;
+}
+.country-tab.active {
+  background: var(--accent); color: #fff;
+  border-color: var(--accent);
+}
+.country-tab:hover:not(.active) {
+  background: var(--bg-secondary);
+}
+
+/* FORM */
+.form-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.form-group { margin-bottom: 0; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  display: block; font-size: 13px; font-weight: 500;
+  color: var(--text-secondary); margin-bottom: 4px;
+}
+.input-wrap {
+  display: flex; align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px; background: var(--bg);
+  overflow: hidden;
+}
+.input-wrap input {
+  flex: 1; padding: 9px 12px; font-size: 14px;
+  border: none; background: transparent;
+  color: var(--text); outline: none; min-width: 0;
+}
+.input-wrap select {
+  flex: 1; padding: 9px 12px; font-size: 14px;
+  border: none; background: transparent;
+  color: var(--text); outline: none;
+}
+.input-unit {
+  padding: 0 12px; font-size: 13px;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--border);
+  white-space: nowrap; background: var(--bg-secondary);
+}
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* STOCK TABLE */
+.stock-table-wrap {
+  overflow-x: auto; margin-top: 1rem;
+}
+.stock-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.stock-table th {
+  text-align: left; padding: 8px 10px;
+  color: var(--text-secondary); font-weight: 500;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.stock-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.stock-table tr:last-child td { border-bottom: none; }
+.stock-table input {
+  width: 100%; padding: 7px 10px; font-size: 13px;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--bg); color: var(--text);
+}
+.add-btn {
+  background: none; border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 18px;
+  font-size: 13px; color: var(--text-secondary);
+  cursor: pointer; margin-top: 0.75rem;
+}
+.add-btn:hover { background: var(--bg-secondary); }
+.del-btn {
+  background: none; border: none;
+  color: var(--text-secondary); cursor: pointer;
+  font-size: 16px; padding: 0 4px;
+}
+.del-btn:hover { color: var(--red); }
+
+/* RESULTS */
+.result-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  margin-bottom: 1rem;
+}
+.result-card {
+  background: var(--bg-secondary);
+  border-radius: 8px; padding: 1rem;
+  text-align: center;
+}
+.result-label {
+  font-size: 12px; color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+.result-value {
+  font-size: 22px; font-weight: 700;
+}
+.result-sub {
+  font-size: 12px; color: var(--text-secondary);
+  margin-top: 2px;
+}
+.pos { color: var(--green); }
+.neg { color: var(--red); }
+@media (max-width: 600px) {
+  .result-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* DETAIL TABLE */
+.detail-table {
+  width: 100%; border-collapse: collapse; font-size: 13px;
+}
+.detail-table th {
+  text-align: left; padding: 8px 10px;
+  color: var(--text-secondary); font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.detail-table tr:last-child td { border-bottom: none; }
+
+/* DISCLAIMER */
+.disclaimer {
+  font-size: 12px; color: var(--text-secondary);
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  line-height: 1.7;
+}
+
+/* SEARCH DROPDOWN (fixed position, body에 붙음) */
+#searchDropdown {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  max-height: 200px;
+  overflow-y: auto;
+  min-width: 220px;
+}
+#searchDropdown.open { display: block; }
+.search-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+.search-item:last-child { border-bottom: none; }
+.search-item:hover { background: var(--bg-secondary); }
+.search-item .si-symbol { font-weight: 600; color: var(--accent); }
+.search-item .si-name { color: var(--text); margin-left: 6px; }
+.search-item .si-exchange { color: var(--text-secondary); font-size: 11px; margin-left: 4px; }
+.search-loading {
+  padding: 10px 12px; font-size: 12px; color: var(--text-secondary); text-align: center;
+}
+
+/* FETCH BTN */
+.fetch-btn {
+  padding: 5px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 500;
+  background: var(--accent); color: #fff;
+  border: none; cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.fetch-btn:hover { background: var(--accent-hover); }
+.fetch-btn:disabled { background: var(--text-secondary); cursor: not-allowed; }
+.fetch-all-btn {
+  padding: 7px 18px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  background: var(--accent); color: #fff;
+  border: none; cursor: pointer;
+  margin-top: 0.75rem; margin-left: 0.5rem;
+  transition: background 0.15s;
+}
+.fetch-all-btn:hover { background: var(--accent-hover); }
+.ticker-input {
+  width: 100%; padding: 7px 10px; font-size: 12px;
+  border: 1px solid var(--accent); border-radius: 6px;
+  background: var(--bg); color: var(--text);
+}
+.ticker-hint {
+  font-size: 11px; color: var(--text-secondary);
+  margin-top: 0.5rem; padding: 8px 12px;
+  background: var(--bg-secondary); border-radius: 6px;
+  line-height: 1.6;
+}
+
+/* FOOTER */
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer {
+  max-width: 1100px; margin: 0 auto;
+  padding: 2.5rem 1.25rem;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/simulation/dividend/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/" class="active">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <h1 class="page-title">투자 수익 시뮬레이터</h1>
+  <p class="page-desc">종목별 평가손익 + 세후 배당금까지, 내 포트폴리오의 실제 수익을 시뮬레이션합니다.</p>
+
+  <!-- COUNTRY SELECT -->
+  <div class="section">
+    <div class="sec-title">국가 선택</div>
+    <div class="country-tabs">
+      <button class="country-tab active" onclick="setCountry('kr', this)">🇰🇷 한국</button>
+      <button class="country-tab" onclick="setCountry('us', this)">🇺🇸 미국</button>
+      <button class="country-tab" onclick="setCountry('jp', this)">🇯🇵 일본</button>
+    </div>
+    <div class="form-grid">
+      <div class="form-group" id="exchangeGroup" style="display:none">
+        <label class="form-label">환율 (<span id="exchangeLabel">USD/KRW</span>)</label>
+        <div class="input-wrap">
+          <input type="number" id="exchangeRate" value="1400" step="0.01" oninput="calc()">
+          <span class="input-unit">원</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">배당 주기</label>
+        <div class="input-wrap">
+          <select id="divFreq" onchange="calc()">
+            <option value="1">연 1회</option>
+            <option value="2">반기 (연 2회)</option>
+            <option value="4" selected>분기 (연 4회)</option>
+            <option value="12">월배당 (연 12회)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STOCK INPUT -->
+  <div class="section">
+    <div class="sec-title">종목 입력</div>
+    <div class="stock-table-wrap">
+      <table class="stock-table">
+        <thead>
+          <tr>
+            <th>종목 검색</th>
+            <th>매수가 (<span id="currLabel">원</span>)</th>
+            <th>현재가 (<span id="currLabel3">원</span>)</th>
+            <th>수량 (주)</th>
+            <th>주당 배당금 (<span id="currLabel2">원</span>)</th>
+            <th>투자금</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="stockBody"></tbody>
+      </table>
+    </div>
+    <button class="add-btn" onclick="addStock()">+ 종목 추가</button>
+    <button class="fetch-all-btn" onclick="fetchAllPrices()">📡 전체 현재가 불러오기</button>
+    <div class="ticker-hint" id="tickerHint">
+      <strong>종목코드 입력 방법:</strong><br>
+      한국 코스피: 005930.KS (삼성전자) · 105560.KS (KB금융)<br>
+      한국 코스닥: 035720.KQ (카카오)<br>
+      미국: AAPL · KO · MSFT<br>
+      일본: 7203.T (토요타) · 8306.T (미쓰비시UFJ)
+    </div>
+  </div>
+
+  <!-- DETAIL TABLE -->
+  <div class="section">
+    <div class="sec-title">종목별 상세</div>
+    <div class="stock-table-wrap">
+      <table class="detail-table" id="detailTable">
+        <thead>
+          <tr>
+            <th>종목명</th>
+            <th>투자금</th>
+            <th>평가금액</th>
+            <th>평가손익</th>
+            <th>세후 배당금</th>
+            <th>세후 수익률</th>
+          </tr>
+        </thead>
+        <tbody id="detailBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="section">
+    <div class="sec-title">계산 결과</div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">총 투자금 (매수 기준)</div>
+        <div class="result-value" id="r_total">0원</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">현재 평가금액</div>
+        <div class="result-value" id="r_eval" style="color:var(--accent)">0원</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">평가손익</div>
+        <div class="result-value" id="r_pnl">0원</div>
+        <div class="result-sub" id="r_pnlPct"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">적용 세율</div>
+        <div class="result-value" id="r_tax" style="color:var(--accent)">15.4%</div>
+      </div>
+    </div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">세전 배당수익률</div>
+        <div class="result-value pos" id="r_yieldPre">0%</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">세후 배당수익률</div>
+        <div class="result-value pos" id="r_yieldPost">0%</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">연간 세전 배당금</div>
+        <div class="result-value" id="r_divPre" style="font-size:18px">0원</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">연간 세후 배당금</div>
+        <div class="result-value pos" id="r_divPost" style="font-size:18px">0원</div>
+      </div>
+    </div>
+    <div class="result-grid">
+      <div class="result-card">
+        <div class="result-label">월 평균 수령액</div>
+        <div class="result-value pos" id="r_monthly" style="font-size:18px">0원</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">1회 수령액</div>
+        <div class="result-value" id="r_perPay" style="font-size:18px">0원</div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">배당 포함 총 수익</div>
+        <div class="result-value" id="r_totalReturn" style="font-size:18px">0원</div>
+        <div class="result-sub" id="r_totalReturnPct"></div>
+      </div>
+      <div class="result-card">
+        <div class="result-label">배당 포함 총 수익률</div>
+        <div class="result-value" id="r_totalYield" style="font-size:18px">0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    ※ 본 서비스에서 제공되는 모든 정보 및 계산 결과는 참고용이며, 모든 투자 판단과 책임은 이용자에게 있습니다.
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<div id="searchDropdown"></div>
+<script src="kr-stocks.js"></script>
+<script>
+// Country config
+const COUNTRIES = {
+  kr: { tax: 0.154, currency: '원', symbol: '₩', exchangeDefault: 1, label: '한국', freqDefault: 1 },
+  us: { tax: 0.15, currency: '달러', symbol: '$', exchangeDefault: 1400, label: '미국', freqDefault: 4 },
+  jp: { tax: 0.15315, currency: '엔', symbol: '¥', exchangeDefault: 9.5, label: '일본', freqDefault: 2 }
+};
+// KR_STOCKS는 외부 kr-stocks.js에서 로드됨 (코스피+코스닥 전체 2,769개)
+
+// 일본 주요 종목 로컬 사전
+const JP_STOCKS = [
+  {symbol:'7203.T',name:'토요타',exchange:'도쿄'},{symbol:'6758.T',name:'소니',exchange:'도쿄'},
+  {symbol:'8306.T',name:'미쓰비시UFJ',exchange:'도쿄'},{symbol:'9984.T',name:'소프트뱅크그룹',exchange:'도쿄'},
+  {symbol:'6861.T',name:'키엔스',exchange:'도쿄'},{symbol:'9432.T',name:'NTT',exchange:'도쿄'},
+  {symbol:'6902.T',name:'덴소',exchange:'도쿄'},{symbol:'8035.T',name:'도쿄일렉트론',exchange:'도쿄'},
+  {symbol:'7267.T',name:'혼다',exchange:'도쿄'},{symbol:'4502.T',name:'다케다제약',exchange:'도쿄'},
+  {symbol:'7741.T',name:'HOYA',exchange:'도쿄'},{symbol:'6501.T',name:'히타치',exchange:'도쿄'},
+  {symbol:'8058.T',name:'미쓰비시상사',exchange:'도쿄'},{symbol:'8001.T',name:'이토추상사',exchange:'도쿄'},
+  {symbol:'6367.T',name:'다이킨',exchange:'도쿄'},{symbol:'4063.T',name:'신에츠화학',exchange:'도쿄'},
+  {symbol:'7974.T',name:'닌텐도',exchange:'도쿄'},{symbol:'9433.T',name:'KDDI',exchange:'도쿄'},
+  {symbol:'7751.T',name:'캐논',exchange:'도쿄'},{symbol:'6954.T',name:'화낙',exchange:'도쿄'},
+];
+
+function searchLocal(query) {
+  const q = query.toLowerCase().trim();
+  let list = [];
+  if (country === 'kr') list = KR_STOCKS;
+  else if (country === 'jp') list = JP_STOCKS;
+  else return [];
+  return list.filter(s =>
+    s.name.toLowerCase().includes(q) || s.symbol.toLowerCase().includes(q)
+  ).slice(0, 8);
+}
+
+function isKorean(str) {
+  return /[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(str);
+}
+
+let country = 'kr';
+let stocks = [
+  { ticker: '005930.KS', name: '삼성전자', price: 70000, now: 0, qty: 100, div: 1444 },
+  { ticker: '105560.KS', name: 'KB금융', price: 85000, now: 0, qty: 50, div: 3060 }
+];
+
+function setCountry(c, el) {
+  country = c;
+  document.querySelectorAll('.country-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const cfg = COUNTRIES[c];
+  const curr = cfg.currency;
+  document.querySelectorAll('#currLabel, #currLabel2, #currLabel3').forEach(e => e.textContent = curr);
+  document.getElementById('exchangeGroup').style.display = c === 'kr' ? 'none' : '';
+  document.getElementById('exchangeLabel').textContent = c === 'us' ? 'USD/KRW' : 'JPY/KRW';
+  document.getElementById('exchangeRate').value = cfg.exchangeDefault;
+  document.getElementById('divFreq').value = cfg.freqDefault;
+
+  if (c === 'us') {
+    stocks = [
+      { ticker: 'AAPL', name: 'Apple', price: 200, now: 0, qty: 50, div: 1.00 },
+      { ticker: 'KO', name: 'Coca-Cola', price: 60, now: 0, qty: 100, div: 1.94 }
+    ];
+  } else if (c === 'jp') {
+    stocks = [
+      { ticker: '7203.T', name: '토요타', price: 2800, now: 0, qty: 100, div: 75 },
+      { ticker: '8306.T', name: '미쓰비시UFJ', price: 1600, now: 0, qty: 200, div: 41 }
+    ];
+  } else {
+    stocks = [
+      { ticker: '005930.KS', name: '삼성전자', price: 70000, now: 0, qty: 100, div: 1444 },
+      { ticker: '105560.KS', name: 'KB금융', price: 85000, now: 0, qty: 50, div: 3060 }
+    ];
+  }
+  renderTable();
+}
+
+function fmtN(n, dec) {
+  if (dec === undefined) dec = 0;
+  return n.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function fmtKRW(n) {
+  const a = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (a >= 100000000) return sign + (a / 100000000).toFixed(1) + '억원';
+  if (a >= 10000) return sign + fmtN(a / 10000, 0) + '만원';
+  return sign + fmtN(a, 0) + '원';
+}
+
+function renderTable() {
+  const cfg = COUNTRIES[country];
+  const tbody = document.getElementById('stockBody');
+  let html = '';
+  stocks.forEach((s, i) => {
+    const invest = s.price * s.qty;
+    const nowDisplay = s.now > 0 ? s.now : '';
+    html += `<tr>
+      <td>
+        <input type="text" value="${s.name || s.ticker}" style="min-width:110px"
+          id="search_${i}" placeholder="종목명 또는 코드"
+          oninput="onSearchInput(${i}, this.value)"
+          onfocus="onSearchInput(${i}, this.value)"
+          onblur="setTimeout(()=>hideDropdown(),200)">
+      </td>
+      <td><input type="number" value="${s.price}" style="min-width:75px" onchange="stocks[${i}].price=+this.value;calc()"></td>
+      <td><input type="number" value="${nowDisplay}" style="min-width:75px;border-color:var(--accent)" onchange="stocks[${i}].now=+this.value;calc()" placeholder="자동"></td>
+      <td><input type="number" value="${s.qty}" style="min-width:55px" onchange="stocks[${i}].qty=+this.value;calc()"></td>
+      <td><input type="number" value="${s.div}" step="0.01" style="min-width:75px" onchange="stocks[${i}].div=+this.value;calc()"></td>
+      <td style="white-space:nowrap;color:var(--text-secondary);font-size:13px">${country === 'kr' ? fmtKRW(invest) : cfg.symbol + fmtN(invest, 2)}</td>
+      <td><button class="del-btn" onclick="stocks.splice(${i},1);renderTable()">×</button></td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+  calc();
+}
+
+function addStock() {
+  if (country === 'us') stocks.push({ ticker: '', name: '', price: 100, now: 0, qty: 10, div: 1.00 });
+  else if (country === 'jp') stocks.push({ ticker: '', name: '', price: 1000, now: 0, qty: 100, div: 30 });
+  else stocks.push({ ticker: '', name: '', price: 50000, now: 0, qty: 10, div: 500 });
+  renderTable();
+}
+
+async function fetchPrice(symbol) {
+  const res = await fetch(`/api/stock-price?symbol=${encodeURIComponent(symbol)}`);
+  if (!res.ok) throw new Error('Not found');
+  return res.json();
+}
+
+async function searchStock(query) {
+  const res = await fetch(`/api/stock-search?q=${encodeURIComponent(query)}`);
+  if (!res.ok) throw new Error('Search failed');
+  const data = await res.json();
+  return data.results || [];
+}
+
+function isTickerCode(str) {
+  return /^[A-Z0-9.]+$/i.test(str) && (str.includes('.') || /^[A-Z]{1,5}$/.test(str) || /^\d{4,6}$/.test(str));
+}
+
+async function fetchAllPrices() {
+  const btn = document.querySelector('.fetch-all-btn');
+  btn.textContent = '불러오는 중...';
+  btn.disabled = true;
+
+  for (let i = 0; i < stocks.length; i++) {
+    const s = stocks[i];
+    let symbol = s.ticker;
+
+    // 종목코드가 없거나 종목명으로 보이면, 검색 API로 코드 찾기
+    if (!symbol || !isTickerCode(symbol)) {
+      const query = symbol || s.name;
+      if (!query) continue;
+      try {
+        const results = await searchStock(query);
+        if (results.length > 0) {
+          symbol = results[0].symbol;
+          s.ticker = symbol;
+          if (!s.name || s.name === query) s.name = results[0].name;
+        } else {
+          continue;
+        }
+      } catch (e) {
+        console.warn(`Search failed for ${query}:`, e);
+        continue;
+      }
+    }
+
+    try {
+      const data = await fetchPrice(symbol);
+      s.now = data.price;
+      // 로컬 사전에 한글 이름이 있으면 한글 이름 유지, 없으면 API 이름 사용
+      const localMatch = KR_STOCKS.find(k => k.symbol === symbol) || JP_STOCKS.find(j => j.symbol === symbol);
+      if (localMatch) s.name = localMatch.name;
+      else if (data.name) s.name = data.name;
+    } catch (e) {
+      console.warn(`Failed to fetch ${symbol}:`, e);
+    }
+  }
+
+  btn.textContent = '📡 전체 현재가 불러오기';
+  btn.disabled = false;
+  renderTable();
+}
+
+// Search dropdown — 공용 1개를 재사용
+let searchTimer = null;
+let activeSearchIdx = -1;
+let dropdownResults = [];
+
+function positionDropdown(inputEl) {
+  const dd = document.getElementById('searchDropdown');
+  const rect = inputEl.getBoundingClientRect();
+  dd.style.left = rect.left + 'px';
+  dd.style.top = (rect.bottom + 2) + 'px';
+  dd.style.width = Math.max(rect.width, 220) + 'px';
+}
+
+function renderDropdownItems(idx, results) {
+  const dd = document.getElementById('searchDropdown');
+  dropdownResults = results;
+  dd.innerHTML = results.map((r, ri) =>
+    `<div class="search-item" onmousedown="selectStock(${idx}, ${ri})">
+      <span class="si-symbol">${r.symbol}</span>
+      <span class="si-name">${r.name}</span>
+      <span class="si-exchange">${r.exchange || ''}</span>
+    </div>`
+  ).join('');
+}
+
+function onSearchInput(idx, value) {
+  if (searchTimer) clearTimeout(searchTimer);
+  const dd = document.getElementById('searchDropdown');
+  const inputEl = document.getElementById('search_' + idx);
+  activeSearchIdx = idx;
+
+  if (!value || value.length < 1) {
+    dd.classList.remove('open');
+    dd.innerHTML = '';
+    return;
+  }
+
+  positionDropdown(inputEl);
+
+  // 1) 로컬 사전에서 먼저 검색
+  const localResults = searchLocal(value);
+  if (localResults.length > 0) {
+    renderDropdownItems(idx, localResults);
+    dd.classList.add('open');
+    if (isKorean(value)) return;
+  }
+
+  // 2) 영문이면 Yahoo API도 검색
+  if (!isKorean(value)) {
+    if (localResults.length === 0) {
+      dd.innerHTML = '<div class="search-loading">검색 중...</div>';
+      dd.classList.add('open');
+    }
+    searchTimer = setTimeout(async () => {
+      try {
+        const apiResults = await searchStock(value);
+        const localSymbols = new Set(localResults.map(r => r.symbol));
+        const combined = [...localResults, ...apiResults.filter(r => !localSymbols.has(r.symbol))].slice(0, 8);
+        const finalResults = combined.map(r => {
+          const local = KR_STOCKS.find(k => k.symbol === r.symbol) || JP_STOCKS.find(j => j.symbol === r.symbol);
+          return local ? {...r, name: local.name, exchange: local.exchange} : r;
+        });
+        if (finalResults.length === 0) {
+          dd.innerHTML = '<div class="search-loading">결과 없음</div>';
+          return;
+        }
+        renderDropdownItems(idx, finalResults);
+      } catch (e) {
+        if (localResults.length === 0) {
+          dd.innerHTML = '<div class="search-loading">검색 실패</div>';
+        }
+      }
+    }, 300);
+  }
+}
+
+function hideDropdown() {
+  const dd = document.getElementById('searchDropdown');
+  dd.classList.remove('open');
+  dd.innerHTML = '';
+  activeSearchIdx = -1;
+  dropdownResults = [];
+}
+
+async function selectStock(idx, resultIdx) {
+  const r = dropdownResults[resultIdx];
+  if (!r) return;
+
+  stocks[idx].ticker = r.symbol;
+  stocks[idx].name = r.name;
+
+  hideDropdown();
+
+  // 현재가 자동 가져오기
+  try {
+    const data = await fetchPrice(r.symbol);
+    stocks[idx].now = data.price;
+    const localMatch = KR_STOCKS.find(k => k.symbol === r.symbol) || JP_STOCKS.find(j => j.symbol === r.symbol);
+    if (!localMatch && data.name) stocks[idx].name = data.name;
+  } catch (e) {
+    console.warn('Price fetch failed:', e);
+  }
+
+  renderTable();
+}
+
+function calc() {
+  const cfg = COUNTRIES[country];
+  const taxRate = cfg.tax;
+  const freq = +document.getElementById('divFreq').value;
+  const exRate = country === 'kr' ? 1 : +document.getElementById('exchangeRate').value;
+
+  let totalInvest = 0;
+  let totalEval = 0;
+  let totalDivPre = 0;
+  const details = [];
+
+  stocks.forEach(s => {
+    const invest = s.price * s.qty;
+    const evalAmt = s.now * s.qty;
+    const pnl = evalAmt - invest;
+    const divPre = s.div * s.qty;
+    const tax = divPre * taxRate;
+    const divPost = divPre - tax;
+    const yieldPost = invest > 0 ? (divPost / invest * 100) : 0;
+    totalInvest += invest;
+    totalEval += evalAmt;
+    totalDivPre += divPre;
+    details.push({ name: s.name, invest, evalAmt, pnl, divPre, tax, divPost, yieldPost });
+  });
+
+  const totalPnl = totalEval - totalInvest;
+  const totalPnlPct = totalInvest > 0 ? (totalPnl / totalInvest * 100) : 0;
+  const totalTax = totalDivPre * taxRate;
+  const totalDivPost = totalDivPre - totalTax;
+  const yieldPre = totalInvest > 0 ? (totalDivPre / totalInvest * 100) : 0;
+  const yieldPost = totalInvest > 0 ? (totalDivPost / totalInvest * 100) : 0;
+  const monthly = totalDivPost / 12;
+  const perPay = totalDivPost / freq;
+  const totalReturn = totalPnl + totalDivPost;
+  const totalReturnPct = totalInvest > 0 ? (totalReturn / totalInvest * 100) : 0;
+
+  // Results in KRW for display
+  const investKRW = totalInvest * exRate;
+  const evalKRW = totalEval * exRate;
+  const pnlKRW = totalPnl * exRate;
+  const divPreKRW = totalDivPre * exRate;
+  const divPostKRW = totalDivPost * exRate;
+  const monthlyKRW = monthly * exRate;
+  const perPayKRW = perPay * exRate;
+  const totalReturnKRW = totalReturn * exRate;
+
+  document.getElementById('r_total').textContent = fmtKRW(investKRW);
+  document.getElementById('r_eval').textContent = fmtKRW(evalKRW);
+
+  const pnlEl = document.getElementById('r_pnl');
+  pnlEl.textContent = (pnlKRW >= 0 ? '+' : '') + fmtKRW(pnlKRW);
+  pnlEl.className = 'result-value ' + (pnlKRW >= 0 ? 'pos' : 'neg');
+  document.getElementById('r_pnlPct').textContent = (totalPnlPct >= 0 ? '+' : '') + totalPnlPct.toFixed(2) + '%';
+
+  document.getElementById('r_tax').textContent = (taxRate * 100).toFixed(1) + '%';
+  document.getElementById('r_yieldPre').textContent = yieldPre.toFixed(2) + '%';
+  document.getElementById('r_yieldPost').textContent = yieldPost.toFixed(2) + '%';
+  document.getElementById('r_divPre').textContent = fmtKRW(divPreKRW);
+  document.getElementById('r_divPost').textContent = fmtKRW(divPostKRW);
+  document.getElementById('r_monthly').textContent = fmtKRW(monthlyKRW);
+  document.getElementById('r_perPay').textContent = fmtKRW(perPayKRW);
+
+  const trEl = document.getElementById('r_totalReturn');
+  trEl.textContent = (totalReturnKRW >= 0 ? '+' : '') + fmtKRW(totalReturnKRW);
+  trEl.className = 'result-value ' + (totalReturnKRW >= 0 ? 'pos' : 'neg');
+  trEl.style.fontSize = '18px';
+  document.getElementById('r_totalReturnPct').textContent = '평가손익 + 세후 배당';
+
+  const tyEl = document.getElementById('r_totalYield');
+  tyEl.textContent = (totalReturnPct >= 0 ? '+' : '') + totalReturnPct.toFixed(2) + '%';
+  tyEl.className = 'result-value ' + (totalReturnPct >= 0 ? 'pos' : 'neg');
+  tyEl.style.fontSize = '18px';
+
+  // Detail table
+  const dtBody = document.getElementById('detailBody');
+  dtBody.innerHTML = '';
+  details.forEach(d => {
+    const pnlColor = d.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+    const pnlSign = d.pnl >= 0 ? '+' : '';
+    dtBody.innerHTML += `<tr>
+      <td style="font-weight:500">${d.name}</td>
+      <td>${fmtKRW(d.invest * exRate)}</td>
+      <td>${fmtKRW(d.evalAmt * exRate)}</td>
+      <td style="color:${pnlColor}">${pnlSign}${fmtKRW(d.pnl * exRate)}</td>
+      <td style="color:var(--green);font-weight:600">${fmtKRW(d.divPost * exRate)}</td>
+      <td style="color:var(--green)">${d.yieldPost.toFixed(2)}%</td>
+    </tr>`;
+  });
+  // Total row
+  const totalPnlColor = totalPnl >= 0 ? 'var(--green)' : 'var(--red)';
+  const totalPnlSign = totalPnl >= 0 ? '+' : '';
+  dtBody.innerHTML += `<tr style="font-weight:600;border-top:2px solid var(--border)">
+    <td>합계</td>
+    <td>${fmtKRW(investKRW)}</td>
+    <td>${fmtKRW(evalKRW)}</td>
+    <td style="color:${totalPnlColor}">${totalPnlSign}${fmtKRW(pnlKRW)}</td>
+    <td style="color:var(--green)">${fmtKRW(divPostKRW)}</td>
+    <td style="color:var(--green)">${yieldPost.toFixed(2)}%</td>
+  </tr>`;
+}
+
+// Theme
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+renderTable();
+</script>
+
+</body>
+</html>

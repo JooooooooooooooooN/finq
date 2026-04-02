@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경제 일정 캘린더 — FinQ</title>
+<meta name="description" content="FOMC, CPI, 고용지표 등 주요 거시 이벤트 일정을 한눈에 확인. 미국·한국 핵심 경제 일정과 지표 해석 가이드.">
+<meta property="og:title" content="경제 일정 캘린더 — FinQ">
+<meta property="og:description" content="FOMC, CPI, 고용지표 등 주요 거시 이벤트 일정을 한눈에 확인하는 페이지">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+/* MAIN LAYOUT */
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+
+/* HERO */
+.hero{margin-bottom:2rem}
+.hero-badge{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:.6rem}
+.hero-lead{font-size:15px;color:var(--text2);line-height:1.7;word-break:keep-all;max-width:640px;margin-bottom:1rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.9rem}
+.hero-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.hero-update{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
+.hero-update::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* SUMMARY CARDS */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+@media(max-width:700px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem}
+.summary-label{font-size:12px;color:var(--text2);margin-bottom:.35rem;word-break:keep-all}
+.summary-value{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.summary-value.accent{color:var(--accent)}
+.summary-value.green{color:var(--green)}
+.summary-value.orange{color:var(--orange)}
+.summary-sub{font-size:11px;color:var(--text2);margin-top:.2rem}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:16px;font-weight:700;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cal-table{width:100%;border-collapse:collapse;font-size:14px}
+.cal-table th{text-align:left;padding:9px 12px;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+.cal-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+.cal-table tr:last-child td{border-bottom:none}
+.cal-table tr:hover td{background:var(--bg2)}
+.flag{font-size:15px;margin-right:4px}
+.country-cell{display:flex;align-items:center;gap:4px}
+.imp-high{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b}
+.imp-mid{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#fef3c7;color:#92400e}
+.imp-low{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .imp-high{background:#7f1d1d;color:#fca5a5}
+[data-theme=dark] .imp-mid{background:#78350f;color:#fcd34d}
+.status-done{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;background:#d1fae5;color:#065f46}
+.status-today{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:700;background:#dbeafe;color:#1e40af}
+.status-upcoming{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+[data-theme=dark] .status-done{background:#064e3b;color:#6ee7b7}
+[data-theme=dark] .status-today{background:#1e3a5f;color:#93c5fd}
+.event-name{font-weight:600}
+.date-cell{font-size:13px;font-weight:600}
+.time-cell{font-size:12px;color:var(--text2)}
+.num-cell{font-size:13px;color:var(--text2)}
+.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+
+/* CATEGORY CARDS */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
+.cat-icon{font-size:22px;margin-bottom:.5rem}
+.cat-name{font-size:14px;font-weight:700;margin-bottom:.3rem}
+.cat-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+.cat-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:.65rem}
+.cat-item{padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text2)}
+
+/* READ GUIDE */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.guide-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem}
+.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+.guide-title{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.guide-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.check-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:10px}
+.check-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.check-text{font-size:14px;line-height:1.65;word-break:keep-all}
+.check-text strong{font-weight:700;color:var(--text)}
+
+/* CALLOUT */
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+
+/* DISCLAIMER */
+.disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem}
+.disclaimer ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.disclaimer ul li{font-size:13px;color:var(--text2);padding-left:1.1em;position:relative;word-break:keep-all}
+.disclaimer ul li::before{content:"·";position:absolute;left:0;font-weight:700}
+
+hr{border:none;border-top:1px solid var(--border)}
+.divider{max-width:900px;margin:0 auto;padding:0 1.25rem}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+
+/* LIVE CALENDAR */
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.week-label{font-size:14px;font-weight:600;color:var(--text)}
+.week-btns{display:flex;gap:6px}
+.week-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 13px;font-size:13px;font-weight:500;cursor:pointer;color:var(--text2);transition:all .15s}
+.week-btn:hover{background:var(--bg2);color:var(--text)}
+.week-btn.today{background:var(--accent);color:#fff;border-color:var(--accent)}
+.filter-bar{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.filter-btn{padding:5px 13px;border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text2);transition:all .15s}
+.filter-btn:hover{background:var(--bg2)}
+.filter-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.filter-btn.f-high.active{background:var(--red);border-color:var(--red)}
+.filter-btn.f-med.active{background:var(--orange);border-color:var(--orange)}
+.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto .75rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.state-box{text-align:center;padding:2.5rem 1rem;color:var(--text2);font-size:14px}
+.day-group{margin-bottom:1.1rem}
+.day-hd{font-size:12px;font-weight:700;color:var(--text2);padding:.3rem 0;margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:7px}
+.today-badge{font-size:11px;background:var(--accent);color:#fff;padding:1px 7px;border-radius:20px;font-weight:600;letter-spacing:0}
+.ev-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;margin-bottom:5px;display:grid;grid-template-columns:48px 1fr auto;gap:.75rem;align-items:center;transition:border-color .15s}
+.ev-card:hover{border-color:var(--accent)}
+.ev-time{font-size:12px;font-weight:600;color:var(--text2);text-align:center}
+.ev-name{font-size:14px;font-weight:600;color:var(--text);word-break:keep-all;margin-bottom:2px}
+.ev-meta{font-size:12px;color:var(--text2);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.ctag{background:var(--bg2);padding:1px 7px;border-radius:4px;font-size:11px;font-weight:500}
+.ibadge{padding:1px 7px;border-radius:4px;font-size:11px;font-weight:700}
+.ibadge.high{background:#fee2e2;color:#991b1b}
+.ibadge.medium{background:#fef3c7;color:#92400e}
+.ibadge.low{background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .ibadge.high{background:#7f1d1d;color:#fca5a5}
+[data-theme=dark] .ibadge.medium{background:#78350f;color:#fcd34d}
+.ev-vals{display:flex;flex-direction:column;gap:2px;align-items:flex-end;min-width:88px}
+.vrow{display:flex;gap:5px;align-items:center;font-size:12px}
+.vlabel{color:var(--text2)}
+.vnum{font-weight:600}
+.vnum.beat{color:var(--green)}
+.vnum.miss{color:var(--red)}
+.vnum.actual{color:var(--accent)}
+@media(max-width:600px){.ev-card{grid-template-columns:40px 1fr}.ev-vals{display:none}}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/data/us_calendar/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/" class="active">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="../../">홈</a>
+    <span>›</span>
+    <a href="../">마켓 데이터</a>
+    <span>›</span>
+    <span>경제 일정 캘린더</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">MARKET DATA</div>
+    <h1>경제 일정 캘린더</h1>
+    <p class="hero-lead">FOMC, CPI, 고용지표 등 주요 거시 이벤트 일정을 한눈에 확인하는 페이지</p>
+    <div class="hero-tags">
+      <span class="hero-tag">거시지표</span>
+      <span class="hero-tag">FOMC</span>
+      <span class="hero-tag">CPI</span>
+      <span class="hero-tag">고용</span>
+    </div>
+    <div class="hero-update">이번 주 기준 주요 이벤트 일정을 정리했습니다</div>
+  </div>
+
+  <!-- SUMMARY CARDS (동적) -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">이번 주 전체 이벤트</div>
+      <div class="summary-value accent" id="statTotal">—</div>
+      <div class="summary-sub" id="statRange">불러오는 중</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">오늘 예정 이벤트</div>
+      <div class="summary-value green" id="statToday">—</div>
+      <div class="summary-sub">오늘 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">고중요도 일정</div>
+      <div class="summary-value" style="color:var(--red)" id="statHigh">—</div>
+      <div class="summary-sub">이번 주 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">발표 완료</div>
+      <div class="summary-value orange" id="statDone">—</div>
+      <div class="summary-sub">실제치 확인 가능</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 실시간 일정 -->
+  <div class="section">
+    <div class="sec-title">이번 주 핵심 일정</div>
+
+    <div class="week-nav">
+      <div class="week-label" id="weekLabel">불러오는 중...</div>
+      <div class="week-btns">
+        <button class="week-btn" onclick="changeWeek(-1)">← 이전 주</button>
+        <button class="week-btn today" onclick="changeWeek(0)">이번 주</button>
+        <button class="week-btn" onclick="changeWeek(1)">다음 주 →</button>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="setFilter('all',this)">전체</button>
+      <button class="filter-btn f-high" onclick="setFilter('high',this)">중요</button>
+      <button class="filter-btn f-med" onclick="setFilter('medium',this)">보통</button>
+      <button class="filter-btn" onclick="setFilter('low',this)">낮음</button>
+    </div>
+
+    <div id="calContent">
+      <div class="state-box"><div class="spinner"></div>데이터를 불러오는 중...</div>
+    </div>
+
+    <div class="table-notice" style="margin-top:.75rem">* Finnhub 데이터 기준. 시간은 현지 발표 시각이며 일정은 변경될 수 있습니다.</div>
+  </div>
+
+  <!-- SECTION 2: 중요 이벤트 분류 -->
+  <div class="section">
+    <div class="sec-title">중요 이벤트 분류</div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-icon">🏛️</div>
+        <div class="cat-name">미국 금리 이벤트</div>
+        <div class="cat-desc">미국 금리 방향성에 직접 영향을 주는 이벤트. 시장 기대가 가장 민감하게 반응하는 일정이다.</div>
+        <div class="cat-items">
+          <span class="cat-item">FOMC</span>
+          <span class="cat-item">연준 의사록</span>
+          <span class="cat-item">연준 위원 발언</span>
+          <span class="cat-item">파월 연설</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">📊</div>
+        <div class="cat-name">미국 물가 이벤트</div>
+        <div class="cat-desc">인플레이션 방향을 가늠하는 지표. 금리 인상·인하 기대와 직결된다.</div>
+        <div class="cat-items">
+          <span class="cat-item">CPI</span>
+          <span class="cat-item">PPI</span>
+          <span class="cat-item">PCE</span>
+          <span class="cat-item">기대인플레이션</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">👷</div>
+        <div class="cat-name">미국 고용 이벤트</div>
+        <div class="cat-desc">고용 시장의 강도를 나타내는 지표. 연준의 금리 판단 근거 중 하나다.</div>
+        <div class="cat-items">
+          <span class="cat-item">비농업고용(NFP)</span>
+          <span class="cat-item">실업률</span>
+          <span class="cat-item">JOLTS</span>
+          <span class="cat-item">ADP 고용</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🇰🇷</div>
+        <div class="cat-name">한국 주요 이벤트</div>
+        <div class="cat-desc">한국 증시와 환율에 직접 영향을 주는 국내 거시 이벤트.</div>
+        <div class="cat-items">
+          <span class="cat-item">금통위 기준금리</span>
+          <span class="cat-item">한국 CPI</span>
+          <span class="cat-item">수출입 지표</span>
+          <span class="cat-item">산업생산</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🌐</div>
+        <div class="cat-name">기타 주요 거시 일정</div>
+        <div class="cat-desc">경기 흐름 전반을 파악하는 데 도움이 되는 광범위한 지표들.</div>
+        <div class="cat-items">
+          <span class="cat-item">GDP</span>
+          <span class="cat-item">소매판매</span>
+          <span class="cat-item">PMI</span>
+          <span class="cat-item">소비자심리</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 이 데이터를 어떻게 읽어야 하나 -->
+  <div class="section">
+    <div class="sec-title">이 데이터를 어떻게 읽어야 하나</div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-num">POINT 01</div>
+        <div class="guide-title">예상치 vs 실제치 차이가 핵심</div>
+        <div class="guide-desc">절대 수치보다 "예상치 대비 얼마나 벗어났는지"가 더 중요하다. 수치 자체보다 서프라이즈 여부가 시장을 움직인다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 02</div>
+        <div class="guide-title">기대가 높을수록 하락 위험</div>
+        <div class="guide-desc">같은 지표라도 시장 기대가 지나치게 높으면, 예상에 부합한 발표조차 실망으로 해석돼 하락이 나올 수 있다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 03</div>
+        <div class="guide-title">발표 전후 변동성 확대</div>
+        <div class="guide-desc">고중요도 이벤트 전후에는 주식, 채권, 환율이 동시에 크게 움직일 수 있다. 포지션 규모 관리가 필요한 구간이다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 04</div>
+        <div class="guide-title">이벤트보다 "서프라이즈" 크기</div>
+        <div class="guide-desc">이벤트 자체의 존재보다, 예상치와의 차이 크기와 방향이 시장 반응의 강도를 결정한다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 05</div>
+        <div class="guide-title">한 번보다 추세가 더 중요</div>
+        <div class="guide-desc">단일 발표보다 2~3회 연속된 방향성이 더 신뢰도 높은 신호다. 이전치와의 흐름을 함께 확인하는 것이 좋다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 이런 상황에서 특히 체크 -->
+  <div class="section">
+    <div class="sec-title">이런 상황에서 특히 체크</div>
+    <div class="check-grid">
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>FOMC 주간</strong>에는 성장주 변동성이 확대될 수 있다. 금리 기대 변화에 특히 민감하게 반응한다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>CPI 발표일</strong>에는 금리 기대 변화 여부를 먼저 확인한다. 채권 금리 반응이 주식보다 먼저 나온다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>고용지표 발표 후</strong>에는 달러와 국채금리 반응을 함께 확인한다. 고용 강세 = 금리 상승 압력의 흐름이 일반적이다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>한국 금통위 전후</strong>에는 환율과 외국인 수급을 같이 체크한다. 금리 결정이 외국인 포지션 변화로 이어지는 경우가 많다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <ul>
+      <li>데이터는 출처 및 반영 시점에 따라 일부 차이가 있을 수 있습니다.</li>
+      <li>일부 해외 데이터는 현지 발표 기준 시각으로 제공될 수 있습니다.</li>
+      <li>본 페이지는 정보 제공 목적이며, 특정 투자 판단을 권유하지 않습니다.</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div style="font-size:13px;color:var(--text2)">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+// ── 테마 ─────────────────────────────────────────
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+// ── 캘린더 ───────────────────────────────────────
+let currentWeek = 0;
+let currentFilter = 'all';
+let cache = {};
+
+function getWeekRange(offset) {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToMon = day === 0 ? -6 : 1 - day;
+  const mon = new Date(now);
+  mon.setDate(now.getDate() + diffToMon + offset * 7);
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  return { from: mon, to: sun };
+}
+
+function fmtDate(d) { return d.toISOString().split('T')[0]; }
+
+function fmtWeekLabel(from, to) {
+  const o = { month: 'long', day: 'numeric' };
+  return `${from.toLocaleDateString('ko-KR', o)} ~ ${to.toLocaleDateString('ko-KR', o)}`;
+}
+
+function fmtDayHd(dateStr) {
+  const d = new Date(dateStr + 'T00:00:00');
+  const days = ['일','월','화','수','목','금','토'];
+  return `${d.toLocaleDateString('ko-KR',{month:'long',day:'numeric'})} (${days[d.getDay()]})`;
+}
+
+function isToday(dateStr) { return dateStr === fmtDate(new Date()); }
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render(cache[currentWeek]);
+}
+
+function changeWeek(offset) {
+  currentWeek = offset;
+  load(offset);
+}
+
+async function load(weekOffset) {
+  const { from, to } = getWeekRange(weekOffset);
+  document.getElementById('weekLabel').textContent = fmtWeekLabel(from, to);
+
+  if (cache[weekOffset]) { render(cache[weekOffset]); updateStats(cache[weekOffset]); return; }
+
+  document.getElementById('calContent').innerHTML =
+    '<div class="state-box"><div class="spinner"></div>데이터를 불러오는 중...</div>';
+
+  try {
+    const res = await fetch(`/api/economic-calendar?week=${weekOffset}`);
+    if (!res.ok) throw new Error('API 오류');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    cache[weekOffset] = data.events || [];
+    render(cache[weekOffset]);
+    updateStats(cache[weekOffset]);
+  } catch (err) {
+    document.getElementById('calContent').innerHTML =
+      `<div class="state-box">⚠️ 데이터를 불러오지 못했습니다.<br><small>${err.message}</small></div>`;
+  }
+}
+
+function updateStats(events) {
+  const todayStr = fmtDate(new Date());
+  document.getElementById('statTotal').textContent = events.length;
+  document.getElementById('statToday').textContent = events.filter(e => e.date === todayStr).length;
+  document.getElementById('statHigh').textContent = events.filter(e => e.impactRaw === 'high').length;
+  document.getElementById('statDone').textContent = events.filter(e => e.actual !== null).length;
+  const { from, to } = getWeekRange(currentWeek);
+  document.getElementById('statRange').textContent =
+    `${from.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ~ ${to.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}`;
+}
+
+function render(events) {
+  if (!events) return;
+  const filtered = currentFilter === 'all' ? events : events.filter(e => e.impactRaw === currentFilter);
+  if (!filtered.length) {
+    document.getElementById('calContent').innerHTML = '<div class="state-box">해당 조건의 이벤트가 없습니다.</div>';
+    return;
+  }
+  const groups = {};
+  filtered.forEach(e => { if (!groups[e.date]) groups[e.date] = []; groups[e.date].push(e); });
+
+  let html = '';
+  Object.keys(groups).sort().forEach(date => {
+    const badge = isToday(date) ? '<span class="today-badge">오늘</span>' : '';
+    html += `<div class="day-group"><div class="day-hd">${fmtDayHd(date)} ${badge}</div>`;
+    groups[date].forEach(e => { html += evCard(e); });
+    html += '</div>';
+  });
+  document.getElementById('calContent').innerHTML = html;
+}
+
+function evCard(e) {
+  const ic = e.impactRaw === 'high' ? 'high' : e.impactRaw === 'medium' ? 'medium' : 'low';
+  const fv = (v, u) => (v === null || v === undefined) ? '—' : `${v}${u || ''}`;
+  let ac = 'actual';
+  if (e.actual !== null && e.estimate !== null) ac = e.actual >= e.estimate ? 'beat' : 'miss';
+  const actualRow = e.actual !== null
+    ? `<div class="vrow"><span class="vlabel">실제</span><span class="vnum ${ac}">${fv(e.actual, e.unit)}</span></div>` : '';
+  return `<div class="ev-card">
+    <div class="ev-time">${e.time || '—'}</div>
+    <div>
+      <div class="ev-name">${e.event}</div>
+      <div class="ev-meta">
+        <span class="ctag">${e.country}</span>
+        <span class="ibadge ${ic}">${e.impact}</span>
+      </div>
+    </div>
+    <div class="ev-vals">
+      <div class="vrow"><span class="vlabel">예상</span><span class="vnum">${fv(e.estimate, e.unit)}</span></div>
+      <div class="vrow"><span class="vlabel">이전</span><span class="vnum">${fv(e.prev, e.unit)}</span></div>
+      ${actualRow}
+    </div>
+  </div>`;
+}
+
+load(0);
+</script>
+</body>
+</html>

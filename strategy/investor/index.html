@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자자 기반 전략 — FinQ</title>
+<meta name="description" content="워런 버핏, 레이 달리오, 마이클 버리 등 12명의 전설적 투자자 포트폴리오를 분석합니다.">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06);--shadow-h:0 4px 12px rgba(0,0,0,.08)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3);--shadow-h:0 4px 12px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:1100px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.page-label{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
+.page-title{font-size:clamp(22px,5vw,32px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:15px;color:var(--text2);margin-bottom:2rem;line-height:1.8}
+.card-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:all .2s;cursor:pointer;position:relative}
+.card:hover{box-shadow:var(--shadow-h);border-color:var(--accent);transform:translateY(-2px) scale(1.02)}
+.card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1rem;background:#f0fdf4}
+[data-theme=dark] .card-icon{background:#14532d}
+.card h3{font-size:17px;font-weight:650;margin-bottom:.4rem}
+.card p{font-size:14px;color:var(--text2);line-height:1.55;word-break:keep-all}
+.feature-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.feature-tag{padding:3px 10px;border-radius:6px;font-size:12px;font-weight:500;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+hr{border:none;border-top:1px solid var(--border)}
+.keyword-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:2rem}
+.keyword-section h2{font-size:17px;font-weight:700;margin-bottom:.35rem}
+.keyword-section .kw-desc{font-size:14px;color:var(--text2);margin-bottom:1rem;line-height:1.6;word-break:keep-all}
+.keyword-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.keyword-row{display:flex;flex-wrap:wrap;gap:8px}
+@media(min-width:769px){.keyword-row{flex-wrap:nowrap}.keyword-row .keyword-btn{flex:1;text-align:center}}
+.keyword-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-btn:hover{border-color:var(--accent);color:var(--accent)}
+.keyword-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.keyword-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.keyword-note{font-size:12px;color:var(--text2);opacity:.75;word-break:keep-all}
+.keyword-reset{padding:5px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-reset:hover{border-color:var(--text2);color:var(--text)}
+.card.highlighted{background:rgba(37,99,235,.06);border-color:var(--accent)}
+.card.highlighted .card-icon{background:rgba(37,99,235,.12)}
+.card.highlighted h3{color:var(--accent)}
+[data-theme=dark] .card.highlighted{background:rgba(37,99,235,.12)}
+[data-theme=dark] .card.highlighted .card-icon{background:rgba(37,99,235,.2)}
+.card-cta{font-size:13px;font-weight:600;color:var(--accent);margin-top:0.85rem;padding-top:0.6rem;border-top:1px solid var(--border)}
+</style>
+<meta property="og:title" content="투자자 기반 전략 — FinQ">
+<meta property="og:description" content="워런 버핏, 레이 달리오, 마이클 버리 등 12명의 전설적 투자자 포트폴리오를 분석합니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/strategy/investor/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/" class="active">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="breadcrumb">
+    <a href="../../">FinQ</a>
+    <span>›</span>
+    <a href="../../strategy/">투자 전략</a>
+    <span>›</span>
+    <span>투자자 기반 전략</span>
+  </div>
+
+  <div class="page-label">Investor Strategy</div>
+  <h1 class="page-title">투자자 기반 전략</h1>
+  <p class="page-desc">전설적 투자자 12명의 실제 포트폴리오를 SEC 13F 공시 기반으로 분석합니다</p>
+
+  <div class="keyword-section">
+    <h2>나에게 맞는 투자자 찾기</h2>
+    <p class="kw-desc">원하는 투자 성향을 선택하면 관련 있는 투자자를 강조해 보여드립니다.</p>
+    <div class="keyword-rows">
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="가치투자">가치투자</button>
+        <button class="keyword-btn" data-kw="장기투자">장기투자</button>
+        <button class="keyword-btn" data-kw="성장주 선호">성장주 선호</button>
+        <button class="keyword-btn" data-kw="집중투자">집중투자</button>
+        <button class="keyword-btn" data-kw="매크로 분석">매크로 분석</button>
+        <button class="keyword-btn" data-kw="행동주의">행동주의</button>
+      </div>
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="역발상 투자">역발상 투자</button>
+        <button class="keyword-btn" data-kw="배당 선호">배당 선호</button>
+        <button class="keyword-btn" data-kw="퀄리티 중시">퀄리티 중시</button>
+        <button class="keyword-btn" data-kw="방어형 성향">방어형 성향</button>
+        <button class="keyword-btn" data-kw="시장 타이밍 활용">시장 타이밍 활용</button>
+        <button class="keyword-btn" data-kw="초보자 친화적">초보자 친화적</button>
+      </div>
+    </div>
+    <div class="keyword-footer">
+      <span class="keyword-note">선택한 성향을 바탕으로 비슷한 투자 스타일의 투자자를 참고용으로 보여드립니다.</span>
+      <button class="keyword-reset" onclick="resetKeywords()">선택 초기화</button>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <a href="buffett/" class="card" data-id="buffett">
+      <div class="card-icon">🏛️</div>
+      <h3>워런 버핏 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Warren Buffett</span></h3>
+      <p>가치투자의 상징. 장기투자 대표 구루, 버크셔 해서웨이 포트폴리오 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">가치투자</span>
+        <span class="feature-tag">장기투자</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="munger/" class="card" data-id="munger">
+      <div class="card-icon">🎓</div>
+      <h3>찰리 멍거 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Charlie Munger</span></h3>
+      <p>버핏의 파트너. 질 좋은 기업에 집중하는 투자 철학의 대가</p>
+      <div class="feature-list">
+        <span class="feature-tag">집중투자</span>
+        <span class="feature-tag">투자 철학</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="lynch/" class="card" data-id="lynch">
+      <div class="card-icon">📚</div>
+      <h3>피터 린치 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Peter Lynch</span></h3>
+      <p>생활 속 아이디어를 투자로 연결한 전설적 펀드매니저. 마젤란 펀드 운용 철학 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">생활 투자</span>
+        <span class="feature-tag">성장주</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="graham/" class="card" data-id="graham">
+      <div class="card-icon">📖</div>
+      <h3>벤저민 그레이엄 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Benjamin Graham</span></h3>
+      <p>가치투자 이론의 뿌리. 버핏의 스승이자 현대 투자 분석의 기초를 세운 인물</p>
+      <div class="feature-list">
+        <span class="feature-tag">가치투자</span>
+        <span class="feature-tag">안전마진</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="dalio/" class="card" data-id="dalio">
+      <div class="card-icon">🌊</div>
+      <h3>레이 달리오 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Ray Dalio</span></h3>
+      <p>거시경제와 자산배분 전략으로 유명한 헤지펀드 거장. 올웨더 포트폴리오 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">올웨더</span>
+        <span class="feature-tag">자산배분</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="soros/" class="card" data-id="soros">
+      <div class="card-icon">💱</div>
+      <h3>조지 소로스 <span style="font-weight:400;font-size:.8em;color:var(--text2)">George Soros</span></h3>
+      <p>매크로 투자와 통화 베팅으로 유명한 전설적 투자자. 소로스 펀드 전략 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">매크로</span>
+        <span class="feature-tag">통화투자</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="burry/" class="card" data-id="burry">
+      <div class="card-icon">🔍</div>
+      <h3>마이클 버리 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Michael Burry</span></h3>
+      <p>금융위기 예측으로 유명해진 역발상 투자자. 사이언 에셋 13F 기반 포트폴리오 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">역발상</span>
+        <span class="feature-tag">13F</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="ackman/" class="card" data-id="ackman">
+      <div class="card-icon">⚡</div>
+      <h3>빌 애크먼 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Bill Ackman</span></h3>
+      <p>대형 집중투자와 행동주의 투자로 잘 알려진 인물. 퍼싱스퀘어 포트폴리오 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">행동주의</span>
+        <span class="feature-tag">집중투자</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="icahn/" class="card" data-id="icahn">
+      <div class="card-icon">🦁</div>
+      <h3>칼 아이칸 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Carl Icahn</span></h3>
+      <p>행동주의 투자의 대표 상징. 기업 경영에 직접 개입하는 공격적 투자 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">행동주의</span>
+        <span class="feature-tag">기업개입</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="marks/" class="card" data-id="marks">
+      <div class="card-icon">⚖️</div>
+      <h3>하워드 막스 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Howard Marks</span></h3>
+      <p>리스크 관리와 시장 사이클 분석의 대가. 오크트리 캐피탈 공동 창립자이자 메모의 저자</p>
+      <div class="feature-list">
+        <span class="feature-tag">리스크 관리</span>
+        <span class="feature-tag">사이클 투자</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="klarman/" class="card" data-id="klarman">
+      <div class="card-icon">🛡️</div>
+      <h3>세스 클라만 <span style="font-weight:400;font-size:.8em;color:var(--text2)">Seth Klarman</span></h3>
+      <p>보수적 가치투자로 유명한 기관투자자들의 구루. 바우포스트 그룹 전략 분석</p>
+      <div class="feature-list">
+        <span class="feature-tag">가치투자</span>
+        <span class="feature-tag">보수적</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+    <a href="templeton/" class="card" data-id="templeton">
+      <div class="card-icon">🌍</div>
+      <h3>존 템플턴 <span style="font-weight:400;font-size:.8em;color:var(--text2)">John Templeton</span></h3>
+      <p>글로벌 역발상 투자의 선구자. 비관 속 기회를 찾는 독립적 시야로 장기 복리를 실현한 투자자</p>
+      <div class="feature-list">
+        <span class="feature-tag">역발상</span>
+        <span class="feature-tag">글로벌 투자</span>
+      </div>
+      <div class="card-cta">&#8594; 투자자 보기</div>
+    </a>
+  </div>
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/">소개</a>
+    <a href="../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+const KW_MAP={
+  '가치투자':['buffett','munger','graham','klarman','templeton'],
+  '장기투자':['buffett','munger','lynch','templeton'],
+  '성장주 선호':['lynch'],
+  '집중투자':['buffett','munger','burry','ackman','klarman'],
+  '매크로 분석':['dalio','soros','marks'],
+  '행동주의':['ackman','icahn'],
+  '역발상 투자':['burry','klarman','templeton','marks'],
+  '배당 선호':['buffett'],
+  '퀄리티 중시':['buffett','munger'],
+  '방어형 성향':['buffett','graham','klarman','marks'],
+  '시장 타이밍 활용':['soros','burry','marks'],
+  '초보자 친화적':['buffett','lynch','graham']
+};
+const selected=new Set();
+document.querySelectorAll('.keyword-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const kw=btn.dataset.kw;
+    if(selected.has(kw)){selected.delete(kw);btn.classList.remove('active')}
+    else{selected.add(kw);btn.classList.add('active')}
+    updateHighlight();
+  });
+});
+function updateHighlight(){
+  const cards=document.querySelectorAll('.card[data-id]');
+  if(selected.size===0){cards.forEach(c=>c.classList.remove('highlighted'));return;}
+  const ids=new Set([...selected].flatMap(kw=>KW_MAP[kw]||[]));
+  cards.forEach(c=>c.classList.toggle('highlighted',ids.has(c.dataset.id)));
+}
+function resetKeywords(){
+  selected.clear();
+  document.querySelectorAll('.keyword-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.card[data-id]').forEach(c=>c.classList.remove('highlighted'));
+}
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('finq-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>초보자 가이드 — FinQ 투자 인사이트</title>
+<meta name="description" content="ETF, 13F, 배당수익률, 시가총액 등 투자 입문자가 먼저 이해해야 할 핵심 개념을 쉽게 정리합니다.">
+<link rel="canonical" href="https://finq.kr/insight/beginner/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.breadcrumb { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1.25rem 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.35; }
+
+.page-header { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem 2.5rem; }
+.page-label { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem; }
+.page-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+.page-desc { font-size: 15px; color: var(--text-secondary); max-width: 600px; word-break: keep-all; margin-bottom: 1rem; line-height: 1.65; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+.section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.card-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 900px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .card-grid { grid-template-columns: 1fr; } }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+.card p { word-break: keep-all; }
+.card:hover { box-shadow: var(--shadow-hover); border-color: var(--accent); transform: translateY(-2px) scale(1.02); }
+.card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 1rem; background: #f3e8ff; }
+[data-theme="dark"] .card-icon { background: #3b0764; }
+.card h3 { font-size: 17px; font-weight: 650; margin-bottom: 0.4rem; line-height: 1.45; }
+.card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; flex: 1; }
+.feature-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.75rem; }
+.feature-tag { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+.card-cta { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 0.85rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+
+.related { max-width: 1100px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+.related-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 1rem; }
+.related-grid { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.related-link { padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.related-link:hover { border-color: var(--accent); color: var(--accent); }
+.back-link { font-size: 13px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="초보자 가이드 — FinQ 투자 인사이트">
+<meta property="og:description" content="ETF, 13F, 배당수익률, 시가총액 등 투자 입문자가 먼저 이해해야 할 핵심 개념을 쉽게 정리합니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/beginner/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/" class="active">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="breadcrumb">
+  <a href="../../">FinQ</a>
+  <span class="breadcrumb-sep">/</span>
+  <a href="../">투자 인사이트</a>
+  <span class="breadcrumb-sep">/</span>
+  <span>초보자 가이드</span>
+</div>
+
+<div class="page-header">
+  <div class="page-label">Beginner</div>
+  <h1 class="page-title">초보자 가이드</h1>
+  <p class="page-desc">ETF, 13F, 배당수익률, 시가총액 등 투자 입문자가 먼저 이해해야 할 핵심 개념을 쉽게 정리합니다.</p>
+  <div class="hero-tags">
+    <span class="hero-tag">기초개념</span>
+    <span class="hero-tag">투자입문</span>
+  </div>
+</div>
+
+<div class="divider"><hr></div>
+
+<section class="section" style="padding-top:2.5rem">
+  <div class="card-grid">
+
+    <a href="what-is-etf/" class="card">
+      <div class="card-icon">📦</div>
+      <h3>ETF란 무엇인가</h3>
+      <p>여러 종목을 한 번에 담는 상품의 기본 구조와 특징 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">ETF</span>
+        <span class="feature-tag">기초</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="why-13f/" class="card">
+      <div class="card-icon">🏛️</div>
+      <h3>13F 공시는 왜 보는가</h3>
+      <p>기관 투자자의 보유 종목을 참고하는 가장 기본적인 방법 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">13F</span>
+        <span class="feature-tag">입문</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="understand-dividend-yield/" class="card">
+      <div class="card-icon">💰</div>
+      <h3>배당수익률 쉽게 이해하기</h3>
+      <p>배당과 주가의 관계를 가장 쉽게 설명하는 기초 개념 해설</p>
+      <div class="feature-list">
+        <span class="feature-tag">배당수익률</span>
+        <span class="feature-tag">기초</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="per-pbr-roe/" class="card">
+      <div class="card-icon">📐</div>
+      <h3>PER, PBR, ROE 한 번에 이해하기</h3>
+      <p>대표 가치 지표의 뜻과 차이를 초보자 관점에서 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">PER</span>
+        <span class="feature-tag">ROE</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="why-market-cap-matters/" class="card">
+      <div class="card-icon">📊</div>
+      <h3>시가총액이 중요한 이유</h3>
+      <p>기업 규모와 시장 평가를 함께 보는 기본 개념 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">시가총액</span>
+        <span class="feature-tag">기초개념</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="why-diversification/" class="card">
+      <div class="card-icon">🗂️</div>
+      <h3>분산투자가 필요한 이유</h3>
+      <p>한 종목 집중보다 분산이 중요한 이유와 기본 원칙 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">분산투자</span>
+        <span class="feature-tag">리스크</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="what-is-dca/" class="card">
+      <div class="card-icon">🔁</div>
+      <h3>적립식 매수란 무엇인가</h3>
+      <p>장기 투자자가 자주 사용하는 기본 매수 방식 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">적립식매수</span>
+        <span class="feature-tag">초보자</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="price-vs-value/" class="card">
+      <div class="card-icon">🔍</div>
+      <h3>주가와 기업가치는 왜 다른가</h3>
+      <p>가격과 가치가 항상 같지 않은 이유를 쉽게 풀어 설명</p>
+      <div class="feature-list">
+        <span class="feature-tag">기업가치</span>
+        <span class="feature-tag">주가</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+    <a href="investing-basics-first/" class="card">
+      <div class="card-icon">📚</div>
+      <h3>초보 투자자가 먼저 익혀야 할 개념</h3>
+      <p>투자 시작 전 꼭 알아야 할 핵심 용어와 기본 시각 정리</p>
+      <div class="feature-list">
+        <span class="feature-tag">투자입문</span>
+        <span class="feature-tag">핵심개념</span>
+      </div>
+      <div class="card-cta">&#8594; 글 보기</div>
+    </a>
+
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+
+<div class="related">
+  <div class="related-title">관련 카테고리</div>
+  <div class="related-grid">
+    <a href="../strategy/" class="related-link">📊 전략 분석</a>
+    <a href="../dividend/" class="related-link">💰 배당/현금흐름</a>
+    <a href="../macro/" class="related-link">🌐 시장/매크로</a>
+  </div>
+  <a href="../" class="back-link">← 투자 인사이트 전체로</a>
+</div>
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

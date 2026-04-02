@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>존 템플턴 포트폴리오 — FinQ</title>
+<meta name="description" content="존 템플턴의 글로벌 역발상 투자 철학. 비관 속 기회를 찾는 독립적 시야와 장기 복리 전략을 분석합니다.">
+<meta property="og:title" content="존 템플턴 포트폴리오 — FinQ">
+<meta property="og:description" content="템플턴 그로스 펀드 창립자 존 템플턴. 군중과 반대로 생각하는 글로벌 역발상 투자의 선구자.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap;transition:all .15s}
+.guru-chip.link{cursor:pointer}.guru-chip.link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.timeline{display:flex;flex-direction:column;gap:0}
+.timeline-item{display:flex;gap:16px;padding:12px 0}
+.timeline-item:not(:last-child){border-bottom:1px solid var(--border)}
+.timeline-year{font-size:13px;font-weight:700;color:var(--accent);min-width:60px;flex-shrink:0;padding-top:2px}
+.timeline-content{font-size:14px;line-height:1.6}
+.timeline-content strong{font-weight:600}
+.timeline-content .sub{font-size:13px;color:var(--text2);margin-top:2px}
+
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/templeton/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a><span>›</span><a href="../../../strategy/">투자 전략</a><span>›</span><a href="../">투자자 기반 전략</a><span>›</span><span>존 템플턴</span>
+  </div>
+
+  <h1 class="page-title">존 템플턴</h1>
+  <p class="page-desc">템플턴 그로스 펀드 창립자. 비관이 극에 달한 순간을 기회로 삼고, 군중과 반대로 생각하며, 전 세계에서 저평가 자산을 발굴한 글로벌 역발상 투자의 선구자.</p>
+
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <span class="guru-chip active">존 템플턴</span>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div></div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">존 템플턴 John Templeton</div>
+        <div class="guru-sub">템플턴 그로스 펀드(Templeton Growth Fund) 창립자 · 1954년~1992년 운용 / 1912~2008</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">연 ~15.8%</div>
+            <div class="guru-stat-label">펀드 창설부터 은퇴까지 연평균 수익률</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">38년</div>
+            <div class="guru-stat-label">템플턴 그로스 펀드 운용 기간</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">글로벌 역발상</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="info-box" style="margin-top:1rem">
+      <span class="info-icon">ℹ️</span>
+      <span>존 템플턴은 2008년 타계한 역사적 투자자로, 현재 활성화된 13F 공시 데이터가 존재하지 않습니다. 이 페이지는 그의 생전 운용 철학과 대표 투자 이력을 기반으로 구성됩니다. 현재 프랭클린 템플턴(Franklin Templeton)이 그의 펀드 철학을 계승하여 운용 중입니다.</span>
+    </div>
+  </div>
+
+  <!-- 2. 역사적 포트폴리오 구성 원칙 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>역사적 포트폴리오 구성 원칙</div>
+      <span class="data-tag">운용 기간 전반 기준</span>
+    </div>
+    <div class="info-box" style="margin-top:0;margin-bottom:1rem">
+      <span class="info-icon">🌍</span>
+      <span>템플턴은 특정 국가·산업에 제한 없이 전 세계에서 가장 저평가된 자산을 찾았습니다. 1950~60년대 일본, 1980년대 한국, 1990년대 동유럽 등 당시 시장이 외면하던 지역을 선제적으로 편입했습니다.</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+    <div style="margin-top:1rem;font-size:13px;color:var(--text2)">※ 위 비중은 템플턴 그로스 펀드의 1980년대 전성기 기준 평균적 지역 배분을 참고한 수치입니다.</div>
+  </div>
+
+  <!-- 3. 섹터/산업 선호 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>선호 업종 및 투자 유형</div>
+      <span class="data-tag">장기 운용 기간 기준</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px">
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+        <div style="font-weight:600;margin-bottom:4px">📉 심각한 하락 종목</div>
+        <div style="color:var(--text2)">전쟁·불황·규제 충격으로 주가가 폭락한 종목. 군중이 공포로 팔아치울 때 매수</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+        <div style="font-weight:600;margin-bottom:4px">🏭 소외된 산업재</div>
+        <div style="color:var(--text2)">경기침체로 버려진 제조업·기초소재. 장기 회복을 내다보고 초기에 진입</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+        <div style="font-weight:600;margin-bottom:4px">🌏 신흥 성장 시장</div>
+        <div style="color:var(--text2)">아직 주목받지 못한 국가·지역의 저PER 주식. 일본·한국·아시아를 선제 편입</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+        <div style="font-weight:600;margin-bottom:4px">💹 저PER·저PBR 종목</div>
+        <div style="color:var(--text2)">이익 대비, 자산 대비 주가가 낮은 종목 위주. 숫자로 증명되는 저평가 기준 적용</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"최고의 매수 기회는 비관론이 극에 달했을 때 온다. 최고의 매도 기회는 낙관론이 극에 달했을 때 온다."</div>
+        <div class="quote-source">— 템플턴의 역발상 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"전 세계 어디서든 가장 저렴한 주식을 찾아라. 한 나라에만 투자를 제한하면 선택지의 95%를 스스로 포기하는 것이다."</div>
+        <div class="quote-source">— 글로벌 분산 투자 철학</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"군중이 팔 때 사고, 군중이 살 때 팔아야 한다. 유행을 따라가면 평균 이하의 성과를 얻는다."</div>
+        <div class="quote-source">— 독립적 판단의 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"좋은 투자는 인내를 요구한다. 시장이 당신의 판단을 인정하는 데는 시간이 걸린다. 그 시간 동안 버티는 것이 수익의 원천이다."</div>
+        <div class="quote-source">— 장기 복리 철학</div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🌍</div>
+          <div style="font-weight:600;margin-bottom:2px">글로벌 시야</div>
+          <div style="color:var(--text2)">특정 국가 제한 없이 전 세계에서 저평가 자산 탐색</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔁</div>
+          <div style="font-weight:600;margin-bottom:2px">역발상 매수</div>
+          <div style="color:var(--text2)">비관이 극에 달할 때 진입. 공포가 가격을 내재가치 이하로 밀어낼 때 기회</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🧭</div>
+          <div style="font-weight:600;margin-bottom:2px">독립적 판단</div>
+          <div style="color:var(--text2)">유행·군중·시장 분위기와 무관한 독립적 분석을 고수</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⏳</div>
+          <div style="font-weight:600;margin-bottom:2px">장기 복리</div>
+          <div style="color:var(--text2)">수년에 걸친 인내. 가치 수렴까지 기다리며 복리로 축적</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 주요 투자 이력 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>주요 투자 이력 및 특징</div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-year">1939</div>
+        <div class="timeline-content">
+          <strong>2차 세계대전 발발 직전 미국 전 상장주 104개 일괄 매수</strong>
+          <div class="sub">주당 $1 이하 패니주 포함 전종목 매수. 4년 후 100개 종목 중 100개에서 수익 실현. 역발상 투자의 원형으로 불리는 사례.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1960s</div>
+        <div class="timeline-content">
+          <strong>일본 주식 선제 편입</strong>
+          <div class="sub">서구 투자자들이 일본을 외면하던 시절, 극단적으로 낮은 PER과 PBR을 근거로 일본 제조업·소비재 종목 대규모 편입. 이후 일본 경제 고도성장기에 막대한 수익 실현.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1980s</div>
+        <div class="timeline-content">
+          <strong>한국·아시아 신흥시장 투자</strong>
+          <div class="sub">세계가 아시아 신흥국을 주목하기 전, 한국·싱가포르·홍콩의 저평가 종목을 선점. 글로벌 분산의 실질적 선구자로 평가받는 계기.</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">2000</div>
+        <div class="timeline-content">
+          <strong>닷컴 버블 공매도</strong>
+          <div class="sub">은퇴 후에도 닷컴 버블이 정점에 달한 2000년 초, 기술주 84개에 공매도 포지션 진입. 락업 해제 직후 매도 기준으로 약 8개월 만에 $9천만 수익 실현.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《템플턴 플랜》</strong> — 템플턴의 원칙과 인생관이 잘 드러나는 대표 저작</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《존 템플턴의 영혼이 있는 투자》</strong> — 장기적 관점과 투자 태도를 다룬 국내 출간 자료</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《존 템플턴의 가치 투자 전략》</strong> — 역발상과 글로벌 분산투자 관점을 이해하는 데 좋은 관련서</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 존 템플턴(1912~2008)은 현재 활동 중인 투자자가 아니므로 현행 SEC 13F 데이터가 존재하지 않습니다. 이 페이지는 생전 운용 철학, 인터뷰, 펀드 보고서를 바탕으로 구성되었습니다. 현재 프랭클린 템플턴이 그의 철학을 계승하여 운용 중입니다. 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const t=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',t==='dark'?'dark':'');
+  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
+  localStorage.setItem('theme',t);
+}
+(function(){
+  const t=localStorage.getItem('theme');
+  if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
+})();
+
+const regions=[
+  {name:'북미',        pct:35, color:'#2563eb'},
+  {name:'일본/아시아', pct:28, color:'#059669'},
+  {name:'유럽',        pct:22, color:'#7c3aed'},
+  {name:'신흥시장',    pct:10, color:'#d97706'},
+  {name:'기타/현금',   pct:5,  color:'#6b7280'},
+];
+const sl=document.getElementById('sectorList');
+regions.forEach(s=>{
+  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
+});
+</script>
+</body>
+</html>

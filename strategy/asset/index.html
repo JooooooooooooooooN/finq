@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자산 기반 전략 — FinQ</title>
+<meta name="description" content="배당주, 성장주, ETF, 리츠, 채권 등 자산 유형별 투자 전략을 분석합니다.">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06);--shadow-h:0 4px 12px rgba(0,0,0,.08)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3);--shadow-h:0 4px 12px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:1100px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.page-label{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
+.page-title{font-size:clamp(22px,5vw,32px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:15px;color:var(--text2);margin-bottom:2rem;line-height:1.8}
+.card-grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.card-grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:all .2s;cursor:pointer;position:relative}
+.card:hover{box-shadow:var(--shadow-h);border-color:var(--accent);transform:translateY(-2px) scale(1.02)}
+.card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1rem;background:#f0fdf4}
+[data-theme=dark] .card-icon{background:#14532d}
+.card h3{font-size:17px;font-weight:650;margin-bottom:.4rem}
+.card p{font-size:14px;color:var(--text2);line-height:1.55;word-break:keep-all}
+.feature-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.feature-tag{padding:3px 10px;border-radius:6px;font-size:12px;font-weight:500;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.card-cta{font-size:13px;font-weight:600;color:var(--accent);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.keyword-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:2rem}
+.keyword-section h2{font-size:17px;font-weight:700;margin-bottom:.35rem}
+.keyword-section .kw-desc{font-size:14px;color:var(--text2);margin-bottom:1rem;line-height:1.6;word-break:keep-all}
+.keyword-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.keyword-row{display:flex;flex-wrap:wrap;gap:8px}
+@media(min-width:769px){.keyword-row{flex-wrap:nowrap}.keyword-row .keyword-btn{flex:1;text-align:center}}
+.keyword-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-btn:hover{border-color:var(--accent);color:var(--accent)}
+.keyword-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.keyword-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.keyword-note{font-size:12px;color:var(--text2);opacity:.75;word-break:keep-all}
+.keyword-reset{padding:5px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-reset:hover{border-color:var(--text2);color:var(--text)}
+.card.highlighted{background:rgba(37,99,235,.06);border-color:var(--accent)}
+.card.highlighted .card-icon{background:rgba(37,99,235,.12)}
+.card.highlighted h3{color:var(--accent)}
+[data-theme=dark] .card.highlighted{background:rgba(37,99,235,.12)}
+[data-theme=dark] .card.highlighted .card-icon{background:rgba(37,99,235,.2)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+hr{border:none;border-top:1px solid var(--border)}
+</style>
+<meta property="og:title" content="자산 기반 전략 — FinQ">
+<meta property="og:description" content="배당주, 성장주, ETF, 리츠, 채권 등 자산 유형별 투자 전략을 분석합니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/strategy/asset/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/asset/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/" class="active">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="breadcrumb">
+    <a href="../../">FinQ</a>
+    <span>›</span>
+    <a href="../../strategy/">투자 전략</a>
+    <span>›</span>
+    <span>자산 기반 전략</span>
+  </div>
+
+  <div class="page-label">Asset Strategy</div>
+  <h1 class="page-title">자산 기반 전략</h1>
+  <p class="page-desc">배당주, 성장주, ETF, 리츠, 채권 등 자산 유형별로 검증된 투자 전략을 분석합니다</p>
+
+  <div class="keyword-section">
+    <h2>나에게 맞는 자산 전략 찾기</h2>
+    <p class="kw-desc">원하는 자산 특징을 선택하면 관련 있는 전략을 강조해 보여드립니다.</p>
+    <div class="keyword-rows" id="keywordList">
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="안정성 중시">안정성 중시</button>
+        <button class="keyword-btn" data-kw="배당·현금흐름">배당·현금흐름</button>
+        <button class="keyword-btn" data-kw="장기 성장">장기 성장</button>
+        <button class="keyword-btn" data-kw="분산투자">분산투자</button>
+        <button class="keyword-btn" data-kw="방어형 자산">방어형 자산</button>
+        <button class="keyword-btn" data-kw="인플레이션 대비">인플레이션 대비</button>
+        <button class="keyword-btn" data-kw="부동산 선호">부동산 선호</button>
+      </div>
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="초보자 친화적">초보자 친화적</button>
+        <button class="keyword-btn" data-kw="변동성 감수 가능">변동성 감수 가능</button>
+        <button class="keyword-btn" data-kw="대기자금 운용">대기자금 운용</button>
+        <button class="keyword-btn" data-kw="절세 관심">절세 관심</button>
+        <button class="keyword-btn" data-kw="환율 영향 고려">환율 영향 고려</button>
+        <button class="keyword-btn" data-kw="글로벌 자산 선호">글로벌 자산 선호</button>
+        <button class="keyword-btn" data-kw="실물자산 선호">실물자산 선호</button>
+      </div>
+    </div>
+    <div class="keyword-footer">
+      <span class="keyword-note">선택한 특징을 바탕으로 관련 있는 자산 전략을 참고용으로 보여드립니다.</span>
+      <button class="keyword-reset" id="kwReset">선택 초기화</button>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <a href="dividend-stock/" class="card" data-id="dividend-stock">
+      <div class="card-icon">💰</div>
+      <h3>배당주 전략</h3>
+      <p>배당 중심의 안정적 현금흐름 추구</p>
+      <div class="feature-list">
+        <span class="feature-tag">현금흐름</span>
+        <span class="feature-tag">배당수익률</span>
+        <span class="feature-tag">인컴</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="growth-stock/" class="card" data-id="growth-stock">
+      <div class="card-icon">🚀</div>
+      <h3>성장주 전략</h3>
+      <p>실적과 산업 확장성이 큰 기업에 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">매출 성장률</span>
+        <span class="feature-tag">산업 확장</span>
+        <span class="feature-tag">장기 투자</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="etf/" class="card" data-id="etf">
+      <div class="card-icon">📦</div>
+      <h3>ETF 전략</h3>
+      <p>지수·섹터·테마를 한 번에 담는 분산 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">분산 투자</span>
+        <span class="feature-tag">저비용</span>
+        <span class="feature-tag">테마 ETF</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="reits/" class="card" data-id="reits">
+      <div class="card-icon">🏢</div>
+      <h3>리츠(REITs) 전략</h3>
+      <p>부동산 수익을 배당 형태로 받는 인컴 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">부동산</span>
+        <span class="feature-tag">인컴</span>
+        <span class="feature-tag">높은 배당</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="preferred-stock/" class="card" data-id="preferred-stock">
+      <div class="card-icon">⭐</div>
+      <h3>우선주 전략</h3>
+      <p>배당 안정성과 가격 매력을 중시하는 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">배당 안정성</span>
+        <span class="feature-tag">우선배당</span>
+        <span class="feature-tag">가격 할인</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="bond/" class="card" data-id="bond">
+      <div class="card-icon">🔒</div>
+      <h3>채권 전략</h3>
+      <p>금리와 안정성을 고려한 방어형 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">금리</span>
+        <span class="feature-tag">방어형</span>
+        <span class="feature-tag">안전자산</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="bond-etf/" class="card" data-id="bond-etf">
+      <div class="card-icon">📊</div>
+      <h3>채권 ETF 전략</h3>
+      <p>ETF로 접근하는 분산형 채권 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">채권 ETF</span>
+        <span class="feature-tag">분산</span>
+        <span class="feature-tag">유동성</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="commodity/" class="card" data-id="commodity">
+      <div class="card-icon">🥇</div>
+      <h3>원자재·금 전략</h3>
+      <p>인플레이션과 불확실성에 대비하는 대체자산 투자</p>
+      <div class="feature-list">
+        <span class="feature-tag">인플레이션 헤지</span>
+        <span class="feature-tag">금</span>
+        <span class="feature-tag">대체자산</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="cash/" class="card" data-id="cash">
+      <div class="card-icon">💵</div>
+      <h3>현금성 자산 전략</h3>
+      <p>MMF·단기채 등 대기자금 중심의 안정적 운용</p>
+      <div class="feature-list">
+        <span class="feature-tag">MMF</span>
+        <span class="feature-tag">단기채</span>
+        <span class="feature-tag">유동성</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+  </div>
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/">소개</a>
+    <a href="../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+const KW_MAP={
+  '안정성 중시':['bond','bond-etf','cash'],
+  '배당·현금흐름':['dividend-stock','reits','preferred-stock','bond'],
+  '장기 성장':['growth-stock','etf'],
+  '분산투자':['etf','bond-etf'],
+  '방어형 자산':['bond','cash','preferred-stock'],
+  '인플레이션 대비':['commodity','reits'],
+  '부동산 선호':['reits'],
+  '초보자 친화적':['etf','bond-etf','cash'],
+  '변동성 감수 가능':['growth-stock','commodity'],
+  '대기자금 운용':['cash','bond-etf'],
+  '절세 관심':['etf','bond-etf','dividend-stock','cash'],
+  '환율 영향 고려':['etf','bond-etf','commodity'],
+  '글로벌 자산 선호':['etf','growth-stock','bond-etf','commodity'],
+  '실물자산 선호':['reits','commodity']
+};
+const selected=new Set();
+function updateHighlight(){
+  const cards=document.querySelectorAll('.card[data-id]');
+  if(selected.size===0){cards.forEach(c=>c.classList.remove('highlighted'));return;}
+  const matched=new Set([...selected].flatMap(k=>KW_MAP[k]||[]));
+  cards.forEach(c=>c.classList.toggle('highlighted',matched.has(c.dataset.id)));
+}
+document.getElementById('keywordList').addEventListener('click',function(e){
+  const btn=e.target.closest('.keyword-btn');
+  if(!btn)return;
+  const kw=btn.dataset.kw;
+  if(selected.has(kw)){selected.delete(kw);btn.classList.remove('active');}
+  else{selected.add(kw);btn.classList.add('active');}
+  updateHighlight();
+});
+document.getElementById('kwReset').addEventListener('click',function(){
+  selected.clear();
+  document.querySelectorAll('.keyword-btn.active').forEach(b=>b.classList.remove('active'));
+  updateHighlight();
+});
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('finq-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

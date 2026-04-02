@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>워런 버핏 포트폴리오 — FinQ</title>
+<meta name="description" content="버크셔 해서웨이 최신 13F 포트폴리오. 워런 버핏의 보유 종목, 섹터 비중, 최근 변동을 한눈에 확인하세요.">
+<meta property="og:title" content="워런 버핏 포트폴리오 — FinQ">
+<meta property="og:description" content="버크셔 해서웨이 13F 기반 보유 종목 분석. 상위 10개 종목, 섹터 배분, 최근 변동 내역.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.hero-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent);color:#fff;margin-bottom:1rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+
+/* 데이터 기준일 배지 */
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+/* 구루 프로필 카드 */
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+/* 보유 종목 테이블 */
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+
+/* 섹터 배분 */
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+/* 투자 철학 */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+/* 캘린더/업데이트 안내 */
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* 브레드크럼 */
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+/* 다른 구루 링크 */
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.link{cursor:pointer;transition:all .15s}.guru-chip.link:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* 면책 문구 */
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/buffett/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span>›</span>
+    <a href="../../../strategy/">투자 전략</a>
+    <span>›</span>
+    <a href="../">투자자 기반 전략</a>
+    <span>›</span>
+    <span>워런 버핏</span>
+  </div>
+
+  <h1 class="page-title">워런 버핏</h1>
+  <p class="page-desc">버크셔 해서웨이 SEC 13F 기반 포트폴리오 분석. 상위 보유 종목, 섹터 배분, 최근 변동 내역.</p>
+
+  <!-- 구루 다른 페이지 -->
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <span class="guru-chip active">워런 버핏</span>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div>
+    </div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">워런 버핏 Warren Buffett</div>
+        <div class="guru-sub">버크셔 해서웨이 회장 겸 CEO · 1965년~현재</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">$2,660억+</div>
+            <div class="guru-stat-label">주식 포트폴리오 규모</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">연 19.8%</div>
+            <div class="guru-stat-label">버크셔 연복리 수익률 (1965~2023)</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">가치투자</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 상위 보유 종목 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>상위 10개 보유 종목</div>
+      <span class="data-tag">2024년 3분기 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>종목</th>
+            <th>비중</th>
+            <th class="col-value">평가액</th>
+            <th class="col-shares">보유 주수</th>
+            <th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>버크셔 해서웨이는 매분기 말 기준 45일 이내에 SEC에 13F를 제출합니다. 일부 포지션은 기밀 처리(confidential treatment)로 공개되지 않을 수 있습니다.</span>
+    </div>
+  </div>
+
+  <!-- 3. 섹터 배분 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
+      <span class="data-tag">2024년 3분기 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <!-- 4. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"남들이 탐욕스러울 때 두려워하고, 남들이 두려워할 때 탐욕스러워지십시오."</div>
+        <div class="quote-source">— 1986년 버크셔 주주서한</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"10년을 보유할 생각이 없다면, 10분도 보유하지 마십시오."</div>
+        <div class="quote-source">— 버핏의 투자 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"훌륭한 회사를 공정한 가격에 사는 것이, 공정한 회사를 훌륭한 가격에 사는 것보다 낫습니다."</div>
+        <div class="quote-source">— 찰리 멍거와의 협업 이후</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"주가는 단기적으로는 투표 기계지만, 장기적으로는 저울입니다."</div>
+        <div class="quote-source">— 벤저민 그레이엄의 가르침 인용</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🏰</div>
+          <div style="font-weight:600;margin-bottom:2px">경제적 해자</div>
+          <div style="color:var(--text2)">경쟁사가 쉽게 침범할 수 없는 독점적 우위</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">💰</div>
+          <div style="font-weight:600;margin-bottom:2px">안정적 현금흐름</div>
+          <div style="color:var(--text2)">예측 가능하고 꾸준한 이익 창출 능력</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">📉</div>
+          <div style="font-weight:600;margin-bottom:2px">안전마진</div>
+          <div style="color:var(--text2)">내재가치 대비 충분히 낮은 매수 가격</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⏳</div>
+          <div style="font-weight:600;margin-bottom:2px">장기 보유</div>
+          <div style="color:var(--text2)">빈번한 매매 없이 수십 년 보유 원칙</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 최근 주요 변동 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>최근 주요 변동</div>
+      <span class="data-tag">2024년 3분기</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대폭 감소</span>
+        <div>
+          <strong>AAPL (애플)</strong> — 2024년 들어 3분기 연속 매도. 905M주 → 300M주 (약 67% 축소). 세금 이슈 및 고평가 우려로 풀이됨.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">일부 매도</span>
+        <div>
+          <strong>BAC (뱅크오브아메리카)</strong> — 2024년 3분기에 약 9억 달러어치 매도. 여전히 3위 비중 유지.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">지속 매수</span>
+        <div>
+          <strong>OXY (옥시덴탈 피트롤리엄)</strong> — 에너지 전환 확신 속 꾸준히 지분 확대. 약 28% 지분 보유.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">현금 축적</span>
+        <div>
+          <strong>현금 및 단기채</strong> — 약 $3,250억 (역대 최고). 적절한 투자처를 찾지 못하고 있음을 시사.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《워런 버핏의 주주 서한》</strong> — 투자 원칙과 자본배분 철학이 가장 직접적으로 드러나는 핵심 자료</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《Berkshire Hathaway Owner's Manual》</strong> — 버크셔의 운영 원칙과 주주 관점을 이해하기 좋은 대표 문서</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《워런 버핏과 찰리 멍거》</strong> — 버핏과 멍거의 투자 철학과 사고방식을 함께 따라가기 좋은 국내 출간 자료</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 SEC EDGAR에 공시된 13F 보고서를 기반으로 합니다. 13F는 분기별 공시이며 실제 현재 보유와 차이가 있을 수 있습니다. 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+// 테마
+function toggleTheme(){
+  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', t);
+}
+(function(){
+  const t = localStorage.getItem('theme');
+  if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
+})();
+
+// 보유 종목 데이터 (2024년 3분기 13F 기준)
+const holdings = [
+  { ticker:'AAPL', name:'애플', sector:'기술', weight:26.9, value:'$699억', shares:'3억주', change:'down', changeLabel:'▼ 대폭 감소' },
+  { ticker:'AXP',  name:'아메리칸 익스프레스', sector:'금융', weight:14.6, value:'$351억', shares:'1.52억주', change:'same', changeLabel:'— 유지' },
+  { ticker:'BAC',  name:'뱅크 오브 아메리카', sector:'금융', weight:11.2, value:'$287억', shares:'7.75억주', change:'down', changeLabel:'▼ 일부 매도' },
+  { ticker:'KO',   name:'코카콜라', sector:'필수소비재', weight:10.0, value:'$255억', shares:'4억주', change:'same', changeLabel:'— 유지' },
+  { ticker:'CVX',  name:'셰브론', sector:'에너지', weight:6.5,  value:'$175억', shares:'1.19억주', change:'same', changeLabel:'— 유지' },
+  { ticker:'OXY',  name:'옥시덴탈 피트롤리엄', sector:'에너지', weight:6.0,  value:'$154억', shares:'2.64억주', change:'up', changeLabel:'▲ 증가' },
+  { ticker:'MCO',  name:'무디스', sector:'금융', weight:3.5,  value:'$94억',  shares:'2,470만주', change:'same', changeLabel:'— 유지' },
+  { ticker:'KHC',  name:'크래프트 하인즈', sector:'필수소비재', weight:3.6,  value:'$92억',  shares:'3.26억주', change:'same', changeLabel:'— 유지' },
+  { ticker:'DVA',  name:'다비타', sector:'헬스케어', weight:1.8,  value:'$45억',  shares:'3,610만주', change:'same', changeLabel:'— 유지' },
+  { ticker:'C',    name:'씨티그룹', sector:'금융', weight:1.5,  value:'$38억',  shares:'5,520만주', change:'same', changeLabel:'— 유지' },
+];
+
+const tbody = document.getElementById('holdingsBody');
+holdings.forEach((h, i) => {
+  const changeClass = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
+      <td>
+        <div class="ticker">${h.ticker}</div>
+        <div class="co-name">${h.name}</div>
+      </td>
+      <td>
+        <div class="weight-bar-wrap">
+          <div class="weight-bar" style="width:${h.weight * 2.8}px"></div>
+          <span class="weight-text">${h.weight}%</span>
+        </div>
+      </td>
+      <td class="col-value"><span class="amount">${h.value}</span></td>
+      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+      <td><span class="${changeClass}">${h.changeLabel}</span></td>
+    </tr>`;
+});
+
+// 섹터 데이터
+const sectors = [
+  { name:'금융', pct:30.8, color:'#2563eb' },
+  { name:'기술', pct:26.9, color:'#7c3aed' },
+  { name:'필수소비재', pct:13.6, color:'#059669' },
+  { name:'에너지', pct:12.5, color:'#d97706' },
+  { name:'헬스케어', pct:1.8, color:'#db2777' },
+  { name:'기타/현금성', pct:14.4, color:'#6b7280' },
+];
+
+const sl = document.getElementById('sectorList');
+sectors.forEach(s => {
+  sl.innerHTML += `
+    <div class="sector-row">
+      <div class="sector-name">${s.name}</div>
+      <div class="sector-bar-bg">
+        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
+      </div>
+      <div class="sector-pct">${s.pct}%</div>
+    </div>`;
+});
+</script>
+</body>
+</html>

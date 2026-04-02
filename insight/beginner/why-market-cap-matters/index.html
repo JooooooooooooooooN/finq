@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시가총액이 중요한 이유 — FinQ 초보자 가이드</title>
+<meta name="description" content="기업 규모와 시장 평가를 함께 보는 시가총액의 기본 개념 정리. 주가만으로 기업 크기를 판단하면 안 되는 이유 중심의 설명.">
+<link rel="canonical" href="https://finq.kr/insight/beginner/why-market-cap-matters/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb;
+  --red: #dc2626; --radius: 12px; --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 16px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+.formula-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1rem; text-align: center; }
+.formula-text { font-size: 15px; font-weight: 700; }
+.formula-sub { font-size: 12px; color: var(--text-secondary); margin-top: 0.35rem; }
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="시가총액이 중요한 이유 — FinQ 초보자 가이드">
+<meta property="og:description" content="기업 규모와 시장 평가를 함께 보는 시가총액의 기본 개념 정리. 주가만으로 기업 크기를 판단하면 안 되는 이유 중심의 설명.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/beginner/why-market-cap-matters/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">초보자 가이드</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>시가총액이 중요한 이유</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">MARKET CAP</div>
+    <h1>시가총액이 중요한 이유</h1>
+    <p class="hero-desc">기업 규모와 시장 평가를 동시에 나타내는 시가총액의 기본 개념 정리.<br>주가만으로 기업 크기를 판단하면 안 되는 이유 중심의 설명.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">시가총액</span>
+      <span class="hero-tag">기초개념</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">기업 전체 가치</div>
+        <div class="summary-text">시가총액은 현재 주가 × 총 발행 주식 수로 계산되는 기업 전체의 시장 평가액</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">주가 ≠ 크기</div>
+        <div class="summary-text">주가가 높아도 발행 주식 수가 적으면 시가총액은 작을 수 있음</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">규모별 특성</div>
+        <div class="summary-text">대형주·중형주·소형주는 안정성과 성장 잠재력 측면에서 특성이 다름</div>
+      </div>
+    </div>
+    <div class="formula-box">
+      <div class="formula-text">시가총액 = 현재 주가 × 총 발행 주식 수</div>
+      <div class="formula-sub">예시: 주가 50,000원 × 발행주식 1억 주 = 시가총액 5조 원</div>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 시가총액은 지금 시장이 그 기업 전체를 얼마로 보고 있는지를 나타내는 수치로, 주가보다 기업 규모 비교에 훨씬 정확한 기준
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">시가총액의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>주가 × 발행 주식 수로 계산</strong>
+          <span>시가총액은 현재 주가에 총 발행 주식 수를 곱한 값. 같은 주가라도 발행 주식 수가 많으면 시가총액이 크고, 적으면 시가총액이 작아지는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>기업 규모의 기준으로 활용</strong>
+          <span>일반적으로 대형주(10조 원 이상), 중형주(1~10조 원), 소형주(1조 원 미만)으로 구분. 규모에 따라 유동성, 변동성, 기관 투자자 접근성이 다르게 나타남</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>지수 편입 비중 결정 기준</strong>
+          <span>코스피200, S&P 500 같은 대표 지수는 시가총액 비중 방식으로 구성. 시가총액이 클수록 지수 내 비중이 높아지고, ETF 보유 비중에도 영향을 미치는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>기업 간 상대 비교 기준</strong>
+          <span>같은 업종 내 두 기업을 비교할 때 주가보다 시가총액 기준이 더 정확한 규모 비교 방법. 주가가 10배 차이 나도 시가총액이 비슷할 수 있음</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">핵심 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">💡</div>
+        <div class="point-body">
+          <strong>주가가 높다고 큰 기업이 아닌 이유</strong>
+          주가 200만 원짜리 기업도 발행 주식 수가 10만 주라면 시가총액은 2,000억 원에 불과. 반대로 주가 1,000원짜리 기업이 발행 주식 수 100억 주라면 시가총액은 10조 원. 주가만으로 크기 비교는 불가
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body">
+          <strong>대형주·중형주·소형주의 특성 차이</strong>
+          대형주는 유동성이 높고 변동성이 낮은 편. 소형주는 성장 잠재력이 크지만 유동성이 낮고 가격 변동이 크며 정보 접근성도 부족한 경향. 포트폴리오 구성 시 비중 조절 판단의 기준으로 활용 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🌍</div>
+        <div class="point-body">
+          <strong>시가총액 기반 지수 구성 원리</strong>
+          S&P 500, 나스닥100 등 대표 지수는 시가총액 가중 방식. 애플·엔비디아 같은 초대형 기업이 지수 전체 수익률에 미치는 영향이 크다는 의미로, 지수 ETF 투자 시 이 구조를 이해하면 편입 비중 파악이 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔄</div>
+        <div class="point-body">
+          <strong>시가총액 변화가 의미하는 신호</strong>
+          시가총액이 꾸준히 증가한다는 것은 주가 상승 또는 실적 개선으로 시장 평가가 높아지는 신호. 반대로 시가총액이 지속 축소되면 기업 가치 하락 또는 주가 하락 추세를 반영하는 경우가 많음
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🏗️</div>
+        <div class="point-body">
+          <strong>기업 규모 비교의 가장 정확한 기준</strong>
+          주가, 매출, 직원 수보다 시가총액이 시장이 그 기업을 어떻게 평가하는지를 가장 직접적으로 반영하는 수치. 이종 업종 기업도 시가총액 기준으로 크기 비교 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📌</div>
+        <div class="point-body">
+          <strong>ETF·지수 투자 이해의 기초</strong>
+          시가총액 개념을 알면 지수 ETF가 왜 특정 종목에 더 많이 투자되는지, 리밸런싱 때 어떤 종목이 편출입되는지를 자연스럽게 이해 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚖️</div>
+        <div class="point-body">
+          <strong>포트폴리오 리스크 관리에 활용 가능</strong>
+          대형주 중심 포트폴리오는 안정성 중심, 소형주 비중을 높이면 성장 잠재력 중심으로 리스크·수익 성격이 달라짐. 시가총액 기준으로 포트폴리오 성격을 설계 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>시가총액이 크다고 좋은 투자 기회가 아닌 구조</strong>
+          시가총액이 클수록 이미 시장에 알려진 정보가 가격에 반영된 경우가 많아 추가 상승 여력이 제한적일 수 있음. 규모와 투자 매력도는 별개의 판단
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body caution">
+          <strong>소형주의 유동성 리스크</strong>
+          시가총액이 작은 소형주는 거래량이 적어 원하는 가격에 즉시 매수·매도하기 어려울 수 있음. 급락 시 손실 대응이 느려지는 유동성 리스크가 존재
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🎭</div>
+        <div class="point-body caution">
+          <strong>시가총액 기반 지수의 쏠림 위험</strong>
+          시가총액 가중 지수는 특정 섹터나 대형주가 과도하게 커지면 지수 전체가 그 종목에 종속되는 구조. 지수 ETF 투자 시 이 쏠림 위험을 인식하는 것이 필요
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>주가와 기업 크기의 차이를 처음 배우는 초보 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>ETF·지수 투자 구조를 이해하고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>대형주와 소형주 중 어디에 투자할지 기준을 세우고 싶은 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>시가총액 하나만으로 종목을 선정하려는 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>단기 차트 중심으로만 매매하는 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="../per-pbr-roe/" class="related-card">
+        <span>📐 PER, PBR, ROE 한 번에 이해하기</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../what-is-etf/" class="related-card">
+        <span>📦 ETF란 무엇인가</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../price-vs-value/" class="related-card">
+        <span>🔍 주가와 기업가치는 왜 다른가</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 초보자 가이드 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</p>
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

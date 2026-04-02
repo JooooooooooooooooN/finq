@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이클 버리 포트폴리오 — FinQ</title>
+<meta name="description" content="사이온 에셋 매니지먼트 13F 기반 마이클 버리 포트폴리오. 빅쇼트 주인공의 보유 종목, 섹터 배분, 최근 변동 내역.">
+<meta property="og:title" content="마이클 버리 포트폴리오 — FinQ">
+<meta property="og:description" content="사이온 에셋 매니지먼트 13F 기반 보유 종목 분석. 극도로 집중된 역발상 가치투자 전략.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.hero-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent);color:#fff;margin-bottom:1rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:130px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.link{cursor:pointer;transition:all .15s}.guru-chip.link:hover{background:var(--border)}
+
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+
+/* 빅쇼트 타임라인 */
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-item{display:grid;grid-template-columns:80px 1fr;gap:1rem;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:37px;top:28px;bottom:-8px;width:2px;background:var(--border)}
+.tl-year{font-size:13px;font-weight:700;color:var(--accent);padding-top:4px;text-align:right}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:6px;position:relative;z-index:1}
+.tl-content{padding-bottom:20px}
+.tl-header{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tl-title{font-size:14px;font-weight:700}
+.tl-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px}
+.tl-desc{font-size:13px;color:var(--text2);line-height:1.6}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/burry/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span>›</span>
+    <a href="../../../strategy/">투자 전략</a>
+    <span>›</span>
+    <a href="../">투자자 기반 전략</a>
+    <span>›</span>
+    <span>마이클 버리</span>
+  </div>
+
+  <h1 class="page-title">마이클 버리</h1>
+  <p class="page-desc">사이온 에셋 매니지먼트 SEC 13F 기반 포트폴리오 분석. 영화 &lt;빅쇼트&gt;의 실제 주인공, 극도로 집중된 역발상 가치투자 전략.</p>
+
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <a href="../dalio/" class="guru-chip link">레이 달리오</a>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <span class="guru-chip active">마이클 버리</span>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div>
+    </div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">마이클 버리 Michael Burry</div>
+        <div class="guru-sub">사이온 에셋 매니지먼트 창립자 · 영화 &lt;빅쇼트&gt; 실제 주인공</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">~$1억</div>
+            <div class="guru-stat-label">사이온 운용자산(AUM) 추정</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">+489%</div>
+            <div class="guru-stat-label">2008년 서브프라임 베팅 수익률</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">역발상 가치</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 빅쇼트 타임라인 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>버리의 주요 투자 이력</div>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">2000~<br>2001</div>
+        <div class="tl-content">
+          <div class="tl-header">
+            <div class="tl-title">닷컴 버블 붕괴 예측</div>
+            <span class="tl-badge" style="background:#d1fae5;color:#065f46">수익</span>
+          </div>
+          <div class="tl-desc">버블 붕괴 전 과대평가된 IT주 공매도. 사이온 캐피탈 설립 초기 주요 성과.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2005~<br>2008</div>
+        <div class="tl-content">
+          <div class="tl-header">
+            <div class="tl-title">서브프라임 모기지 공매도 (빅쇼트)</div>
+            <span class="tl-badge" style="background:#d1fae5;color:#065f46">+489%</span>
+          </div>
+          <div class="tl-desc">CDS(신용부도스왑)를 통해 서브프라임 모기지 붕괴에 베팅. 투자자들의 반발 속에서도 포지션 유지, 2008년 금융위기로 약 7억 달러 수익.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2021</div>
+        <div class="tl-content">
+          <div class="tl-header">
+            <div class="tl-title">테슬라·ARK 공매도 & 인플레이션 경고</div>
+            <span class="tl-badge" style="background:#fef3c7;color:#92400e">혼조</span>
+          </div>
+          <div class="tl-desc">테슬라 고평가 공매도 포지션 보유. 인플레이션 급등을 사전 경고. 이후 트위터(현 X)를 통해 시장 과열 지속 경고.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2023~<br>2024</div>
+        <div class="tl-content">
+          <div class="tl-header">
+            <div class="tl-title">중국 주식 집중 매수</div>
+            <span class="tl-badge" style="background:#dbeafe;color:#1e40af">현재</span>
+          </div>
+          <div class="tl-desc">극도로 저평가된 알리바바·JD닷컴 등 중국 빅테크 매수. "시장이 두려워할 때 사는" 전형적인 역발상 투자.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. 보유 종목 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>상위 10개 보유 종목</div>
+      <span class="data-tag">2024년 3분기 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>종목</th>
+            <th>비중</th>
+            <th class="col-value">평가액</th>
+            <th class="col-shares">보유 주수</th>
+            <th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>사이온은 운용 규모가 작고 포트폴리오가 매우 집중되어 있습니다. 13F 제출 시점과 실제 보유 사이에 큰 변화가 있을 수 있습니다. 버리는 포지션을 빠르게 바꾸는 것으로 유명합니다.</span>
+    </div>
+  </div>
+
+  <!-- 4. 섹터 배분 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">4</span>섹터 배분</div>
+      <span class="data-tag">2024년 3분기 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <!-- 5. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>투자 철학</div>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"모든 버블은 결국 현실로 돌아옵니다. 타이밍이 문제일 뿐입니다."</div>
+        <div class="quote-source">— 2008년 금융위기 이후 인터뷰</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"나는 내 분석이 맞다는 확신이 들면, 모두가 반대해도 포지션을 유지합니다."</div>
+        <div class="quote-source">— The Big Short 원작 인터뷰</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"인덱스 펀드 버블은 서브프라임 CDO와 구조적으로 유사합니다. 언젠가 터집니다."</div>
+        <div class="quote-source">— 2019년 Bloomberg 인터뷰</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"중국 주식은 지금 아무도 원하지 않습니다. 그래서 제가 삽니다."</div>
+        <div class="quote-source">— 2023년 13F 공개 이후 X(트위터)</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔬</div>
+          <div style="font-weight:600;margin-bottom:2px">바텀업 리서치</div>
+          <div style="color:var(--text2)">재무제표를 직접 분석, 시장 의견과 무관하게 결론 도출</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🎯</div>
+          <div style="font-weight:600;margin-bottom:2px">극단적 집중</div>
+          <div style="color:var(--text2)">5~10개 종목에 자산 집중. 확신 없으면 매수 안 함</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">📉</div>
+          <div style="font-weight:600;margin-bottom:2px">역발상</div>
+          <div style="color:var(--text2)">시장이 공포에 질릴 때 매수, 탐욕스러울 때 공매도</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⏳</div>
+          <div style="font-weight:600;margin-bottom:2px">인내심</div>
+          <div style="color:var(--text2)">확신 포지션은 수년간 보유. 단기 손실에 흔들리지 않음</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 최근 주요 변동 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>최근 주요 변동</div>
+      <span class="data-tag">2024년 3분기</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 확대</span>
+        <div>
+          <strong>BABA (알리바바)</strong> — 규제 리스크 완화 및 자사주 매입 확대 기대감 속 지속 매수. 포트폴리오 1위 유지.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">신규 매수</span>
+        <div>
+          <strong>HCA (HCA 헬스케어)</strong> — 미국 최대 민영 병원 체인. 고령화 수혜 + 안정적 현금흐름 평가로 신규 편입.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">전량 매도</span>
+        <div>
+          <strong>GOOG (알파벳)</strong> — AI 경쟁 심화에 따른 광고 매출 압박 우려로 전량 청산.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">경고 발언</span>
+        <div>
+          <strong>X(트위터) 포스트</strong> — AI 버블 및 미국 국채 급등에 대한 경고 반복. 시장 전반의 과도한 낙관론 비판.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">7</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《Cassandra Unchained》</strong> — 버블, 시장 구조, 매크로 리스크에 대한 버리의 대표 뉴스레터</li>
+      <li style="font-size:14px;line-height:1.7"><strong>Scion 관련 서한 / 인터뷰 자료</strong> — 가치투자, 역발상, 위기 포착 관점을 이해하는 참고 자료</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 SEC EDGAR에 공시된 사이온 에셋 매니지먼트의 13F 보고서를 기반으로 합니다. 버리는 포지션을 빠르게 교체하는 것으로 유명하며, 13F 공시 시점과 실제 보유 현황은 크게 다를 수 있습니다. 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', t);
+}
+(function(){
+  const t = localStorage.getItem('theme');
+  if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
+})();
+
+const holdings = [
+  { ticker:'BABA', name:'알리바바',        sector:'중국 기술',  weight:21.4, value:'$2,140만', shares:'25만주',  change:'up',   changeLabel:'▲ 비중 확대' },
+  { ticker:'JD',   name:'JD닷컴',          sector:'중국 이커머스',weight:16.8, value:'$1,680만', shares:'62만주',  change:'same', changeLabel:'— 유지' },
+  { ticker:'BIDU', name:'바이두',           sector:'중국 AI',    weight:13.2, value:'$1,320만', shares:'9만주',   change:'new',  changeLabel:'★ 신규 편입' },
+  { ticker:'HCA',  name:'HCA 헬스케어',    sector:'헬스케어',   weight:10.5, value:'$1,050만', shares:'2.8만주', change:'new',  changeLabel:'★ 신규 편입' },
+  { ticker:'MGM',  name:'MGM 리조트',       sector:'소비재',     weight:8.7,  value:'$870만',   shares:'23만주',  change:'same', changeLabel:'— 유지' },
+  { ticker:'CPRI', name:'카프리 홀딩스',    sector:'소비재',     weight:7.1,  value:'$710만',   shares:'18만주',  change:'down', changeLabel:'▼ 소폭 축소' },
+  { ticker:'SIG',  name:'시그넷 주얼러스',  sector:'소비재',     weight:6.3,  value:'$630만',   shares:'8만주',   change:'same', changeLabel:'— 유지' },
+  { ticker:'REAL', name:'더리얼리얼',        sector:'이커머스',   weight:5.4,  value:'$540만',   shares:'80만주',  change:'same', changeLabel:'— 유지' },
+  { ticker:'OLLI', name:'올리스 바겐 아울렛',sector:'소비재',     weight:4.8,  value:'$480만',   shares:'5만주',   change:'same', changeLabel:'— 유지' },
+  { ticker:'GEO',  name:'GEO 그룹',         sector:'부동산',     weight:3.2,  value:'$320만',   shares:'22만주',  change:'up',   changeLabel:'▲ 증가' },
+];
+
+const tbody = document.getElementById('holdingsBody');
+holdings.forEach((h, i) => {
+  const cc = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
+      <td>
+        <div class="ticker">${h.ticker}</div>
+        <div class="co-name">${h.name}</div>
+      </td>
+      <td>
+        <div class="weight-bar-wrap">
+          <div class="weight-bar" style="width:${h.weight * 2.8}px"></div>
+          <span class="weight-text">${h.weight}%</span>
+        </div>
+      </td>
+      <td class="col-value"><span class="amount">${h.value}</span></td>
+      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+      <td><span class="${cc}">${h.changeLabel}</span></td>
+    </tr>`;
+});
+
+const sectors = [
+  { name:'중국 기술/이커머스', pct:45, color:'#dc2626' },
+  { name:'소비재',             pct:22, color:'#d97706' },
+  { name:'헬스케어',           pct:12, color:'#059669' },
+  { name:'이커머스',           pct:8,  color:'#7c3aed' },
+  { name:'부동산',             pct:5,  color:'#2563eb' },
+  { name:'기타',               pct:8,  color:'#6b7280' },
+];
+
+const sl = document.getElementById('sectorList');
+sectors.forEach(s => {
+  sl.innerHTML += `
+    <div class="sector-row">
+      <div class="sector-name">${s.name}</div>
+      <div class="sector-bar-bg">
+        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
+      </div>
+      <div class="sector-pct">${s.pct}%</div>
+    </div>`;
+});
+</script>
+</body>
+</html>

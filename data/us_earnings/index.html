@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>미국 실적 발표 일정 — FinQ</title>
+<meta name="description" content="미국 주요 기업의 실적 발표 일정과 예상치를 빠르게 확인. 애플, 마이크로소프트, 엔비디아 등 핵심 기업 EPS·매출 예상치와 섹터별 체크포인트 정리.">
+<meta property="og:title" content="미국 실적 발표 일정 — FinQ">
+<meta property="og:description" content="미국 주요 기업의 실적 발표 일정과 예상치를 빠르게 확인하는 페이지">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+/* MAIN LAYOUT */
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.breadcrumb a{color:var(--accent)}
+
+/* HERO */
+.hero{margin-bottom:2rem}
+.hero-badge{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
+.hero h1{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:.6rem}
+.hero-lead{font-size:15px;color:var(--text2);line-height:1.7;word-break:keep-all;max-width:640px;margin-bottom:1rem}
+.hero-tags{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.9rem}
+.hero-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.hero-update{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
+.hero-update::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green)}
+
+/* SUMMARY CARDS */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
+@media(max-width:700px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
+.summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem}
+.summary-label{font-size:12px;color:var(--text2);margin-bottom:.35rem;word-break:keep-all}
+.summary-value{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+.summary-value.accent{color:var(--accent)}
+.summary-value.green{color:var(--green)}
+.summary-value.orange{color:var(--orange)}
+.summary-sub{font-size:11px;color:var(--text2);margin-top:.2rem}
+
+/* SECTION */
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
+.sec-title{font-size:16px;font-weight:700;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cal-table{width:100%;border-collapse:collapse;font-size:14px}
+.cal-table th{text-align:left;padding:9px 12px;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+.cal-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle;white-space:nowrap}
+.cal-table tr:last-child td{border-bottom:none}
+.cal-table tr:hover td{background:var(--bg2)}
+.imp-high{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;background:#fee2e2;color:#991b1b}
+.imp-mid{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:#fef3c7;color:#92400e}
+.imp-low{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2)}
+[data-theme=dark] .imp-high{background:#7f1d1d;color:#fca5a5}
+[data-theme=dark] .imp-mid{background:#78350f;color:#fcd34d}
+.time-tag{display:inline-block;padding:2px 9px;border-radius:4px;font-size:11px;font-weight:600}
+.time-pre{background:#dbeafe;color:#1e40af}
+.time-post{background:#f3e8ff;color:#6b21a8}
+[data-theme=dark] .time-pre{background:#1e3a5f;color:#93c5fd}
+[data-theme=dark] .time-post{background:#3b0764;color:#d8b4fe}
+.ticker{font-size:12px;color:var(--text2);font-weight:600;font-family:monospace}
+.company-name{font-weight:600}
+.date-cell{font-size:13px;font-weight:600}
+.num-cell{font-size:13px;color:var(--text2)}
+.sector-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+
+/* SECTOR CARDS */
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.cat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
+.cat-icon{font-size:22px;margin-bottom:.5rem}
+.cat-name{font-size:14px;font-weight:700;margin-bottom:.3rem}
+.cat-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+.cat-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:.65rem}
+.cat-item{padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text2)}
+
+/* GUIDE CARDS */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.guide-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem}
+.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
+.guide-title{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.guide-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
+
+/* CHECKLIST */
+.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.check-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:10px}
+.check-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
+.check-text{font-size:14px;line-height:1.65;word-break:keep-all}
+.check-text strong{font-weight:700;color:var(--text)}
+
+/* CALLOUT */
+.callout{border-radius:10px;padding:.9rem 1.1rem;margin-top:1rem;font-size:14px;line-height:1.75;word-break:keep-all}
+.callout-info{background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.2)}
+[data-theme=dark] .callout-info{background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.3)}
+
+/* DISCLAIMER */
+.disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem}
+.disclaimer ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+.disclaimer ul li{font-size:13px;color:var(--text2);padding-left:1.1em;position:relative;word-break:keep-all}
+.disclaimer ul li::before{content:"·";position:absolute;left:0;font-weight:700}
+
+hr{border:none;border-top:1px solid var(--border)}
+.divider{max-width:900px;margin:0 auto;padding:0 1.25rem}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/data/us_earnings/">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/">전략</a>
+      <a href="../../data/" class="active">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="../../">홈</a>
+    <span>›</span>
+    <a href="../">마켓 데이터</a>
+    <span>›</span>
+    <span>미국 실적 발표 일정</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">MARKET DATA</div>
+    <h1>미국 실적 발표 일정</h1>
+    <p class="hero-lead">미국 주요 기업의 실적 발표 일정과 예상치를 빠르게 확인하는 페이지</p>
+    <div class="hero-tags">
+      <span class="hero-tag">실적발표</span>
+      <span class="hero-tag">미국주식</span>
+      <span class="hero-tag">EPS</span>
+      <span class="hero-tag">매출</span>
+    </div>
+    <div class="hero-update">이번 주 기준 주요 실적 발표 일정을 정리했습니다</div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="summary-label">오늘 발표 예정 기업</div>
+      <div class="summary-value accent">3</div>
+      <div class="summary-sub">04/23 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">이번 주 주요 기업</div>
+      <div class="summary-value green">12</div>
+      <div class="summary-sub">04/21 ~ 04/25 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">장전 발표</div>
+      <div class="summary-value orange">4</div>
+      <div class="summary-sub">이번 주 기준</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">장후 발표</div>
+      <div class="summary-value" style="color:var(--red)">8</div>
+      <div class="summary-sub">이번 주 기준</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 오늘·이번 주 실적 일정 -->
+  <div class="section">
+    <div class="sec-title">오늘·이번 주 실적 일정</div>
+    <div class="table-wrap">
+      <table class="cal-table">
+        <thead>
+          <tr>
+            <th>발표일</th>
+            <th>기업명</th>
+            <th>티커</th>
+            <th>발표 시간</th>
+            <th>예상 EPS</th>
+            <th>예상 매출</th>
+            <th>섹터</th>
+            <th>중요도</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="date-cell">04/16 수</td>
+            <td><span class="company-name">JPMorgan</span></td>
+            <td><span class="ticker">JPM</span></td>
+            <td><span class="time-tag time-pre">장전</span></td>
+            <td class="num-cell">$4.52</td>
+            <td class="num-cell">$44.1B</td>
+            <td><span class="sector-tag">금융</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/16 수</td>
+            <td><span class="company-name">Bank of America</span></td>
+            <td><span class="ticker">BAC</span></td>
+            <td><span class="time-tag time-pre">장전</span></td>
+            <td class="num-cell">$0.82</td>
+            <td class="num-cell">$27.4B</td>
+            <td><span class="sector-tag">금융</span></td>
+            <td><span class="imp-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/17 목</td>
+            <td><span class="company-name">Goldman Sachs</span></td>
+            <td><span class="ticker">GS</span></td>
+            <td><span class="time-tag time-pre">장전</span></td>
+            <td class="num-cell">$12.80</td>
+            <td class="num-cell">$14.2B</td>
+            <td><span class="sector-tag">금융</span></td>
+            <td><span class="imp-mid">보통</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/17 목</td>
+            <td><span class="company-name">AMD</span></td>
+            <td><span class="ticker">AMD</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$0.88</td>
+            <td class="num-cell">$7.4B</td>
+            <td><span class="sector-tag">반도체</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/22 화</td>
+            <td><span class="company-name">Costco</span></td>
+            <td><span class="ticker">COST</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$4.21</td>
+            <td class="num-cell">$63.8B</td>
+            <td><span class="sector-tag">소비재</span></td>
+            <td><span class="imp-mid">보통</span></td>
+          </tr>
+          <tr style="background:rgba(37,99,235,.04)">
+            <td class="date-cell">04/23 수</td>
+            <td><span class="company-name">Tesla</span></td>
+            <td><span class="ticker">TSLA</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$0.45</td>
+            <td class="num-cell">$22.4B</td>
+            <td><span class="sector-tag">자동차</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/24 목</td>
+            <td><span class="company-name">Meta</span></td>
+            <td><span class="ticker">META</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$5.65</td>
+            <td class="num-cell">$41.1B</td>
+            <td><span class="sector-tag">빅테크</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/24 목</td>
+            <td><span class="company-name">Microsoft</span></td>
+            <td><span class="ticker">MSFT</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$3.12</td>
+            <td class="num-cell">$68.7B</td>
+            <td><span class="sector-tag">빅테크</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/25 금</td>
+            <td><span class="company-name">Apple</span></td>
+            <td><span class="ticker">AAPL</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$1.65</td>
+            <td class="num-cell">$94.2B</td>
+            <td><span class="sector-tag">빅테크</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/25 금</td>
+            <td><span class="company-name">Amazon</span></td>
+            <td><span class="ticker">AMZN</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$1.37</td>
+            <td class="num-cell">$155.6B</td>
+            <td><span class="sector-tag">빅테크</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">04/25 금</td>
+            <td><span class="company-name">Alphabet</span></td>
+            <td><span class="ticker">GOOGL</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$2.13</td>
+            <td class="num-cell">$89.6B</td>
+            <td><span class="sector-tag">빅테크</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+          <tr>
+            <td class="date-cell">05/01 목</td>
+            <td><span class="company-name">NVIDIA</span></td>
+            <td><span class="ticker">NVDA</span></td>
+            <td><span class="time-tag time-post">장후</span></td>
+            <td class="num-cell">$0.91</td>
+            <td class="num-cell">$43.2B</td>
+            <td><span class="sector-tag">반도체</span></td>
+            <td><span class="imp-high">높음</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-notice">* 발표 시간은 미국 동부 시간 기준이며, 장전은 개장 전(BMO), 장후는 폐장 후(AMC)입니다. 예상치는 애널리스트 컨센서스 기준이며 변경될 수 있습니다. 더미 데이터 기반 UI 예시입니다.</div>
+
+    <div class="callout callout-info" style="margin-top:1rem">
+      <strong>주목 포인트:</strong> 4월 마지막 주(04/23~04/25)에 빅테크 5개사 실적이 집중되어 있습니다. 해당 주간 나스닥 변동성이 확대될 수 있으며, 각사 가이던스 발표 내용이 시장 방향을 결정하는 주요 변수가 됩니다.
+    </div>
+  </div>
+
+  <!-- SECTION 2: 주요 섹터별 발표 일정 -->
+  <div class="section">
+    <div class="sec-title">주요 섹터별 발표 일정</div>
+    <div class="cat-grid">
+      <div class="cat-card">
+        <div class="cat-icon">💻</div>
+        <div class="cat-name">빅테크</div>
+        <div class="cat-desc">클라우드·광고 매출과 AI 투자 규모가 핵심 체크포인트다. 영업마진 추이도 함께 확인한다.</div>
+        <div class="cat-items">
+          <span class="cat-item">Apple</span>
+          <span class="cat-item">Microsoft</span>
+          <span class="cat-item">Amazon</span>
+          <span class="cat-item">Meta</span>
+          <span class="cat-item">Alphabet</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">⚙️</div>
+        <div class="cat-name">반도체</div>
+        <div class="cat-desc">데이터센터 수요 전망과 재고 흐름이 주요 변수다. AI 칩 수요에 대한 코멘터리도 주목해야 한다.</div>
+        <div class="cat-items">
+          <span class="cat-item">NVIDIA</span>
+          <span class="cat-item">AMD</span>
+          <span class="cat-item">Qualcomm</span>
+          <span class="cat-item">Intel</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🏦</div>
+        <div class="cat-name">금융</div>
+        <div class="cat-desc">순이자마진(NIM)과 대손충당금 규모가 핵심이다. 금리 환경 변화에 따른 가이던스 수정 여부도 체크한다.</div>
+        <div class="cat-items">
+          <span class="cat-item">JPMorgan</span>
+          <span class="cat-item">Goldman Sachs</span>
+          <span class="cat-item">Bank of America</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">🛒</div>
+        <div class="cat-name">소비재</div>
+        <div class="cat-desc">동일점포매출 성장률이 가장 중요하다. 소비 둔화 여부와 재고 수준 변화도 함께 살핀다.</div>
+        <div class="cat-items">
+          <span class="cat-item">Costco</span>
+          <span class="cat-item">Walmart</span>
+          <span class="cat-item">Nike</span>
+        </div>
+      </div>
+      <div class="cat-card">
+        <div class="cat-icon">💊</div>
+        <div class="cat-name">헬스케어</div>
+        <div class="cat-desc">주요 제품별 매출 성장세와 파이프라인 업데이트, 의료비 원가 흐름을 중점적으로 체크한다.</div>
+        <div class="cat-items">
+          <span class="cat-item">UnitedHealth</span>
+          <span class="cat-item">J&amp;J</span>
+          <span class="cat-item">Pfizer</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: 무엇을 같이 봐야 하나 -->
+  <div class="section">
+    <div class="sec-title">무엇을 같이 봐야 하나</div>
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-num">POINT 01</div>
+        <div class="guide-title">EPS만이 아니라 매출과 가이던스까지</div>
+        <div class="guide-desc">EPS가 예상치를 웃돌아도 매출이 기대에 미치지 못하거나 다음 분기 가이던스가 낮아지면 주가가 하락하는 경우가 많다. 세 가지를 함께 봐야 한다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 02</div>
+        <div class="guide-title">기대치가 높은 종목은 "좋아도 하락" 가능</div>
+        <div class="guide-desc">이미 주가에 좋은 실적이 선반영돼 있다면, 실적이 예상에 부합해도 "기대 이하"로 해석돼 하락 반응이 나올 수 있다. 발표 전 주가 흐름을 먼저 확인한다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 03</div>
+        <div class="guide-title">발표 시간이 당일 vs 다음 날을 가른다</div>
+        <div class="guide-desc">장후 발표 종목은 당일 거래 시간 내 반응이 없고 다음 날 갭으로 나온다. 장전 발표 종목은 당일 개장 직후 변동성이 집중된다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 04</div>
+        <div class="guide-title">업종별 핵심 포인트가 다르다</div>
+        <div class="guide-desc">빅테크는 클라우드·AI 마진, 반도체는 데이터센터 수요, 금융은 순이자마진, 소비재는 동일점포매출, 헬스케어는 주요 제품 성장 여부가 각각 다르다. 공통 기준만으로 판단하면 놓치는 부분이 생긴다.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">POINT 05</div>
+        <div class="guide-title">전년 동기 대비 성장률도 같이 확인</div>
+        <div class="guide-desc">예상치 충족 여부뿐 아니라, 전년 동기 대비 성장이 가속하고 있는지 둔화하고 있는지를 함께 보면 기업의 실질 모멘텀을 파악하기 쉽다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: 실적 시즌 체크 포인트 -->
+  <div class="section">
+    <div class="sec-title">실적 시즌 체크 포인트</div>
+    <div class="check-grid">
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>장후 발표 종목</strong>은 다음 날 개장 갭 변동 가능성을 미리 확인한다. 선물 반응이 먼저 방향을 보여주는 경우가 많다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>EPS 상회보다 가이던스 변화</strong>가 더 중요할 수 있다. 이번 분기 실적보다 다음 분기 전망이 주가 방향을 결정하는 경우가 더 많다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>전년 동기 대비 성장률</strong>을 함께 확인한다. 절대 수치보다 성장이 가속 중인지, 둔화 중인지가 더 중요한 신호일 수 있다.</div>
+      </div>
+      <div class="check-card">
+        <div class="check-dot"></div>
+        <div class="check-text"><strong>같은 섹터 내 연쇄 반응</strong>도 체크한다. 한 빅테크의 클라우드 실망 가이던스가 동종 업계 전체로 반응이 번지는 패턴이 자주 나타난다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="disclaimer">
+    <ul>
+      <li>데이터는 출처 및 반영 시점에 따라 일부 차이가 있을 수 있습니다.</li>
+      <li>일부 해외 데이터는 현지 발표 기준 시각으로 제공될 수 있습니다.</li>
+      <li>본 페이지는 정보 제공 목적이며, 특정 투자 판단을 권유하지 않습니다.</li>
+    </ul>
+  </div>
+
+</div><!-- /main -->
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div style="font-size:13px;color:var(--text2)">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/index.html">소개</a>
+    <a href="../../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

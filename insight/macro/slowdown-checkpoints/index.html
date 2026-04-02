@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경기 둔화 국면 투자 체크포인트 — FinQ 투자 인사이트</title>
+<meta name="description" content="경기 둔화 가능성이 높아지는 구간에서 확인할 주요 지표와 시장 신호. 실적, 고용, 소비, 방어주 흐름 중심의 판단 구조.">
+<link rel="canonical" href="https://finq.kr/insight/macro/slowdown-checkpoints/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="경기 둔화 국면 투자 체크포인트 — FinQ 투자 인사이트">
+<meta property="og:description" content="경기 둔화 가능성이 높아지는 구간에서 확인할 주요 지표와 시장 신호. 실적, 고용, 소비, 방어주 흐름 중심의 판단 구조.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/macro/slowdown-checkpoints/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">시장/매크로</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>경기 둔화 국면 투자 체크포인트</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">SLOWDOWN</div>
+    <h1>경기 둔화 국면 투자 체크포인트</h1>
+    <p class="hero-desc">경기 둔화 가능성이 높아지는 구간에서 확인할 주요 지표와 시장 신호를 정리하는 콘텐츠.<br>실적, 고용, 소비, 방어주 흐름 중심의 판단 구조.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">경기둔화</span>
+      <span class="hero-tag">체크포인트</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">위험선호 약화</div>
+        <div class="summary-text">경기 둔화 구간에서는 실적 기대와 위험선호 약화 가능성 확대</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">방어 강화</div>
+        <div class="summary-text">방어 업종과 안전자산 선호 강화 가능성</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">동시 점검</div>
+        <div class="summary-text">금리 기대 변화와 실적 전망 조정의 동시 확인 필요성</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 경기 둔화 구간에서는 "얼마나 나쁜가"보다 "예상보다 얼마나 더 나쁜가"가 시장 반응을 결정하는 핵심 기준
+    </div>
+  </div>
+
+  <!-- 기본 구조 -->
+  <div class="section">
+    <div class="sec-title">경기 둔화 점검의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>고용과 소비 지표 약화 여부 확인</strong>
+          <span>신규 실업수당 청구 건수 증가, 소매판매 둔화, ISM 제조업·서비스업 지수 50 하회 여부 → 경기 체력 약화의 초기 신호 포착</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>기업 실적 가이던스 하향 여부 점검</strong>
+          <span>실적 발표 시즌 기업들의 다음 분기 가이던스 하향 빈도 증가 여부 → 애널리스트의 이익 추정치(EPS 컨센서스) 하향 조정 흐름 확인</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>금리 기대와 채권시장 반응 확인</strong>
+          <span>경기 둔화 우려 → 금리 인하 기대 강화 → 장기 국채 금리 하락 → 장단기 금리차 변화 → 채권시장이 선행적으로 경기 방향을 반영하는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>방어주·현금흐름 자산 상대 강도 점검</strong>
+          <span>헬스케어, 필수소비재, 유틸리티 등 방어 업종의 시장 대비 상대 강도 상승 여부 → 시장 참여자들이 이미 방어적으로 포지션을 이동하는 신호</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body">
+          <strong>ISM, 소비, 실업률 변화 확인</strong>
+          ISM 제조업 PMI 50 하회 지속, 소비자신뢰지수 하락, 실업률 상승 전환 → 세 지표가 동시에 악화 방향이면 경기 둔화 신호로 해석 강도 높아짐
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body">
+          <strong>기업 이익 추정치 하향 여부</strong>
+          블룸버그·팩트셋 등의 S&P500 EPS 컨센서스가 하향 조정되는 흐름이 나타나면 주가 밸류에이션 부담 확대 → 실적 발표 전 추정치 변화만으로도 시장 선행 반응 가능
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔄</div>
+        <div class="point-body">
+          <strong>경기민감주와 방어주의 상대 강도</strong>
+          경기민감주(금융, 에너지, 소재, 산업재)의 하락 대비 방어주(헬스케어, 필수소비재)의 상대 강도 상승 여부 → 섹터 로테이션이 먼저 경기 방향을 신호하는 경우 多
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📐</div>
+        <div class="point-body">
+          <strong>장단기 금리차와 채권시장 신호</strong>
+          10년물과 2년물 국채금리 차이(장단기 스프레드) 역전은 역사적으로 경기침체 선행 신호로 해석 → 역전 후 실제 침체까지 시간 차이가 크므로 단독 판단 지표로 사용 주의
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">이 관점의 활용 강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🔍</div>
+        <div class="point-body">
+          <strong>하락 원인과 구조 판단에 도움</strong>
+          단순 주가 하락이 경기 우려에서 비롯된 것인지, 금리 충격인지, 개별 기업 이슈인지 구분하는 매크로 판단 틀 제공
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🗂️</div>
+        <div class="point-body">
+          <strong>업종 선택 기준 마련 가능</strong>
+          경기 둔화 구간에서 방어적 업종 비중 조정 판단의 근거 제공 → 무작정 전량 매도 대신 포트폴리오 구성 변화로 대응하는 시각 형성
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body">
+          <strong>과도한 낙관 구간 경계에 유리</strong>
+          경기 지표가 이미 악화되고 있는데 시장이 낙관적인 경우, 체크포인트를 통해 리스크 수준을 객관적으로 재확인하는 기준 제공
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🔀</div>
+        <div class="point-body caution">
+          <strong>경기 둔화와 침체의 구분 어려움</strong>
+          성장률 둔화와 실질적인 경기 침체는 시장 반응이 크게 다름 → 둔화를 침체로 과잉 해석해 지나치게 방어적으로 대응하면 강세 구간 소외 위험
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⏩</div>
+        <div class="point-body caution">
+          <strong>시장이 경기보다 먼저 움직이는 선반영 구조 존재</strong>
+          주가는 실제 경기 지표 발표 6~12개월 전에 바닥을 찍는 경우가 많음 → 지표가 최악일 때 시장은 이미 반등 중인 상황 가능 → 지표만 보고 매도하는 판단의 위험
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🛡️</div>
+        <div class="point-body caution">
+          <strong>방어적 대응이 과도할 경우 반등 구간 소외 가능성</strong>
+          경기 둔화 신호에 과도하게 반응해 전량 방어주 또는 현금으로 이동 시, 예상보다 빠른 회복 구간에서 수익 기회 손실 발생 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>경기 사이클과 포트폴리오를 연결해 보고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>하락장 대응 기준이 필요한 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>섹터 회전과 방어 전략에 관심이 있는 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>단기 뉴스 위주 매매 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>거시 흐름보다 개별 종목 이벤트만 중시하는 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="../jobs-and-market/" class="related-card">
+        <span>💼 고용지표와 증시 흐름 해석</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../strong-dollar-market/" class="related-card">
+        <span>💵 달러 강세 시기 시장 흐름</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../liquidity-and-assets/" class="related-card">
+        <span>💧 유동성과 자산시장 관계</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 시장/매크로 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

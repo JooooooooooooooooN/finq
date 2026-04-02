@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>밸류에이션이 높을 때 볼 지표 — FinQ 투자 인사이트</title>
+<meta name="description" content="시장이나 섹터가 비싸 보일 때 확인할 주요 평가 지표. PER, CAPE, 금리, 이익 성장 기대의 연결 구조 중심의 해설.">
+<link rel="canonical" href="https://finq.kr/insight/macro/valuation-checkpoints/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --green: #16a34a; --red: #dc2626; --orange: #d97706;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 18px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.fit-section { margin-top: 0.5rem; }
+.fit-group { margin-bottom: 1rem; }
+.fit-label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.fit-items { display: flex; flex-direction: column; gap: 6px; }
+.fit-item { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.fit-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 7px; }
+.fit-dot.red { background: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="밸류에이션이 높을 때 볼 지표 — FinQ 투자 인사이트">
+<meta property="og:description" content="시장이나 섹터가 비싸 보일 때 확인할 주요 평가 지표. PER, CAPE, 금리, 이익 성장 기대의 연결 구조 중심의 해설.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/macro/valuation-checkpoints/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/" class="active">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../../">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="../">시장/매크로</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>밸류에이션이 높을 때 볼 지표</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">VALUATION</div>
+    <h1>밸류에이션이 높을 때 볼 지표</h1>
+    <p class="hero-desc">시장이나 특정 섹터가 비싸 보일 때 함께 확인할 주요 평가 지표를 정리하는 콘텐츠.<br>PER, CAPE, 금리, 이익 성장 기대의 연결 구조 중심의 해설.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">밸류에이션</span>
+      <span class="hero-tag">PER</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">맥락 우선</div>
+        <div class="summary-text">비싸 보인다는 느낌보다 수치와 맥락 확인이 우선</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">복합 구조</div>
+        <div class="summary-text">밸류에이션은 금리와 이익 성장 기대를 함께 봐야 하는 구조</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">기준 차이</div>
+        <div class="summary-text">시장 전체와 개별 종목의 평가 기준 차이 존재</div>
+      </div>
+    </div>
+    <div class="callout callout-info" style="margin-top:1rem;">
+      <strong>한 줄 요약:</strong> 밸류에이션이 높다는 사실 자체보다, 그 수준을 정당화할 이익 성장과 금리 환경이 갖춰져 있는지 확인하는 것이 핵심
+    </div>
+  </div>
+
+  <!-- 기본 구조 -->
+  <div class="section">
+    <div class="sec-title">밸류에이션 점검의 기본 구조</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>현재 평가 지표 수준 확인</strong>
+          <span>PER, PBR, PSR 등 현재 시장 또는 종목의 주요 밸류에이션 지표 수치 확인 → 숫자 자체보다 어느 지표가 더 적합한 업종인지 먼저 파악</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>과거 평균과의 비교</strong>
+          <span>현재 PER이 과거 10년·20년 평균 대비 높은지 확인 → CAPE(경기조정 PER)는 단기 이익 왜곡을 제거한 장기 시각의 고평가 여부 판단 도구</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>금리와 성장 기대 반영 여부 점검</strong>
+          <span>금리가 낮으면 높은 PER도 상대적으로 정당화 가능 → 반대로 금리가 높은 상황에서 고PER은 부담 → 이익 성장 기대가 실현 가능한지도 함께 확인</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>실적 뒷받침 가능성 판단</strong>
+          <span>현재 밸류에이션이 미래 이익 성장 기대를 선반영한 것이라면, 그 기대가 실현될 가능성이 얼마나 되는지 확인하는 것이 최종 판단 기준</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">핵심 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">📐</div>
+        <div class="point-body">
+          <strong>PER, PBR, PSR의 차이</strong>
+          PER(주가/이익)은 이익이 나는 기업에 적합. PBR(주가/순자산)은 자산 중심의 금융·제조업에 유용. PSR(주가/매출)은 적자 초기 성장기업 평가에 활용. 업종마다 더 적합한 지표가 다름
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body">
+          <strong>CAPE와 장기 평균 비교</strong>
+          CAPE(Cyclically Adjusted P/E)는 최근 10년 평균 이익으로 나눈 PER → 경기 사이클 왜곡을 제거해 장기 고평가 여부 판단에 유리. 현재 미국 S&P500 CAPE는 역사적 평균(약 16~17배)보다 높은 수준에서 오래 유지되는 경향
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏦</div>
+        <div class="point-body">
+          <strong>금리 수준과 밸류에이션 허용 범위</strong>
+          금리가 낮을수록 미래 이익의 현재가치가 커지므로 높은 PER이 정당화됨. 금리 상승기에는 같은 이익 기대라도 PER 허용 범위가 줄어드는 구조 → 금리와 밸류에이션은 세트로 해석
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📈</div>
+        <div class="point-body">
+          <strong>이익 성장률과 밸류에이션 정당화 여부</strong>
+          PEG(PER ÷ 이익 성장률)는 성장 속도 대비 가격 수준 확인에 유용. PER이 30배라도 이익이 연 30% 성장하면 PEG는 1.0 → 성장이 충분히 빠르면 높은 PER도 정당화 가능한 구조
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 강점 -->
+  <div class="section">
+    <div class="sec-title">이 관점의 활용 강점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🧠</div>
+        <div class="point-body">
+          <strong>고평가 공포의 과장 여부 판단 가능</strong>
+          "너무 비싸다"는 직관적 판단 대신, 실제 지표와 금리·성장 맥락을 함께 확인해 근거 있는 판단 가능 → 불필요한 조기 매도 방지에 도움
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔍</div>
+        <div class="point-body">
+          <strong>단순 숫자보다 맥락 중심 해석 가능</strong>
+          같은 PER 25배라도 금리 환경, 이익 성장 기대, 업종 특성에 따라 해석이 달라짐 → 숫자 하나보다 배경 조건을 함께 보는 시각 형성
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🗂️</div>
+        <div class="point-body">
+          <strong>종목과 시장의 구분된 평가 기준 이해 가능</strong>
+          시장 전체 밸류에이션은 섹터·업종 구성에 따라 달라지므로 개별 종목 평가와 분리해서 보는 시각 필요 → 시장이 비싸도 특정 종목은 저평가 가능
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리스크 -->
+  <div class="section">
+    <div class="sec-title">리스크</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>낮은 PER이 항상 저평가를 의미하지 않는 한계</strong>
+          이익 감소 우려나 성장 정체가 반영된 낮은 PER은 오히려 가치함정(value trap)일 수 있음 → 낮은 수치에 안도하기 전에 이익 방향 먼저 확인
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🚀</div>
+        <div class="point-body caution">
+          <strong>고성장 구간에서는 높은 밸류에이션 정당화 가능성</strong>
+          AI·바이오 등 이익 급성장 구간에서는 높은 PER이 수년간 유지되기도 함 → 밸류에이션만으로 고점 타이밍을 판단하는 것의 한계 존재
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🗂️</div>
+        <div class="point-body caution">
+          <strong>업종별 지표 해석 방식 차이에 따른 오해 가능성</strong>
+          은행주에는 PBR, 기술주에는 PER·PSR, 부동산에는 P/FFO 등 업종마다 적합한 지표가 다름 → 같은 지표를 모든 업종에 동일하게 적용하면 오판 위험
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 적합한 투자자 -->
+  <div class="section">
+    <div class="sec-title">적합한 투자자</div>
+    <div class="fit-section">
+      <div class="fit-group">
+        <div class="fit-label">적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot"></span><span>시장이 비싸 보일 때 판단 기준이 필요한 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>성장주와 가치주의 평가 차이를 이해하고 싶은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot"></span><span>숫자 해석 능력을 높이고 싶은 투자자</span></div>
+        </div>
+      </div>
+      <div class="fit-group" style="margin-top:1rem;">
+        <div class="fit-label">비적합</div>
+        <div class="fit-items">
+          <div class="fit-item"><span class="fit-dot red"></span><span>장기 적립식만 하고 가격 수준 판단에 관심이 낮은 투자자</span></div>
+          <div class="fit-item"><span class="fit-dot red"></span><span>밸류에이션보다 모멘텀만 중시하는 투자자</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="../bond-yields-and-growth/" class="related-card">
+        <span>📉 국채금리와 성장주의 관계</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../rates-and-stocks/" class="related-card">
+        <span>📈 금리 인상과 주식시장 관계</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="../../strategy/value-vs-growth/" class="related-card">
+        <span>⚖️ 가치주와 성장주 전략 비교</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="../" class="bottom-link">← 시장/매크로 전체로</a>
+    <a href="../../" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../../about/">소개</a>
+    <a href="../../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

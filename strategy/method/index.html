@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>방법 기반 전략 — FinQ</title>
+<meta name="description" content="가치투자, 모멘텀, 올웨더, 커버드콜 등 12가지 검증된 투자 방법론을 분석합니다.">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06);--shadow-h:0 4px 12px rgba(0,0,0,.08)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3);--shadow-h:0 4px 12px rgba(0,0,0,.4)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover,.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+.main{max-width:1100px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.page-label{font-size:12px;font-weight:600;color:var(--accent);letter-spacing:.05em;text-transform:uppercase;margin-bottom:.5rem}
+.page-title{font-size:clamp(22px,5vw,32px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:15px;color:var(--text2);margin-bottom:2rem;line-height:1.8}
+.card-grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+@media(max-width:900px){.card-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.card-grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;transition:all .2s;cursor:pointer;position:relative}
+.card:hover{box-shadow:var(--shadow-h);border-color:var(--accent);transform:translateY(-2px) scale(1.02)}
+.card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:1rem;background:#f0fdf4}
+[data-theme=dark] .card-icon{background:#14532d}
+.card h3{font-size:17px;font-weight:650;margin-bottom:.4rem}
+.card p{font-size:14px;color:var(--text2);line-height:1.55;word-break:keep-all}
+.feature-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:.75rem}
+.feature-tag{padding:3px 10px;border-radius:6px;font-size:12px;font-weight:500;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.card-cta{font-size:13px;font-weight:600;color:var(--accent);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.keyword-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:2rem}
+.keyword-section h2{font-size:17px;font-weight:700;margin-bottom:.35rem}
+.keyword-section .kw-desc{font-size:14px;color:var(--text2);margin-bottom:1rem;line-height:1.6;word-break:keep-all}
+.keyword-rows{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.keyword-row{display:flex;flex-wrap:wrap;gap:8px}
+@media(min-width:769px){.keyword-row{flex-wrap:nowrap}.keyword-row .keyword-btn{flex:1;text-align:center}}
+.keyword-btn{padding:6px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-btn:hover{border-color:var(--accent);color:var(--accent)}
+.keyword-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.keyword-footer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.keyword-note{font-size:12px;color:var(--text2);opacity:.75;word-break:keep-all}
+.keyword-reset{padding:5px 14px;border-radius:20px;font-size:13px;font-weight:500;border:1px solid var(--border);background:none;color:var(--text2);cursor:pointer;transition:all .15s}
+.keyword-reset:hover{border-color:var(--text2);color:var(--text)}
+.card.highlighted{background:rgba(37,99,235,.06);border-color:var(--accent)}
+.card.highlighted .card-icon{background:rgba(37,99,235,.12)}
+.card.highlighted h3{color:var(--accent)}
+[data-theme=dark] .card.highlighted{background:rgba(37,99,235,.12)}
+[data-theme=dark] .card.highlighted .card-icon{background:rgba(37,99,235,.2)}
+.footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
+.footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
+hr{border:none;border-top:1px solid var(--border)}
+</style>
+<meta property="og:title" content="방법 기반 전략 — FinQ">
+<meta property="og:description" content="가치투자, 모멘텀, 올웨더, 커버드콜 등 12가지 검증된 투자 방법론을 분석합니다.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/strategy/method/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/method/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../strategy/" class="active">전략</a>
+      <a href="../../data/">데이터</a>
+      <a href="../../simulation/">시뮬레이션</a>
+      <a href="../../insight/">인사이트</a>
+      <a href="../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+  <div class="breadcrumb">
+    <a href="../../">FinQ</a>
+    <span>›</span>
+    <a href="../../strategy/">투자 전략</a>
+    <span>›</span>
+    <span>방법 기반 전략</span>
+  </div>
+
+  <div class="page-label">Method Strategy</div>
+  <h1 class="page-title">방법 기반 전략</h1>
+  <p class="page-desc">가치투자부터 올웨더, 커버드콜까지 12가지 검증된 투자 방법론을 데이터로 분석합니다</p>
+
+  <div class="keyword-section">
+    <h2>나에게 맞는 전략 찾기</h2>
+    <p class="kw-desc">원하는 투자 성향을 선택하면 관련 있는 전략을 강조해 보여드립니다.</p>
+    <div class="keyword-rows" id="keywordList">
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="가치투자">가치투자</button>
+        <button class="keyword-btn" data-kw="장기 투자">장기 투자</button>
+        <button class="keyword-btn" data-kw="성장주 선호">성장주 선호</button>
+        <button class="keyword-btn" data-kw="퀄리티 중시">퀄리티 중시</button>
+        <button class="keyword-btn" data-kw="방어형 성향">방어형 성향</button>
+        <button class="keyword-btn" data-kw="초보자 친화적">초보자 친화적</button>
+        <button class="keyword-btn" data-kw="분산투자">분산투자</button>
+      </div>
+      <div class="keyword-row">
+        <button class="keyword-btn" data-kw="배당 선호">배당 선호</button>
+        <button class="keyword-btn" data-kw="배당 현금흐름">배당 현금흐름</button>
+        <button class="keyword-btn" data-kw="안정성 중시">안정성 중시</button>
+        <button class="keyword-btn" data-kw="장기 성장">장기 성장</button>
+        <button class="keyword-btn" data-kw="정량 분석">정량 분석</button>
+        <button class="keyword-btn" data-kw="시장 타이밍 활용">시장 타이밍 활용</button>
+        <button class="keyword-btn" data-kw="변동성 감소 가능">변동성 감소 가능</button>
+      </div>
+    </div>
+    <div class="keyword-footer">
+      <span class="keyword-note">선택한 성향을 바탕으로 관련 있는 투자 방법론을 참고용으로 보여드립니다.</span>
+      <button class="keyword-reset" id="kwReset">선택 초기화</button>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <a href="value/" class="card" data-id="value">
+      <div class="card-icon">🔍</div>
+      <h3>가치 투자 전략</h3>
+      <p>내재가치 대비 저평가된 기업을 찾아 할인 구간에서 매수하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#저평가</span>
+        <span class="feature-tag">#장기투자</span>
+        <span class="feature-tag">#안전마진</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="garp/" class="card" data-id="garp">
+      <div class="card-icon">⚖️</div>
+      <h3>GARP 전략</h3>
+      <p>성장성과 가격 부담을 함께 보며 적정 가격의 성장주에 투자하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#성장주</span>
+        <span class="feature-tag">#밸류에이션</span>
+        <span class="feature-tag">#PEG비율</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="momentum/" class="card" data-id="momentum">
+      <div class="card-icon">🚀</div>
+      <h3>모멘텀 전략</h3>
+      <p>최근 상승 흐름이 강한 종목과 섹터에 비중을 두는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#추세추종</span>
+        <span class="feature-tag">#섹터로테이션</span>
+        <span class="feature-tag">#단기</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="quality/" class="card" data-id="quality">
+      <div class="card-icon">🏆</div>
+      <h3>퀄리티 전략</h3>
+      <p>높은 수익성과 안정적 재무를 가진 우량 기업에 집중하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#우량주</span>
+        <span class="feature-tag">#재무안정성</span>
+        <span class="feature-tag">#ROE</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="low-volatility/" class="card" data-id="low-volatility">
+      <div class="card-icon">🛡️</div>
+      <h3>저변동성 전략</h3>
+      <p>가격 변동이 낮은 종목 중심으로 하락 방어를 노리는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#방어주</span>
+        <span class="feature-tag">#저위험</span>
+        <span class="feature-tag">#변동성관리</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="dca/" class="card" data-id="dca">
+      <div class="card-icon">📅</div>
+      <h3>적립식 매수 전략</h3>
+      <p>일정 금액을 정기적으로 투자해 매수 단가를 분산하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#분할매수</span>
+        <span class="feature-tag">#자동투자</span>
+        <span class="feature-tag">#장기복리</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="can-slim/" class="card" data-id="can-slim">
+      <div class="card-icon">📊</div>
+      <h3>CAN SLIM 전략</h3>
+      <p>실적 성장, 수급, 업종 리더십을 함께 보며 강한 성장주를 찾는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#성장주</span>
+        <span class="feature-tag">#수급분석</span>
+        <span class="feature-tag">#업종리더</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="magic-formula/" class="card" data-id="magic-formula">
+      <div class="card-icon">🧮</div>
+      <h3>매직 포뮬러 전략</h3>
+      <p>수익성이 높고 가격은 상대적으로 싼 기업을 순위화해 고르는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#정량투자</span>
+        <span class="feature-tag">#랭킹선별</span>
+        <span class="feature-tag">#저PER</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="all-weather/" class="card" data-id="all-weather">
+      <div class="card-icon">🌤️</div>
+      <h3>올웨더 전략</h3>
+      <p>경기와 물가 환경 변화에 대응하도록 자산과 위험을 분산하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#자산배분</span>
+        <span class="feature-tag">#전천후</span>
+        <span class="feature-tag">#위험분산</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="leverage-dividend/" class="card" data-id="leverage-dividend">
+      <div class="card-icon">⚡</div>
+      <h3>레버리지 배당 전략</h3>
+      <p>레버리지 ETF와 배당주를 조합해 수익과 현금흐름을 동시에 추구하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#레버리지</span>
+        <span class="feature-tag">#배당</span>
+        <span class="feature-tag">#ETF조합</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="covered-call/" class="card" data-id="covered-call">
+      <div class="card-icon">📋</div>
+      <h3>커버드콜 전략</h3>
+      <p>보유 주식에 콜옵션을 매도해 프리미엄 수익을 추가로 확보하는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#옵션</span>
+        <span class="feature-tag">#월배당</span>
+        <span class="feature-tag">#인컴</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+    <a href="dividend-growth/" class="card" data-id="dividend-growth">
+      <div class="card-icon">🌱</div>
+      <h3>배당 성장 전략</h3>
+      <p>배당을 꾸준히 늘려온 기업에 장기 투자해 복리 효과를 노리는 전략</p>
+      <div class="feature-list">
+        <span class="feature-tag">#배당성장</span>
+        <span class="feature-tag">#복리</span>
+        <span class="feature-tag">#장기투자</span>
+      </div>
+      <div class="card-cta">&#8594; 전략 보기</div>
+    </a>
+  </div>
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 투자자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../../about/">소개</a>
+    <a href="../../privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+const KW_MAP={
+  '가치투자':['value','magic-formula','garp'],
+  '장기 투자':['value','quality','dca','dividend-growth','all-weather'],
+  '성장주 선호':['garp','can-slim','momentum'],
+  '퀄리티 중시':['quality','dividend-growth','value'],
+  '방어형 성향':['low-volatility','all-weather','quality'],
+  '초보자 친화적':['dca','all-weather','dividend-growth','low-volatility'],
+  '분산투자':['all-weather','dca','low-volatility'],
+  '배당 선호':['dividend-growth','leverage-dividend','covered-call'],
+  '배당 현금흐름':['covered-call','leverage-dividend','dividend-growth'],
+  '안정성 중시':['low-volatility','all-weather','quality','dividend-growth'],
+  '장기 성장':['dividend-growth','quality','garp','dca'],
+  '정량 분석':['magic-formula','can-slim'],
+  '시장 타이밍 활용':['momentum','can-slim'],
+  '변동성 감소 가능':['low-volatility','all-weather','dca']
+};
+
+const selected=new Set();
+
+function updateUI(){
+  const cards=document.querySelectorAll('.card[data-id]');
+  if(selected.size===0){cards.forEach(c=>c.classList.remove('highlighted'));return;}
+  const matched=new Set([...selected].flatMap(k=>KW_MAP[k]||[]));
+  cards.forEach(c=>c.classList.toggle('highlighted',matched.has(c.dataset.id)));
+}
+
+document.getElementById('keywordList').addEventListener('click',function(e){
+  const btn=e.target.closest('.keyword-btn');
+  if(!btn)return;
+  const kw=btn.dataset.kw;
+  if(selected.has(kw)){selected.delete(kw);btn.classList.remove('active');}
+  else{selected.add(kw);btn.classList.add('active');}
+  updateUI();
+});
+document.getElementById('kwReset').addEventListener('click',function(){
+  selected.clear();
+  document.querySelectorAll('.keyword-btn.active').forEach(b=>b.classList.remove('active'));
+  updateUI();
+});
+function toggleTheme(){const h=document.documentElement,d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'🌙':'☀️';localStorage.setItem('finq-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('finq-theme');if(s==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
+</script>
+</body>
+</html>

@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>레이 달리오 포트폴리오 — FinQ</title>
+<meta name="description" content="브리지워터 어소시에이츠 13F 기반 레이 달리오 포트폴리오. 올웨더 전략 보유 종목, 섹터 배분, 최근 변동 내역.">
+<meta property="og:title" content="레이 달리오 포트폴리오 — FinQ">
+<meta property="og:description" content="브리지워터 13F 기반 보유 종목 분석. 올웨더 전략, 섹터 배분, 최근 변동 내역.">
+<meta property="og:type" content="article">
+<style>
+:root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
+[data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+
+.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
+.nav-links{display:flex;gap:6px;align-items:center}
+.nav-links a{padding:6px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text2);transition:all .15s}
+.nav-links a:hover{background:var(--bg2);color:var(--text)}.nav-links a.active{background:var(--bg2);color:var(--text);font-weight:600}
+.theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
+.nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
+@media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
+
+.main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
+.hero-badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--accent);color:#fff;margin-bottom:1rem}
+.page-title{font-size:clamp(24px,5vw,34px);font-weight:700;letter-spacing:-.5px;margin-bottom:.5rem}
+.page-desc{font-size:16px;color:var(--text2);margin-bottom:1.5rem;line-height:1.8}
+
+.section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1.25rem}
+.sec-title{font-size:18px;font-weight:700;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;justify-content:space-between}
+.sec-title-left{display:flex;align-items:center;gap:8px}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex-shrink:0}
+
+.data-tag{font-size:11px;font-weight:500;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:3px 8px;white-space:nowrap}
+
+.guru-profile{display:grid;grid-template-columns:1fr;gap:1.5rem;align-items:center}
+.guru-name{font-size:22px;font-weight:700;margin-bottom:4px}
+.guru-sub{font-size:14px;color:var(--text2);margin-bottom:.75rem}
+.guru-stats{display:flex;gap:1.5rem;flex-wrap:wrap}
+.guru-stat{text-align:left}
+.guru-stat-val{font-size:18px;font-weight:700;color:var(--accent)}
+.guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
+@media(max-width:600px){.guru-stats{gap:1rem}}
+
+.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
+.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
+.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.holdings-table tbody tr:last-child{border-bottom:none}
+.holdings-table tbody tr:hover{background:var(--bg2)}
+.holdings-table td{padding:12px 10px;vertical-align:middle}
+.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
+.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
+.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
+.co-name{font-size:13px;color:var(--text2);margin-top:1px}
+.weight-bar-wrap{display:flex;align-items:center;gap:8px}
+.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
+.weight-text{font-size:13px;font-weight:600;min-width:42px}
+.change-up{color:var(--green);font-size:13px;font-weight:600}
+.change-down{color:var(--red);font-size:13px;font-weight:600}
+.change-same{color:var(--text2);font-size:13px}
+.change-new{color:var(--orange);font-size:13px;font-weight:600}
+.amount{font-size:13px;font-weight:500}
+@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
+
+.sector-list{display:flex;flex-direction:column;gap:10px}
+.sector-row{display:flex;align-items:center;gap:12px}
+.sector-name{font-size:14px;font-weight:500;min-width:130px;flex-shrink:0}
+.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.sector-bar{height:100%;border-radius:5px;transition:width .3s}
+.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
+
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
+.quote-text{font-size:14px;line-height:1.7;font-style:italic;color:var(--text);margin-bottom:.75rem}
+.quote-source{font-size:12px;color:var(--text2);font-weight:500}
+@media(max-width:600px){.quote-grid{grid-template-columns:1fr}}
+
+.info-box{background:var(--bg2);border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:var(--text2);display:flex;gap:10px;align-items:flex-start;margin-top:1rem}
+.info-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+.breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.25rem;display:flex;align-items:center;gap:6px}
+.breadcrumb a{color:var(--accent)}
+.breadcrumb span{color:var(--text2)}
+
+.guru-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.guru-chip{padding:5px 6px;border-radius:16px;font-size:12px;font-weight:500;background:var(--bg2);border:1px solid var(--border);color:var(--text2);cursor:default;text-align:center;white-space:nowrap}
+.guru-chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guru-chip.link{cursor:pointer;transition:all .15s}.guru-chip.link:hover{background:var(--border)}
+
+.disclaimer{margin-top:2rem;padding:1rem 1.25rem;background:var(--bg2);border-radius:10px;font-size:12px;color:var(--text2);line-height:1.7}
+
+/* 올웨더 배분 시각화 */
+.allweather-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:.75rem}
+.aw-block{border-radius:10px;padding:1rem;text-align:center}
+.aw-pct{font-size:26px;font-weight:800;margin-bottom:4px}
+.aw-label{font-size:13px;font-weight:600;margin-bottom:4px}
+.aw-desc{font-size:11px;opacity:.75;line-height:1.5}
+</style>
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<link rel="canonical" href="https://finq.kr/strategy/investor/dalio/">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../../../strategy/">전략</a>
+      <a href="../../../data/" class="active">데이터</a>
+      <a href="../../../simulation/">시뮬레이션</a>
+      <a href="../../../insight/">인사이트</a>
+      <a href="../../../about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <div class="breadcrumb">
+    <a href="../../../">FinQ</a>
+    <span>›</span>
+    <a href="../../../strategy/">투자 전략</a>
+    <span>›</span>
+    <a href="../">투자자 기반 전략</a>
+    <span>›</span>
+    <span>레이 달리오</span>
+  </div>
+
+  <h1 class="page-title">레이 달리오</h1>
+  <p class="page-desc">브리지워터 어소시에이츠 SEC 13F 기반 포트폴리오 분석. 올웨더 전략 기반 보유 종목, 섹터 배분, 최근 변동 내역.</p>
+
+  <div class="guru-nav" style="margin-bottom:1.5rem">
+    <a href="../buffett/" class="guru-chip link">워런 버핏</a>
+    <a href="../munger/" class="guru-chip link">찰리 멍거</a>
+    <a href="../lynch/" class="guru-chip link">피터 린치</a>
+    <a href="../graham/" class="guru-chip link">벤저민 그레이엄</a>
+    <span class="guru-chip active">레이 달리오</span>
+    <a href="../soros/" class="guru-chip link">조지 소로스</a>
+    <a href="../burry/" class="guru-chip link">마이클 버리</a>
+    <a href="../ackman/" class="guru-chip link">빌 애크먼</a>
+    <a href="../icahn/" class="guru-chip link">칼 아이칸</a>
+    <a href="../marks/" class="guru-chip link">하워드 막스</a>
+    <a href="../klarman/" class="guru-chip link">세스 클라만</a>
+    <a href="../templeton/" class="guru-chip link">존 템플턴</a>
+  </div>
+
+  <!-- 1. 프로필 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">1</span>구루 정보</div>
+    </div>
+    <div class="guru-profile">
+      <div>
+        <div class="guru-name">레이 달리오 Ray Dalio</div>
+        <div class="guru-sub">브리지워터 어소시에이츠 창립자 · 1975년 창업, 2022년 경영권 이양</div>
+        <div class="guru-stats">
+          <div class="guru-stat">
+            <div class="guru-stat-val">$1,240억+</div>
+            <div class="guru-stat-label">브리지워터 운용자산(AUM)</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">세계 1위</div>
+            <div class="guru-stat-label">헤지펀드 규모 (2023년 기준)</div>
+          </div>
+          <div class="guru-stat">
+            <div class="guru-stat-val">올웨더</div>
+            <div class="guru-stat-label">투자 스타일</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. 상위 보유 종목 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">2</span>상위 10개 보유 종목</div>
+      <span class="data-tag">2024년 3분기 13F 기준</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="holdings-table">
+        <thead>
+          <tr>
+            <th style="width:40px">#</th>
+            <th>종목</th>
+            <th>비중</th>
+            <th class="col-value">평가액</th>
+            <th class="col-shares">보유 주수</th>
+            <th>전분기 대비</th>
+          </tr>
+        </thead>
+        <tbody id="holdingsBody"></tbody>
+      </table>
+    </div>
+    <div class="info-box">
+      <span class="info-icon">ℹ️</span>
+      <span>브리지워터의 13F는 미국 상장 주식·ETF 포지션만 공시합니다. 채권, 원자재, 통화 등 파생상품 포지션은 포함되지 않아 실제 펀드 구성과 큰 차이가 있을 수 있습니다.</span>
+    </div>
+  </div>
+
+  <!-- 3. 섹터 배분 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">3</span>자산군 배분</div>
+      <span class="data-tag">2024년 3분기 기준</span>
+    </div>
+    <div class="sector-list" id="sectorList"></div>
+  </div>
+
+  <!-- 4. 올웨더 전략 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">4</span>올웨더(All Weather) 전략</div>
+    </div>
+    <p style="font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:1rem">
+      달리오의 핵심 전략. 경제 환경이 어떻게 변해도(호황·불황·인플레·디플레) 일정한 수익을 내도록 4가지 시나리오에 균등하게 리스크를 배분합니다.
+    </p>
+    <div class="allweather-grid">
+      <div class="aw-block" style="background:rgba(37,99,235,.12)">
+        <div class="aw-pct" style="color:#2563eb">30%</div>
+        <div class="aw-label">미국 주식</div>
+        <div class="aw-desc">성장 국면 수혜<br>SPY, IVV 중심</div>
+      </div>
+      <div class="aw-block" style="background:rgba(217,119,6,.12)">
+        <div class="aw-pct" style="color:#d97706">15%</div>
+        <div class="aw-label">금 / 원자재</div>
+        <div class="aw-desc">인플레·위기 헤지<br>GLD, DJP 중심</div>
+      </div>
+      <div class="aw-block" style="background:rgba(5,150,105,.12)">
+        <div class="aw-pct" style="color:#059669">40%</div>
+        <div class="aw-label">장기 국채</div>
+        <div class="aw-desc">디플레·침체 방어<br>TLT, TIP 중심</div>
+      </div>
+      <div class="aw-block" style="background:rgba(124,58,237,.12)">
+        <div class="aw-pct" style="color:#7c3aed">15%</div>
+        <div class="aw-label">중기 채권 + EM</div>
+        <div class="aw-desc">균형 완충 역할<br>IEF, EEM 중심</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. 투자 철학 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">5</span>투자 철학</div>
+    </div>
+    <div class="quote-grid">
+      <div class="quote-card">
+        <div class="quote-text">"경제는 기계처럼 작동합니다. 이해하면 사이클을 예측할 수 있습니다."</div>
+        <div class="quote-source">— How the Economic Machine Works (2013)</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"분산투자는 투자의 성배입니다. 수익률 손실 없이 리스크를 줄이는 유일한 방법입니다."</div>
+        <div class="quote-source">— Principles (2017)</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"급진적 투명성과 급진적 진실만이 조직을 위대하게 만듭니다."</div>
+        <div class="quote-source">— 브리지워터 운영 원칙</div>
+      </div>
+      <div class="quote-card">
+        <div class="quote-text">"현금은 쓰레기입니다. 인플레이션이 현금 보유자를 천천히 죽이고 있습니다."</div>
+        <div class="quote-source">— 2020년 다보스 포럼</div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem">
+      <div style="font-size:14px;font-weight:600;margin-bottom:.75rem">핵심 투자 기준</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px">
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">⚖️</div>
+          <div style="font-weight:600;margin-bottom:2px">리스크 균형</div>
+          <div style="color:var(--text2)">수익이 아닌 리스크를 균등 배분하는 구조 설계</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🌍</div>
+          <div style="font-weight:600;margin-bottom:2px">글로벌 분산</div>
+          <div style="color:var(--text2)">신흥국, 원자재, 채권 포함한 진정한 자산군 분산</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🔄</div>
+          <div style="font-weight:600;margin-bottom:2px">부채 사이클</div>
+          <div style="color:var(--text2)">단기·장기 부채 사이클에 따른 자산군 조정</div>
+        </div>
+        <div style="background:var(--bg2);border-radius:8px;padding:.75rem 1rem;font-size:13px">
+          <div style="font-size:18px;margin-bottom:4px">🥇</div>
+          <div style="font-weight:600;margin-bottom:2px">금 헤지</div>
+          <div style="color:var(--text2)">화폐 가치 하락과 지정학 리스크에 대한 보험</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. 최근 주요 변동 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">6</span>최근 주요 변동</div>
+      <span class="data-tag">2024년 3분기</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 확대</span>
+        <div>
+          <strong>GLD (금 ETF)</strong> — 인플레이션 우려 및 달러 약세 전망 속 금 비중 지속 확대. 전체 포트폴리오의 12% 이상 유지.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">신규 매수</span>
+        <div>
+          <strong>IEMG (신흥국 ETF)</strong> — 중국 경기 부양책 기대감 속 신흥국 비중 증가. EEM과 함께 신흥국 익스포저 강화.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 축소</span>
+        <div>
+          <strong>SPY (S&amp;P 500 ETF)</strong> — 미국 주식 고평가 우려로 소폭 축소. 신흥국·원자재로 자금 이동.
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
+        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">경영 이양</span>
+        <div>
+          <strong>달리오 공식 은퇴(2022)</strong> — 투자 의사결정권을 공동 CIO에게 이양. 브리지워터의 전략 방향성은 유지.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. 주요 저서 / 대표 자료 -->
+  <div class="section">
+    <div class="sec-title">
+      <div class="sec-title-left"><span class="sec-num">7</span>주요 저서 / 대표 자료</div>
+    </div>
+    <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
+      <li style="font-size:14px;line-height:1.7"><strong>《원칙》</strong> — 의사결정, 조직운영, 투자 사고의 중심축</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《변화하는 세계 질서》</strong> — 국가 흥망, 통화질서, 장기 거시 사이클을 다룬 책</li>
+      <li style="font-size:14px;line-height:1.7"><strong>《빅 데트 크라이시스》</strong> — 부채 사이클과 위기 대응 프레임을 정리한 책</li>
+    </ul>
+  </div>
+
+  <div class="disclaimer">
+    ※ 이 페이지의 데이터는 SEC EDGAR에 공시된 브리지워터 어소시에이츠의 13F 보고서를 기반으로 합니다. 헤지펀드 특성상 13F에 포함되지 않는 숏 포지션, 채권, 파생상품 포지션이 다수 존재합니다. 실제 펀드 구성과 큰 차이가 있을 수 있으며, 투자 권유가 아닙니다.
+  </div>
+
+</div>
+
+<script>
+function toggleTheme(){
+  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('theme', t);
+}
+(function(){
+  const t = localStorage.getItem('theme');
+  if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
+})();
+
+const holdings = [
+  { ticker:'SPY',  name:'SPDR S&P 500 ETF',           type:'미국 주식 ETF',  weight:15.2, value:'$1,196억', shares:'2,900만주', change:'down',  changeLabel:'▼ 소폭 축소' },
+  { ticker:'GLD',  name:'SPDR 금 ETF',                 type:'원자재 ETF',     weight:12.8, value:'$1,007억', shares:'6,890만주', change:'up',    changeLabel:'▲ 비중 확대' },
+  { ticker:'EEM',  name:'iShares MSCI 신흥시장 ETF',   type:'신흥국 주식 ETF',weight:9.3,  value:'$731억',  shares:'1.62억주', change:'same',  changeLabel:'— 유지' },
+  { ticker:'IVV',  name:'iShares Core S&P 500 ETF',    type:'미국 주식 ETF',  weight:7.1,  value:'$558억',  shares:'1,240만주', change:'same',  changeLabel:'— 유지' },
+  { ticker:'VWO',  name:'Vanguard 신흥시장 ETF',        type:'신흥국 주식 ETF',weight:6.2,  value:'$487억',  shares:'1.12억주', change:'same',  changeLabel:'— 유지' },
+  { ticker:'IEMG', name:'iShares Core MSCI EM IMI ETF', type:'신흥국 주식 ETF',weight:5.4,  value:'$425억',  shares:'7,280만주', change:'new',   changeLabel:'★ 신규 매수' },
+  { ticker:'TIP',  name:'iShares TIPS 채권 ETF',        type:'채권 ETF',       weight:4.8,  value:'$377억',  shares:'3,250만주', change:'same',  changeLabel:'— 유지' },
+  { ticker:'LQD',  name:'iShares 투자등급 회사채 ETF',  type:'채권 ETF',       weight:3.9,  value:'$307억',  shares:'2,680만주', change:'same',  changeLabel:'— 유지' },
+  { ticker:'BRK/B',name:'버크셔 해서웨이 B',            type:'금융',           weight:3.1,  value:'$244억',  shares:'620만주',  change:'same',  changeLabel:'— 유지' },
+  { ticker:'GDX',  name:'VanEck 금광 채굴 ETF',         type:'원자재 ETF',     weight:2.8,  value:'$220억',  shares:'6,410만주', change:'up',    changeLabel:'▲ 증가' },
+];
+
+const tbody = document.getElementById('holdingsBody');
+holdings.forEach((h, i) => {
+  const changeClass = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
+  tbody.innerHTML += `
+    <tr>
+      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
+      <td>
+        <div class="ticker">${h.ticker}</div>
+        <div class="co-name">${h.name}</div>
+      </td>
+      <td>
+        <div class="weight-bar-wrap">
+          <div class="weight-bar" style="width:${h.weight * 3.2}px"></div>
+          <span class="weight-text">${h.weight}%</span>
+        </div>
+      </td>
+      <td class="col-value"><span class="amount">${h.value}</span></td>
+      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
+      <td><span class="${changeClass}">${h.changeLabel}</span></td>
+    </tr>`;
+});
+
+const sectors = [
+  { name:'미국 주식 ETF',    pct:22.3, color:'#2563eb' },
+  { name:'신흥국 주식 ETF',  pct:20.9, color:'#7c3aed' },
+  { name:'금/원자재 ETF',    pct:15.6, color:'#d97706' },
+  { name:'채권 ETF',         pct:8.7,  color:'#059669' },
+  { name:'개별 주식',        pct:6.2,  color:'#db2777' },
+  { name:'기타/현금성',      pct:26.3, color:'#6b7280' },
+];
+
+const sl = document.getElementById('sectorList');
+sectors.forEach(s => {
+  sl.innerHTML += `
+    <div class="sector-row">
+      <div class="sector-name">${s.name}</div>
+      <div class="sector-bar-bg">
+        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
+      </div>
+      <div class="sector-pct">${s.pct}%</div>
+    </div>`;
+});
+</script>
+</body>
+</html>

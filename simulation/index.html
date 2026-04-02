@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>투자 시뮬레이션 — FinQ</title>
+<meta name="description" content="레버리지 배당 전략, 복리 투자, 목표 자산, 해외주식 세금까지. FinQ 투자 시뮬레이션 허브.">
+<link rel="canonical" href="https://finq.kr/simulation/">
+<style>
+:root {
+  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
+  --text: #1a1a2e; --text-secondary: #6b7280;
+  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
+}
+[data-theme="dark"] {
+  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
+  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
+  --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+
+.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
+.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
+.nav-logo span { color: var(--text); }
+.nav-links { display: flex; gap: 6px; align-items: center; }
+.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
+.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); }
+.nav-links a.active { font-weight: 600; }
+.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
+.theme-btn:hover { background: var(--bg-secondary); }
+.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
+  .nav-links.open a { padding: 10px 14px; }
+  .nav-mobile-btn { display: block; }
+}
+
+.page-header { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 2rem; }
+.back-link { font-size: 13px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; margin-bottom: 1.5rem; transition: color 0.15s; }
+.back-link:hover { color: var(--accent); }
+.page-header-inner { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+.page-icon { font-size: 36px; }
+.page-label { font-size: 13px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; }
+.page-title { font-size: clamp(24px, 4vw, 36px); font-weight: 800; letter-spacing: -0.5px; }
+.page-desc { font-size: 15px; color: var(--text-secondary); margin-top: 0.5rem; word-break: keep-all; }
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 8px 14px; background: var(--bg-secondary); border-radius: 8px; display: inline-block; margin-top: 0.75rem; }
+
+.section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+.group-label { font-size: 13px; font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; padding-left: 2px; letter-spacing: 0.03em; }
+.group-label.secondary { color: var(--text-secondary); margin-top: 2rem; }
+.card-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transition: all 0.2s; cursor: pointer; position: relative; overflow: hidden; }
+.card p { word-break: keep-all; }
+.card:hover { box-shadow: var(--shadow-hover); border-color: var(--accent); transform: translateY(-2px) scale(1.02); }
+.card-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 1rem; }
+.card-icon.sim { background: #eff6ff; }
+[data-theme="dark"] .card-icon.sim { background: #1e3a5f; }
+.card h3 { font-size: 17px; font-weight: 650; margin-bottom: 0.4rem; }
+.card p { font-size: 14px; color: var(--text-secondary); line-height: 1.55; }
+.card-badge { position: absolute; top: calc(1.5rem + 22px); right: 1.5rem; transform: translateY(-50%); padding: 2px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; }
+.badge-live { background: #dcfce7; color: #166534; }
+.badge-soon { background: #f1f5f9; color: #64748b; }
+.badge-sub { background: #f1f5f9; color: #64748b; }
+[data-theme="dark"] .badge-live { background: #14532d; color: #86efac; }
+[data-theme="dark"] .badge-soon { background: #1e293b; color: #94a3b8; }
+[data-theme="dark"] .badge-sub { background: #1e293b; color: #94a3b8; }
+.feature-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.75rem; }
+.feature-tag { padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+.card-cta { font-size: 13px; font-weight: 600; color: var(--accent); margin-top: 0.85rem; padding-top: 0.6rem; border-top: 1px solid var(--border); }
+
+.divider { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
+.divider hr { border: none; border-top: 1px solid var(--border); }
+.footer { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+.footer-left { font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="투자 시뮬레이션 — FinQ">
+<meta property="og:description" content="레버리지 배당 전략, 복리 투자, 목표 자산, 해외주식 세금까지. FinQ 투자 시뮬레이션 허브.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://finq.kr/simulation/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="../strategy/">전략</a>
+      <a href="../data/">데이터</a>
+      <a href="../simulation/" class="active">시뮬레이션</a>
+      <a href="../insight/">인사이트</a>
+      <a href="../about/index.html">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="테마 전환" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="메뉴">☰</button>
+  </div>
+</nav>
+
+<div class="page-header">
+  <a href="../" class="back-link">← 메인으로</a>
+  <div class="page-header-inner">
+    <span class="page-icon">⚡</span>
+    <div>
+      <div class="page-label">Simulation</div>
+      <h1 class="page-title">투자 시뮬레이션</h1>
+    </div>
+  </div>
+  <p class="page-desc">내 상황에 맞는 숫자로 투자 결과 미리 확인</p>
+  <div class="disclaimer">본 서비스에서 제공되는 모든 정보 및 계산 결과는 참고용이며, 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+</div>
+
+<div class="divider"><hr></div>
+
+<section class="section" style="padding-top:2.5rem">
+  <div class="card-grid">
+    <a href="dividend/index.html" class="card">
+      <div class="card-icon sim">💰</div>
+      <h3>투자 수익 시뮬레이터</h3>
+      <p>종목별 평가손익 + 세후 배당금까지, 내 포트폴리오의 실제 수익을 한눈에 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">평가손익</span>
+        <span class="feature-tag">세후 배당</span>
+        <span class="feature-tag">종목 검색</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="dca/index.html" class="card">
+      <div class="card-icon sim">📈</div>
+      <h3>복리 투자 시뮬레이터</h3>
+      <p>매달 50만원씩 넣으면 10년 뒤 얼마? 복리 효과를 숫자로 직접 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">복리 계산</span>
+        <span class="feature-tag">적립식 DCA</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="goal/index.html" class="card">
+      <div class="card-icon sim">🎯</div>
+      <h3>목표 자산 시뮬레이터</h3>
+      <p>1억을 모으려면 매달 얼마씩, 몇 년을 투자해야 할까? 역산으로 계획 세우기</p>
+      <div class="feature-list">
+        <span class="feature-tag">목표 역산</span>
+        <span class="feature-tag">기간 설정</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="avg-price/index.html" class="card">
+      <div class="card-icon sim">🧮</div>
+      <h3>평균단가 시뮬레이터</h3>
+      <p>추가 매수 후 평균단가와 손익분기점이 어떻게 바뀌는지 한눈에 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">평균단가</span>
+        <span class="feature-tag">물타기</span>
+        <span class="feature-tag">추매 계산</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="risk-reward/index.html" class="card">
+      <div class="card-icon sim">⚖️</div>
+      <h3>목표가·손절가 시뮬레이터</h3>
+      <p>매수가, 목표가, 손절가를 기준으로 예상 수익률·손실률·손익비를 빠르게 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">목표가</span>
+        <span class="feature-tag">손절가</span>
+        <span class="feature-tag">손익비</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="loan/index.html" class="card">
+      <div class="card-icon sim">🏦</div>
+      <h3>담보대출 리스크 시뮬레이터</h3>
+      <p>주가가 얼마나 떨어지면 반대매매 당할까? 위험 구간을 미리 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">담보비율</span>
+        <span class="feature-tag">반대매매</span>
+        <span class="feature-tag">위험구간</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="dividend-growth/index.html" class="card">
+      <div class="card-icon sim">🌱</div>
+      <h3>배당 성장 시뮬레이터</h3>
+      <p>초기 투자금·추가 투자·배당 성장률을 반영해 미래 배당 흐름과 누적 자산 변화를 확인</p>
+      <div class="feature-list">
+        <span class="feature-tag">배당 재투자</span>
+        <span class="feature-tag">배당 성장</span>
+        <span class="feature-tag">현금흐름</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="lever-dividend/index.html" class="card">
+      <div class="card-icon sim">📊</div>
+      <h3>레버리지 배당 시뮬레이터</h3>
+      <p>자기자본 + 레버리지 + 배당의 수익과 리스크를 한눈에 확인. 기본/고급 모드 지원</p>
+      <div class="feature-list">
+        <span class="feature-tag">손익분기 분석</span>
+        <span class="feature-tag">레버리지 비교</span>
+        <span class="feature-tag">리스크 지표</span>
+      </div>
+      <div class="card-cta">&#8594; 시뮬레이션 시작</div>
+    </a>
+    <a href="tax/index.html" class="card">
+      <span class="card-badge badge-sub">보조 계산기</span>
+      <div class="card-icon sim">🧾</div>
+      <h3>해외주식 세금 계산기</h3>
+      <p>해외주식 팔았을 때 세금 얼마나 내야 하나? 250만원 공제 반영, 바로 계산</p>
+      <div class="feature-list">
+        <span class="feature-tag">양도소득세</span>
+        <span class="feature-tag">환율 반영</span>
+      </div>
+      <div class="card-cta">&#8594; 계산 시작</div>
+    </a>
+  </div>
+</section>
+
+<div class="divider"><hr></div>
+<footer class="footer">
+  <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="../about/index.html">소개</a>
+    <a href="../privacy/index.html">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+}
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>
