@@ -479,6 +479,7 @@ hr{border:none;border-top:1px solid var(--border)}
   </div>
 </footer>
 
+<script src="../../simulation/dividend/kr-stocks.js"></script>
 <script>
 function toggleTheme() {
   const html = document.documentElement;
@@ -499,24 +500,56 @@ function toggleTheme() {
 let fundTimer = null;
 let fundResults = [];
 
+// KR_STOCKS_RAW: [ticker, name, exchange] — kr-stocks.js 에서 로드
+function searchKrLocal(val) {
+  const q = val.trim().toLowerCase();
+  return (KR_STOCKS_RAW || [])
+    .filter(r => r[1].includes(val.trim()) || r[0].toLowerCase().includes(q))
+    .slice(0, 10)
+    .map(r => ({ symbol: r[0], name: r[1], exchange: r[2] }));
+}
+
+function isKorean(s) { return /[가-힣]/.test(s); }
+
+function renderFundDrop(items) {
+  const dd = document.getElementById('fundDropdown');
+  if (!items.length) { dd.innerHTML = '<div class="search-msg">결과 없음</div>'; return; }
+  fundResults = items;
+  dd.innerHTML = items.map((r, i) =>
+    `<div class="search-item" onmousedown="selectFund(${i})">
+      <span class="si-symbol">${r.symbol}</span>
+      <span class="si-name">${r.name}</span>
+      <span class="si-exchange">${r.exchange || ''}</span>
+    </div>`).join('');
+}
+
 function onFundSearch(val) {
   const dd = document.getElementById('fundDropdown');
   if (fundTimer) clearTimeout(fundTimer);
   if (!val || val.length < 1) { dd.classList.remove('open'); return; }
-  dd.innerHTML = '<div class="search-msg">검색 중...</div>';
   dd.classList.add('open');
+
+  // 한글 → KR_STOCKS_RAW 로컬 검색 (즉시)
+  if (isKorean(val)) {
+    const local = searchKrLocal(val);
+    renderFundDrop(local);
+    return;
+  }
+
+  // 숫자만 입력 (종목코드) → 로컬 검색
+  if (/^\d+/.test(val)) {
+    const local = searchKrLocal(val);
+    renderFundDrop(local);
+    return;
+  }
+
+  // 영문 → Yahoo API (딜레이)
+  dd.innerHTML = '<div class="search-msg">검색 중...</div>';
   fundTimer = setTimeout(async () => {
     try {
       const res  = await fetch(`/api/stock-search?q=${encodeURIComponent(val)}`);
       const data = await res.json();
-      fundResults = data.results || [];
-      if (!fundResults.length) { dd.innerHTML = '<div class="search-msg">결과 없음</div>'; return; }
-      dd.innerHTML = fundResults.map((r, i) =>
-        `<div class="search-item" onmousedown="selectFund(${i})">
-          <span class="si-symbol">${r.symbol}</span>
-          <span class="si-name">${r.name}</span>
-          <span class="si-exchange">${r.exchange || ''}</span>
-        </div>`).join('');
+      renderFundDrop(data.results || []);
     } catch { dd.innerHTML = '<div class="search-msg">검색 실패</div>'; }
   }, 300);
 }
