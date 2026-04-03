@@ -45,12 +45,12 @@ const KO_NAMES = {
   'S&P Global Composite PMI': 'S&P 글로벌 종합 PMI',
   'Michigan Consumer Sentiment': '미시간 소비자심리지수',
   'Job Openings (JOLTS)': '구인건수 (JOLTS)',
+  'JOLTs Job Openings': '구인건수 (JOLTS)',
   'Dallas Fed Manufacturing Business Index': '댈러스 연은 제조업',
   'Chicago PMI': '시카고 PMI',
   'Factory Orders MoM': '공장수주',
   'Wholesale Inventories MoM': '도매재고',
   'CB Consumer Confidence': 'CB 소비자신뢰지수',
-  'JOLTs Job Openings': '구인건수 (JOLTS)',
 };
 
 const KO_COUNTRIES = {
@@ -59,8 +59,18 @@ const KO_COUNTRIES = {
   'CA': '캐나다', 'AU': '호주', 'IT': '이탈리아', 'ES': '스페인',
 };
 
-const IMPACT_KO = { 'high': '중요', 'medium': '보통', 'low': '낮음' };
-const IMPACT_ORDER = { 'high': 0, 'medium': 1, 'low': 2 };
+// FMP impact 기준 (estimate 있으면 medium, 주요 이벤트는 high)
+const HIGH_KEYWORDS = [
+  'Nonfarm Payrolls', 'Fed Interest Rate', 'FOMC', 'Consumer Price Index',
+  'CPI', 'PCE', 'GDP', 'Unemployment Rate', 'ISM Manufacturing',
+];
+
+function getImpact(event) {
+  for (const kw of HIGH_KEYWORDS) {
+    if (event.includes(kw)) return 'high';
+  }
+  return 'medium';
+}
 
 function getWeekRange(offsetWeeks = 0) {
   const now = new Date();
@@ -82,38 +92,41 @@ export async function onRequest(context) {
     const limitParam = url.searchParams.get('limit');
 
     const { from, to } = getWeekRange(weekOffset);
-    const apiKey = env.FINNHUB_API_KEY;
+    const apiKey = env.FMP_API_KEY;
+    if (!apiKey) throw new Error('API 키 없음: FMP_API_KEY 미설정');
 
-    if (!apiKey) throw new Error('API 키 없음: FINNHUB_API_KEY 미설정');
     const res = await fetch(
-      `https://finnhub.io/api/v1/calendar/economic?from=${from}&to=${to}&token=${apiKey}`
+      `https://financialmodelingprep.com/api/v3/economic_calendar?from=${from}&to=${to}&apikey=${apiKey}`
     );
     if (!res.ok) {
       const body = await res.text();
-      throw new Error(`Finnhub ${res.status}: ${body.slice(0, 200)}`);
+      throw new Error(`FMP ${res.status}: ${body.slice(0, 200)}`);
     }
     const data = await res.json();
 
-    let events = (data.economicCalendar || [])
-      .filter(e => e.time && e.country && KO_COUNTRIES[e.country])
-      .map(e => ({
-        date: e.time.split(' ')[0],
-        time: e.time.split(' ')[1]?.slice(0, 5) || '',
-        event: KO_NAMES[e.event] || e.event,
-        eventEn: e.event,
-        country: KO_COUNTRIES[e.country] || e.country,
-        countryCode: e.country,
-        impact: IMPACT_KO[e.impact] || e.impact,
-        impactRaw: e.impact,
-        estimate: e.estimate ?? null,
-        prev: e.prev ?? null,
-        actual: e.actual ?? null,
-        unit: e.unit || '',
-      }))
+    let events = (Array.isArray(data) ? data : [])
+      .filter(e => e.date && e.country && KO_COUNTRIES[e.country])
+      .map(e => {
+        const impactRaw = getImpact(e.event || '');
+        return {
+          date: e.date.split(' ')[0],
+          time: e.date.split(' ')[1]?.slice(0, 5) || '',
+          event: KO_NAMES[e.event] || e.event,
+          eventEn: e.event,
+          country: KO_COUNTRIES[e.country] || e.country,
+          countryCode: e.country,
+          impact: impactRaw === 'high' ? '중요' : '보통',
+          impactRaw,
+          estimate: e.estimate ?? null,
+          prev: e.previous ?? null,
+          actual: e.actual ?? null,
+          unit: e.unit || '',
+        };
+      })
       .sort((a, b) => {
         const dateDiff = a.date.localeCompare(b.date);
         if (dateDiff !== 0) return dateDiff;
-        return (IMPACT_ORDER[a.impactRaw] ?? 9) - (IMPACT_ORDER[b.impactRaw] ?? 9);
+        return a.impactRaw === 'high' ? -1 : 1;
       });
 
     if (limitParam) {
