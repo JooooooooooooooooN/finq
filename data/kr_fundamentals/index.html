@@ -75,6 +75,27 @@ a{color:inherit;text-decoration:none}
 .num-warn{color:var(--red);font-weight:600}
 .num-neu {color:var(--text2)}
 .table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:1.25rem}
+.search-field{width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-size:14px;outline:none;transition:border-color .15s;box-sizing:border-box}
+.search-field:focus{border-color:var(--accent)}
+.search-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1px solid var(--border);border-radius:10px;max-height:240px;overflow-y:auto;z-index:50;display:none;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.search-dropdown.open{display:block}
+.search-item{padding:10px 14px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.search-item:hover{background:var(--bg2)}
+.si-symbol{font-weight:700;font-size:13px;color:var(--accent);min-width:64px;font-family:monospace}
+.si-name{font-size:13px;flex:1}
+.si-exchange{font-size:11px;color:var(--text2)}
+.search-msg{padding:10px 14px;font-size:13px;color:var(--text2)}
+/* FUNDAMENTALS RESULT */
+.fund-empty{text-align:center;padding:2.5rem 1rem;color:var(--text2);font-size:14px}
+.fund-group-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin:1.25rem 0 .6rem}
+.fund-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:600px){.fund-grid{grid-template-columns:repeat(2,1fr)}}
+.fund-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem}
+.fund-label{font-size:11px;color:var(--text2);margin-bottom:.3rem}
+.fund-value{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.fund-sub{font-size:11px;color:var(--text2);margin-top:.15rem}
 
 /* INDICATOR CARDS (섹션 2) */
 .ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -162,34 +183,39 @@ hr{border:none;border-top:1px solid var(--border)}
   <!-- SUMMARY CARDS -->
   <div class="summary-grid">
     <div class="summary-card">
-      <div class="summary-label">저평가 판단 종목</div>
-      <div class="summary-value" style="color:var(--green)">8</div>
-      <div class="summary-sub">PER 10 미만 기준</div>
+      <div class="summary-label">조회 종목</div>
+      <div class="summary-value accent" style="font-size:16px;line-height:1.4" id="scName">—</div>
+      <div class="summary-sub" id="scExchange">종목을 검색하세요</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">고ROE 우량 종목</div>
-      <div class="summary-value" style="color:var(--accent)">11</div>
-      <div class="summary-sub">ROE 15% 이상 기준</div>
+      <div class="summary-label">PER (TTM)</div>
+      <div class="summary-value" id="scPer">—</div>
+      <div class="summary-sub">주가수익비율</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">배당수익률 3% 이상</div>
-      <div class="summary-value" style="color:var(--orange)">14</div>
-      <div class="summary-sub">최근 배당 기준</div>
+      <div class="summary-label">PBR</div>
+      <div class="summary-value" id="scPbr">—</div>
+      <div class="summary-sub">주가순자산비율</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">부채비율 200% 이상</div>
-      <div class="summary-value" style="color:var(--red)">5</div>
-      <div class="summary-sub">재무 점검 필요</div>
+      <div class="summary-label">ROE</div>
+      <div class="summary-value" id="scRoe">—</div>
+      <div class="summary-sub">자기자본이익률</div>
     </div>
   </div>
 
-  <!-- SECTION 1: 주요 종목 재무 지표 -->
+  <!-- SECTION 1: 종목 재무 조회 -->
   <div class="section">
-    <div class="sec-title">주요 종목 재무 지표</div>
-    <div class="table-wrap">
-      <table class="cal-table">
-        <thead>
-          <tr>
+    <div class="sec-title">종목 재무 조회</div>
+    <div class="search-wrap">
+      <input type="text" id="fundSearch" class="search-field" placeholder="종목명 또는 티커 검색 (예: 삼성전자, AAPL, 005930.KS)" oninput="onFundSearch(this.value)" autocomplete="off">
+      <div class="search-dropdown" id="fundDropdown"></div>
+    </div>
+    <div id="fundResult">
+      <div class="fund-empty">🔍 종목을 검색하면 재무 지표가 표시됩니다<br><span style="font-size:12px;margin-top:.4rem;display:block">한국 종목은 티커+.KS 또는 종목명으로 검색 (예: 005930.KS, 삼성전자)</span></div>
+    </div>
+    <!-- 기존 테이블 구조 유지 (JS가 대체) -->
+    <div style="display:none"><table class="cal-table"><thead><tr>
             <th>기업명</th>
             <th>업종</th>
             <th>PER</th>
@@ -313,9 +339,8 @@ hr{border:none;border-top:1px solid var(--border)}
             <td><span class="grade-exp">고평가</span></td>
           </tr>
         </tbody>
-      </table>
-    </div>
-    <div class="table-notice">* 재무 지표는 최근 분기 기준이며, PER·PBR은 현재 주가 기준입니다. 밸류 판단은 업종 평균 대비 상대적 수준을 단순 참고용으로 제시한 것입니다. 더미 데이터 기반 UI 예시입니다.</div>
+      </table></div>
+    <div class="table-notice">* 재무 데이터는 Yahoo Finance 기준이며, 최근 분기 또는 TTM 기준으로 제공됩니다. 투자 판단의 참고 자료로만 활용하세요.</div>
   </div>
 
   <!-- SECTION 2: 지표별 해설 -->
@@ -469,6 +494,92 @@ function toggleTheme() {
     document.getElementById('themeBtn').textContent = '☀️';
   }
 })();
+
+// ── 종목 재무 조회 ──────────────────────────────
+let fundTimer = null;
+let fundResults = [];
+
+function onFundSearch(val) {
+  const dd = document.getElementById('fundDropdown');
+  if (fundTimer) clearTimeout(fundTimer);
+  if (!val || val.length < 1) { dd.classList.remove('open'); return; }
+  dd.innerHTML = '<div class="search-msg">검색 중...</div>';
+  dd.classList.add('open');
+  fundTimer = setTimeout(async () => {
+    try {
+      const res  = await fetch(`/api/stock-search?q=${encodeURIComponent(val)}`);
+      const data = await res.json();
+      fundResults = data.results || [];
+      if (!fundResults.length) { dd.innerHTML = '<div class="search-msg">결과 없음</div>'; return; }
+      dd.innerHTML = fundResults.map((r, i) =>
+        `<div class="search-item" onmousedown="selectFund(${i})">
+          <span class="si-symbol">${r.symbol}</span>
+          <span class="si-name">${r.name}</span>
+          <span class="si-exchange">${r.exchange || ''}</span>
+        </div>`).join('');
+    } catch { dd.innerHTML = '<div class="search-msg">검색 실패</div>'; }
+  }, 300);
+}
+
+function selectFund(i) {
+  const s = fundResults[i];
+  document.getElementById('fundSearch').value = `${s.symbol}  ${s.name}`;
+  document.getElementById('fundDropdown').classList.remove('open');
+  loadFundamentals(s.symbol);
+}
+
+async function loadFundamentals(symbol) {
+  const el = document.getElementById('fundResult');
+  el.innerHTML = '<div class="fund-empty">📡 재무 데이터 불러오는 중...</div>';
+  ['scPer','scPbr','scRoe'].forEach(id => document.getElementById(id).textContent = '—');
+  try {
+    const res = await fetch(`/api/fundamentals?symbol=${encodeURIComponent(symbol)}`);
+    const d   = await res.json();
+    if (d.error) throw new Error(d.error);
+
+    document.getElementById('scName').textContent     = d.name;
+    document.getElementById('scExchange').textContent = `${d.exchange} · ${d.currency}`;
+    document.getElementById('scPer').textContent      = d.per;
+    document.getElementById('scPbr').textContent      = d.pbr;
+    document.getElementById('scRoe').textContent      = d.roe;
+
+    el.innerHTML = `
+      <div class="fund-group-title">밸류에이션</div>
+      <div class="fund-grid">
+        <div class="fund-card"><div class="fund-label">PER (TTM)</div><div class="fund-value">${d.per}</div><div class="fund-sub">주가수익비율</div></div>
+        <div class="fund-card"><div class="fund-label">Forward PER</div><div class="fund-value">${d.forwardPer}</div><div class="fund-sub">예상 PER</div></div>
+        <div class="fund-card"><div class="fund-label">PBR</div><div class="fund-value">${d.pbr}</div><div class="fund-sub">주가순자산비율</div></div>
+        <div class="fund-card"><div class="fund-label">EPS (TTM)</div><div class="fund-value">${d.eps}</div><div class="fund-sub">주당순이익</div></div>
+      </div>
+      <div class="fund-group-title">수익성</div>
+      <div class="fund-grid">
+        <div class="fund-card"><div class="fund-label">ROE</div><div class="fund-value">${d.roe}</div><div class="fund-sub">자기자본이익률</div></div>
+        <div class="fund-card"><div class="fund-label">ROA</div><div class="fund-value">${d.roa}</div><div class="fund-sub">총자산이익률</div></div>
+        <div class="fund-card"><div class="fund-label">영업이익률</div><div class="fund-value">${d.operatingMargin}</div><div class="fund-sub">Operating Margin</div></div>
+        <div class="fund-card"><div class="fund-label">순이익률</div><div class="fund-value">${d.profitMargin}</div><div class="fund-sub">Net Margin</div></div>
+      </div>
+      <div class="fund-group-title">성장성</div>
+      <div class="fund-grid">
+        <div class="fund-card"><div class="fund-label">매출 증가율</div><div class="fund-value">${d.revenueGrowth}</div><div class="fund-sub">YoY</div></div>
+        <div class="fund-card"><div class="fund-label">이익 증가율</div><div class="fund-value">${d.earningsGrowth}</div><div class="fund-sub">YoY</div></div>
+      </div>
+      <div class="fund-group-title">재무건전성 · 배당</div>
+      <div class="fund-grid">
+        <div class="fund-card"><div class="fund-label">부채비율</div><div class="fund-value">${d.debtToEquity}</div><div class="fund-sub">Debt / Equity</div></div>
+        <div class="fund-card"><div class="fund-label">유동비율</div><div class="fund-value">${d.currentRatio}</div><div class="fund-sub">Current Ratio</div></div>
+        <div class="fund-card"><div class="fund-label">배당수익률</div><div class="fund-value">${d.dividendYield}</div><div class="fund-sub">Dividend Yield</div></div>
+        <div class="fund-card"><div class="fund-label">배당성향</div><div class="fund-value">${d.payoutRatio}</div><div class="fund-sub">Payout Ratio</div></div>
+      </div>`;
+  } catch (e) {
+    el.innerHTML = `<div class="fund-empty">⚠️ ${e.message || '데이터를 불러오지 못했습니다'}</div>`;
+  }
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#fundSearch') && !e.target.closest('#fundDropdown')) {
+    document.getElementById('fundDropdown').classList.remove('open');
+  }
+});
 </script>
 </body>
 </html>

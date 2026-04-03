@@ -78,6 +78,7 @@ a{color:inherit;text-decoration:none}
 .num-cell{font-size:13px;color:var(--text2)}
 .sector-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
 .table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
+.loading-cell{text-align:center;padding:2rem!important;color:var(--text2);font-size:14px}
 
 /* SECTOR CARDS */
 .cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
@@ -208,18 +209,11 @@ hr{border:none;border-top:1px solid var(--border)}
             <th>중요도</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="earningsBody">
           <tr>
-            <td class="date-cell">04/16 수</td>
-            <td><span class="company-name">JPMorgan</span></td>
-            <td><span class="ticker">JPM</span></td>
-            <td><span class="time-tag time-pre">장전</span></td>
-            <td class="num-cell">$4.52</td>
-            <td class="num-cell">$44.1B</td>
-            <td><span class="sector-tag">금융</span></td>
-            <td><span class="imp-high">높음</span></td>
+            <td colspan="8" class="loading-cell">📡 실적 데이터 불러오는 중...</td>
           </tr>
-          <tr>
+          <tr style="display:none">
             <td class="date-cell">04/16 수</td>
             <td><span class="company-name">Bank of America</span></td>
             <td><span class="ticker">BAC</span></td>
@@ -332,7 +326,7 @@ hr{border:none;border-top:1px solid var(--border)}
         </tbody>
       </table>
     </div>
-    <div class="table-notice">* 발표 시간은 미국 동부 시간 기준이며, 장전은 개장 전(BMO), 장후는 폐장 후(AMC)입니다. 예상치는 애널리스트 컨센서스 기준이며 변경될 수 있습니다. 더미 데이터 기반 UI 예시입니다.</div>
+    <div class="table-notice">* 발표 시간은 미국 동부 시간 기준이며, 장전은 개장 전(BMO), 장후는 폐장 후(AMC)입니다. 예상치는 Yahoo Finance 애널리스트 컨센서스 기준이며 변경될 수 있습니다.</div>
 
     <div class="callout callout-info" style="margin-top:1rem">
       <strong>주목 포인트:</strong> 4월 마지막 주(04/23~04/25)에 빅테크 5개사 실적이 집중되어 있습니다. 해당 주간 나스닥 변동성이 확대될 수 있으며, 각사 가이던스 발표 내용이 시장 방향을 결정하는 주요 변수가 됩니다.
@@ -489,6 +483,58 @@ function toggleTheme() {
     document.getElementById('themeBtn').textContent = '☀️';
   }
 })();
+
+// ── 실적 캘린더 ──────────────────────────────────
+const DAY_KO = ['일','월','화','수','목','금','토'];
+
+function fmtEarningsDate(raw) {
+  const d = new Date(raw * 1000);
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${mm}/${dd} ${DAY_KO[d.getDay()]}`;
+}
+
+function callTimeTag(s) {
+  if (!s) return '<span class="time-tag">미정</span>';
+  if (s.toLowerCase().includes('before')) return '<span class="time-tag time-pre">장전</span>';
+  if (s.toLowerCase().includes('after'))  return '<span class="time-tag time-post">장후</span>';
+  return `<span class="time-tag">${s}</span>`;
+}
+
+function impBadge(imp) {
+  return imp === 'high'
+    ? '<span class="imp-high">높음</span>'
+    : '<span class="imp-mid">보통</span>';
+}
+
+async function loadEarnings() {
+  const tbody = document.getElementById('earningsBody');
+  tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">📡 실적 데이터 불러오는 중...</td></tr>';
+  try {
+    const res  = await fetch('/api/earnings');
+    if (!res.ok) throw new Error('서버 오류');
+    const data = await res.json();
+    if (!data.items || !data.items.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">예정된 실적 발표가 없습니다</td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.items.map(item => `
+      <tr>
+        <td class="date-cell">${fmtEarningsDate(item.dateRaw)}</td>
+        <td><span class="company-name">${item.name}</span></td>
+        <td><span class="ticker">${item.symbol}</span></td>
+        <td>${callTimeTag(item.callTime)}</td>
+        <td class="num-cell">${item.epsEst}</td>
+        <td class="num-cell">${item.revEst}</td>
+        <td><span class="sector-tag">${item.sector}</span></td>
+        <td>${impBadge(item.importance)}</td>
+      </tr>`).join('');
+  } catch (e) {
+    tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요</td></tr>';
+  }
+}
+
+loadEarnings();
 </script>
 </body>
 </html>
