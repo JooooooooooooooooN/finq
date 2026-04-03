@@ -84,10 +84,14 @@ export async function onRequest(context) {
     const { from, to } = getWeekRange(weekOffset);
     const apiKey = env.FINNHUB_API_KEY;
 
+    if (!apiKey) throw new Error('API 키 없음: FINNHUB_API_KEY 미설정');
     const res = await fetch(
       `https://finnhub.io/api/v1/calendar/economic?from=${from}&to=${to}&token=${apiKey}`
     );
-    if (!res.ok) throw new Error('Finnhub API 오류');
+    if (!res.ok) {
+      const body = await res.text();
+      throw new Error(`Finnhub ${res.status}: ${body.slice(0, 200)}`);
+    }
     const data = await res.json();
 
     let events = (data.economicCalendar || [])
