@@ -423,21 +423,49 @@ function setDays(days, btn) {
   loadDisclosures(days);
 }
 
+const DART_KEY = '94c432c0a3802e680f9132881fe881425ea5f794'; // 재발급 후 교체
+
+const KEY_KW = ['자기주식','유상증자','무상증자','분기보고서','반기보고서','사업보고서','공급계약','주요사항','합병','분할','전환사채','신주인수권'];
+
+function classifyType(nm) {
+  if (nm.includes('자기주식'))   return '자사주';
+  if (nm.includes('유상증자') || nm.includes('무상증자')) return '증자';
+  if (nm.includes('보고서'))     return '실적';
+  if (nm.includes('공급계약'))   return '공급계약';
+  if (nm.includes('합병') || nm.includes('분할')) return 'M&A';
+  if (nm.includes('전환사채') || nm.includes('신주인수권')) return '사채·CB';
+  return '기타';
+}
+
+function dartDateRange(days) {
+  const fmt = d => d.toISOString().slice(0,10).replace(/-/g,'');
+  const end = new Date();
+  const start = new Date();
+  start.setDate(start.getDate() - days);
+  return { bgn: fmt(start), end: fmt(end) };
+}
+
 async function loadDisclosures(days) {
   const tbody = document.getElementById('disclosureBody');
   tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">📡 공시 데이터 불러오는 중...</td></tr>';
 
   try {
-    const res  = await fetch(`/api/dart?days=${days}`);
+    const { bgn, end } = dartDateRange(days);
+    const url = `https://opendart.fss.or.kr/api/list.json?crtfc_key=${DART_KEY}&bgn_de=${bgn}&end_de=${end}&page_no=1&page_count=50&sort=date&sort_mth=desc`;
+    const res  = await fetch(url);
+    if (!res.ok) throw new Error(`DART 응답 오류 (${res.status})`);
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
+    if (data.status !== '000') throw new Error(data.message || 'DART 오류');
 
-    const items = data.items || [];
-    const total = items.length;
+    const raw   = data.list || [];
+    const items = raw.map(item => {
+      const typeLabel = classifyType(item.report_nm);
+      const isKey     = KEY_KW.some(k => item.report_nm.includes(k));
+      return { ...item, typeLabel, isKey, dartUrl: `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${item.rcept_no}` };
+    });
 
-    // 요약 카드 업데이트
     const periodLabel = days === 1 ? '오늘 기준' : `최근 ${days}일 기준`;
-    document.getElementById('scTotal').textContent    = total;
+    document.getElementById('scTotal').textContent    = data.total_count || items.length;
     document.getElementById('scPeriod').textContent   = periodLabel;
     document.getElementById('scTreasury').textContent = items.filter(i => i.typeLabel === '자사주').length;
     document.getElementById('scIssue').textContent    = items.filter(i => i.typeLabel === '증자').length;
@@ -449,14 +477,14 @@ async function loadDisclosures(days) {
     }
 
     tbody.innerHTML = items.map(item => {
-      const css  = TYPE_CSS[item.typeLabel] || 'type-major';
-      const imp  = item.isKey
+      const css = TYPE_CSS[item.typeLabel] || 'type-major';
+      const imp = item.isKey
         ? '<span class="key-badge">핵심</span>'
         : '<span class="normal-badge">일반</span>';
       return `<tr>
         <td class="time-cell">${fmtDartDate(item.rcept_dt)}</td>
         <td><span class="company-name">${item.corp_name}</span></td>
-        <td><a href="${item.url}" target="_blank" rel="noopener" class="notice-link">${item.report_nm}</a></td>
+        <td><a href="${item.dartUrl}" target="_blank" rel="noopener" class="notice-link">${item.report_nm}</a></td>
         <td><span class="type-tag ${css}">${item.typeLabel}</span></td>
         <td>${imp}</td>
       </tr>`;
