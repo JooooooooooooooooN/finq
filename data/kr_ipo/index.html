@@ -3,19 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>국내 IPO·공모 일정 — FinQ</title>
-<meta name="description" content="공모주 청약, 수요예측, 환불일, 상장 일정 등 국내 IPO 흐름 확인. 기관 경쟁률, 의무보유확약, 유통가능물량 등 공모주 체크포인트 정리.">
-<meta property="og:title" content="국내 IPO·공모 일정 — FinQ">
-<meta property="og:description" content="공모주 청약, 수요예측, 상장 일정 등 국내 IPO 흐름을 확인하는 페이지">
+<title>국내 공모주 일정 — FinQ</title>
+<meta name="description" content="DART 공시 기반 최근 90일 국내 공모주(IPO) 일정. 신규상장, 수요예측, 청약일정, 증권신고서를 한눈에 확인.">
+<meta property="og:title" content="국내 공모주 일정 — FinQ">
+<meta property="og:description" content="DART 공시 기반 최근 90일 국내 공모주(IPO) 일정. 신규상장, 수요예측, 청약일정을 한눈에 확인.">
 <meta property="og:type" content="article">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<meta property="og:url" content="https://finq.kr/data/kr_ipo/">
+<link rel="canonical" href="https://finq.kr/data/kr_ipo/">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4111399134907305" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"국내 공모주 일정 — FinQ","url":"https://finq.kr/data/kr_ipo/","description":"DART 공시 기반 최근 90일 국내 공모주(IPO) 일정.","inLanguage":"ko","publisher":{"@type":"Organization","name":"FinQ","url":"https://finq.kr"}}</script>
 <style>
 :root{--bg:#fff;--bg2:#f8f9fb;--card:#fff;--text:#1a1a2e;--text2:#6b7280;--border:#e5e7eb;--accent:#2563eb;--accent-h:#1d4ed8;--green:#059669;--red:#dc2626;--orange:#d97706;--r:12px;--shadow:0 1px 3px rgba(0,0,0,.06)}
 [data-theme=dark]{--bg:#0a0e14;--bg2:#111827;--card:#1a1f2e;--text:#f1f5f9;--text2:#94a3b8;--border:#1e293b;--shadow:0 1px 3px rgba(0,0,0,.3)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
-
-/* NAV */
 .nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
 .nav-inner{max-width:1100px;margin:0 auto;padding:0 1.25rem;display:flex;align-items:center;justify-content:space-between;height:56px}
 .nav-logo{font-size:22px;font-weight:700;letter-spacing:-.5px;color:var(--accent)}.nav-logo span{color:var(--text)}
@@ -25,13 +28,9 @@ a{color:inherit;text-decoration:none}
 .theme-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:16px;color:var(--text2);transition:all .15s}.theme-btn:hover{background:var(--bg2)}
 .nav-mobile-btn{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:var(--text);padding:4px}
 @media(max-width:768px){.nav-links{display:none}.nav-links.open{display:flex;flex-direction:column;position:absolute;top:56px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 20px;gap:4px}.nav-links.open a{padding:10px 14px}.nav-mobile-btn{display:block}}
-
-/* LAYOUT */
 .main{max-width:900px;margin:0 auto;padding:2rem 1.25rem 3rem}
 .breadcrumb{font-size:13px;color:var(--text2);margin-bottom:1.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .breadcrumb a{color:var(--accent)}
-
-/* HERO */
 .hero{margin-bottom:2rem}
 .hero-badge{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem}
 .hero h1{font-size:clamp(22px,4vw,32px);font-weight:800;letter-spacing:-.5px;margin-bottom:.6rem}
@@ -40,93 +39,63 @@ a{color:inherit;text-decoration:none}
 .hero-tag{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
 .hero-update{font-size:12px;color:var(--text2);display:inline-flex;align-items:center;gap:5px}
 .hero-update::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green)}
-
-/* SUMMARY */
 .summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:2rem}
 @media(max-width:700px){.summary-grid{grid-template-columns:repeat(2,1fr)}}
 .summary-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.25rem}
 .summary-label{font-size:12px;color:var(--text2);margin-bottom:.35rem;word-break:keep-all}
 .summary-value{font-size:26px;font-weight:800;letter-spacing:-.5px}
 .summary-sub{font-size:11px;color:var(--text2);margin-top:.2rem}
-
-/* SECTION */
 .section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
 .sec-title{font-size:16px;font-weight:700;margin-bottom:1.1rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
-
-/* TABLE */
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.cal-table{width:100%;border-collapse:collapse;font-size:13px}
-.cal-table th{text-align:left;padding:9px 11px;font-size:11px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
-.cal-table td{padding:10px 11px;border-bottom:1px solid var(--border);vertical-align:middle}
+.cal-table{width:100%;border-collapse:collapse;font-size:14px}
+.cal-table th{text-align:left;padding:9px 12px;font-size:12px;font-weight:600;color:var(--text2);background:var(--bg2);border-bottom:1px solid var(--border);white-space:nowrap}
+.cal-table td{padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
 .cal-table tr:last-child td{border-bottom:none}
 .cal-table tr:hover td{background:var(--bg2)}
-.company-name{font-weight:700;white-space:nowrap;font-size:13px}
-.sector-tag{display:inline-block;padding:2px 8px;border-radius:5px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
-.price-band{font-size:12px;color:var(--text2);white-space:nowrap}
-.date-range{font-size:12px;color:var(--text2);white-space:nowrap}
-.underwriter{font-size:12px;color:var(--text2);white-space:nowrap}
-.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
-
-/* 상태 뱃지 */
-.s-demand {display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:#ede9fe;color:#6d28d9;white-space:nowrap}
-.s-sub-soon{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:#dbeafe;color:#1e40af;white-space:nowrap}
-.s-sub-live{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:#d1fae5;color:#065f46;white-space:nowrap}
-.s-list-soon{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:#fef3c7;color:#92400e;white-space:nowrap}
-.s-done     {display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border);white-space:nowrap}
-[data-theme=dark] .s-demand  {background:#4c1d95;color:#c4b5fd}
-[data-theme=dark] .s-sub-soon{background:#1e3a5f;color:#93c5fd}
-[data-theme=dark] .s-sub-live{background:#064e3b;color:#6ee7b7}
-[data-theme=dark] .s-list-soon{background:#78350f;color:#fcd34d}
-
-/* 단계 흐름 안내 */
-.flow-bar{display:flex;align-items:center;gap:0;margin-bottom:1.25rem;flex-wrap:wrap;gap:4px}
-.flow-step{padding:5px 14px;border-radius:6px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
-.flow-step.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-.flow-arrow{font-size:12px;color:var(--text2);padding:0 2px}
-
-/* CHECK POINT CARDS (섹션 2) */
-.check2-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.check2-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.25rem}
-.check2-icon{font-size:20px;margin-bottom:.5rem}
-.check2-name{font-size:14px;font-weight:700;margin-bottom:.35rem}
-.check2-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
-.check2-items{display:flex;flex-wrap:wrap;gap:5px;margin-top:.65rem}
-.check2-item{padding:2px 9px;border-radius:5px;font-size:11px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text2)}
-
-/* GUIDE CARDS */
-.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.company-name{font-weight:600;white-space:nowrap}
+.notice-link{color:var(--accent);font-size:13px}.notice-link:hover{text-decoration:underline}
+.loading-cell{text-align:center;padding:2rem!important;color:var(--text2);font-size:14px}
+.type-tag{display:inline-block;padding:2px 9px;border-radius:5px;font-size:11px;font-weight:700;white-space:nowrap}
+.type-listing{background:#d1fae5;color:#065f46}
+.type-review {background:#dbeafe;color:#1e40af}
+.type-book   {background:#ede9fe;color:#6d28d9}
+.type-price  {background:#fef3c7;color:#92400e}
+.type-sub    {background:#fee2e2;color:#991b1b}
+.type-pros   {background:#fce7f3;color:#9d174d}
+.type-reg    {background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+.type-other  {background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
+[data-theme=dark] .type-listing{background:#064e3b;color:#6ee7b7}
+[data-theme=dark] .type-review {background:#1e3a5f;color:#93c5fd}
+[data-theme=dark] .type-book   {background:#4c1d95;color:#c4b5fd}
+[data-theme=dark] .type-price  {background:#78350f;color:#fcd34d}
+[data-theme=dark] .type-sub    {background:#7f1d1d;color:#fca5a5}
+[data-theme=dark] .type-pros   {background:#831843;color:#fbcfe8}
+.mkt-kospi {display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:#eff6ff;color:#1d4ed8}
+.mkt-kosdaq{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:#f0fdf4;color:#166534}
+[data-theme=dark] .mkt-kospi {background:#1e3a5f;color:#93c5fd}
+[data-theme=dark] .mkt-kosdaq{background:#064e3b;color:#6ee7b7}
+.filter-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.filter-tab{padding:5px 14px;border-radius:8px;font-size:13px;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s}
+.filter-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
 .guide-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem}
-.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.05em}
-.guide-title{font-size:14px;font-weight:700;margin-bottom:.35rem}
+.guide-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:.3rem;letter-spacing:.05em}
+.guide-title{font-size:14px;font-weight:700;margin-bottom:.3rem}
 .guide-desc{font-size:13px;color:var(--text2);line-height:1.6;word-break:keep-all}
-
-/* CHECKLIST */
-.check-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
-.check-card{background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem;display:flex;align-items:flex-start;gap:10px}
-.check-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0;margin-top:5px}
-.check-text{font-size:14px;line-height:1.65;word-break:keep-all}
-.check-text strong{font-weight:700;color:var(--text)}
-
-/* DISCLAIMER */
 .disclaimer{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:1.1rem 1.5rem;margin-bottom:1rem}
 .disclaimer ul{list-style:none;display:flex;flex-direction:column;gap:6px}
 .disclaimer ul li{font-size:13px;color:var(--text2);padding-left:1.1em;position:relative;word-break:keep-all}
 .disclaimer ul li::before{content:"·";position:absolute;left:0;font-weight:700}
-
+.table-notice{font-size:12px;color:var(--text2);margin-top:.75rem;padding-top:.6rem;border-top:1px solid var(--border)}
 hr{border:none;border-top:1px solid var(--border)}
 .divider{max-width:900px;margin:0 auto;padding:0 1.25rem}
 .footer{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--text2);gap:1rem;flex-wrap:wrap}
 .footer-links{display:flex;gap:1rem}.footer-links a:hover{color:var(--text)}
 </style>
-<meta property="og:image" content="https://finq.kr/og-image.png">
-<meta property="og:url" content="https://finq.kr/data/kr_ipo/">
-<link rel="canonical" href="https://finq.kr/data/kr_ipo/">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4111399134907305" crossorigin="anonymous"></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"국내 IPO·공모 일정 — FinQ","url":"https://finq.kr/data/kr_ipo/","description":"공모주 청약, 수요예측, 환불일, 상장 일정 등 국내 IPO 흐름 확인. 기관 경쟁률, 의무보유확약, 유통가능물량 등 공모주 체크포인트 정리.","inLanguage":"ko","publisher":{"@type":"Organization","name":"FinQ","url":"https://finq.kr"}}</script>
 </head>
 <body>
 
-<!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
     <a href="../../" class="nav-logo">Fin<span>Q</span></a>
@@ -144,319 +113,139 @@ hr{border:none;border-top:1px solid var(--border)}
 
 <div class="main">
 
-  <!-- BREADCRUMB -->
   <div class="breadcrumb">
-    <a href="../../">홈</a>
-    <span>›</span>
-    <a href="../">마켓 데이터</a>
-    <span>›</span>
-    <span>국내 IPO·공모 일정</span>
+    <a href="../../">홈</a><span>›</span>
+    <a href="../">마켓 데이터</a><span>›</span>
+    <span>국내 공모주 일정</span>
   </div>
 
-  <!-- HERO -->
   <div class="hero">
-    <div class="hero-badge">MARKET DATA</div>
-    <h1>국내 IPO·공모 일정</h1>
-    <p class="hero-lead">공모주 청약, 수요예측, 상장 일정 등 국내 IPO 흐름을 확인하는 페이지</p>
+    <div class="hero-badge">MARKET DATA · IPO</div>
+    <h1>국내 공모주 일정</h1>
+    <p class="hero-lead">DART 공시 기반 최근 90일 신규상장·수요예측·청약 일정. 공모 단계별 공시를 한눈에 확인하고 DART 원문으로 바로 이동.</p>
     <div class="hero-tags">
-      <span class="hero-tag">IPO</span>
-      <span class="hero-tag">공모주</span>
+      <span class="hero-tag">신규상장</span>
       <span class="hero-tag">수요예측</span>
-      <span class="hero-tag">상장일정</span>
+      <span class="hero-tag">청약일정</span>
+      <span class="hero-tag">증권신고서</span>
+      <span class="hero-tag">DART 연동</span>
     </div>
-    <div class="hero-update">최근 일정 기준 주요 IPO·공모 일정을 정리했습니다</div>
+    <span class="hero-update" id="updatedAt">최근 90일 기준</span>
   </div>
 
-  <!-- SUMMARY CARDS -->
   <div class="summary-grid">
     <div class="summary-card">
-      <div class="summary-label">이번 달 청약 종목</div>
-      <div class="summary-value" style="color:var(--accent)">8</div>
-      <div class="summary-sub">04월 기준</div>
+      <div class="summary-label">신규상장</div>
+      <div class="summary-value" id="cntListing">—</div>
+      <div class="summary-sub">최근 90일</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">수요예측 진행 중</div>
-      <div class="summary-value" style="color:var(--green)">3</div>
-      <div class="summary-sub">현재 진행 기준</div>
+      <div class="summary-label">수요예측</div>
+      <div class="summary-value" id="cntBook">—</div>
+      <div class="summary-sub">최근 90일</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">상장 예정 종목</div>
-      <div class="summary-value" style="color:var(--orange)">5</div>
-      <div class="summary-sub">04월 내 예정</div>
+      <div class="summary-label">청약일정</div>
+      <div class="summary-value" id="cntSub">—</div>
+      <div class="summary-sub">최근 90일</div>
     </div>
     <div class="summary-card">
-      <div class="summary-label">경쟁률 100:1 이상</div>
-      <div class="summary-value" style="color:var(--red)">4</div>
-      <div class="summary-sub">최근 마감 기준</div>
+      <div class="summary-label">증권신고</div>
+      <div class="summary-value" id="cntReg">—</div>
+      <div class="summary-sub">최근 90일</div>
     </div>
   </div>
 
-  <!-- SECTION 1: 단계별 일정 -->
   <div class="section">
-    <div class="sec-title">단계별 일정</div>
-
-    <!-- 흐름 안내 바 -->
-    <div class="flow-bar">
-      <span class="flow-step">수요예측</span>
-      <span class="flow-arrow">→</span>
-      <span class="flow-step">공모가 확정</span>
-      <span class="flow-arrow">→</span>
-      <span class="flow-step">청약</span>
-      <span class="flow-arrow">→</span>
-      <span class="flow-step">환불</span>
-      <span class="flow-arrow">→</span>
-      <span class="flow-step active">상장</span>
+    <div class="sec-title">공모주 공시 목록</div>
+    <div class="filter-tabs">
+      <button class="filter-tab active" onclick="filterTable('전체',this)">전체</button>
+      <button class="filter-tab" onclick="filterTable('신규상장',this)">신규상장</button>
+      <button class="filter-tab" onclick="filterTable('수요예측',this)">수요예측</button>
+      <button class="filter-tab" onclick="filterTable('청약일정',this)">청약일정</button>
+      <button class="filter-tab" onclick="filterTable('공모가확정',this)">공모가확정</button>
+      <button class="filter-tab" onclick="filterTable('증권신고',this)">증권신고</button>
     </div>
-
     <div class="table-wrap">
       <table class="cal-table">
         <thead>
           <tr>
-            <th>기업명</th>
-            <th>업종</th>
-            <th>공모가 밴드</th>
-            <th>수요예측</th>
-            <th>청약일</th>
-            <th>환불일</th>
-            <th>상장일</th>
-            <th>주관사</th>
-            <th>상태</th>
+            <th>회사명</th>
+            <th>유형</th>
+            <th>시장</th>
+            <th>공시일</th>
+            <th>DART</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td><span class="company-name">넥스트AI</span></td>
-            <td><span class="sector-tag">AI</span></td>
-            <td class="price-band">38,000~45,000</td>
-            <td class="date-range">04/21~04/22</td>
-            <td class="date-range">04/25~04/26</td>
-            <td class="date-range">04/28</td>
-            <td class="date-range">05/02</td>
-            <td class="underwriter">한국투자</td>
-            <td><span class="s-list-soon">상장 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">바이오리버</span></td>
-            <td><span class="sector-tag">바이오</span></td>
-            <td class="price-band">12,000~14,500</td>
-            <td class="date-range">04/22~04/23</td>
-            <td class="date-range">04/28~04/29</td>
-            <td class="date-range">05/02</td>
-            <td class="date-range">05/07</td>
-            <td class="underwriter">미래에셋</td>
-            <td><span class="s-sub-soon">청약 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">솔리드배터리</span></td>
-            <td><span class="sector-tag">2차전지</span></td>
-            <td class="price-band">22,000~26,000</td>
-            <td class="date-range">04/23~04/24</td>
-            <td class="date-range">04/29~04/30</td>
-            <td class="date-range">05/07</td>
-            <td class="date-range">05/09</td>
-            <td class="underwriter">NH투자</td>
-            <td><span class="s-sub-soon">청약 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">퀀텀로직스</span></td>
-            <td><span class="sector-tag">반도체</span></td>
-            <td class="price-band">55,000~65,000</td>
-            <td class="date-range">04/24~04/25</td>
-            <td class="date-range">04/30~05/02</td>
-            <td class="date-range">05/07</td>
-            <td class="date-range">05/12</td>
-            <td class="underwriter">KB증권</td>
-            <td><span class="s-demand">수요예측 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">클라우드원</span></td>
-            <td><span class="sector-tag">플랫폼</span></td>
-            <td class="price-band">18,000~21,000</td>
-            <td class="date-range">04/28~04/29</td>
-            <td class="date-range">05/07~05/08</td>
-            <td class="date-range">05/13</td>
-            <td class="date-range">05/16</td>
-            <td class="underwriter">삼성증권</td>
-            <td><span class="s-demand">수요예측 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">뷰티랩코리아</span></td>
-            <td><span class="sector-tag">소비재</span></td>
-            <td class="price-band">9,500~11,000</td>
-            <td class="date-range">04/07~04/08</td>
-            <td class="date-range">04/14~04/15</td>
-            <td class="date-range">04/17</td>
-            <td class="date-range">04/22</td>
-            <td class="underwriter">대신증권</td>
-            <td><span class="s-list-soon">상장 예정</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">그린파워텍</span></td>
-            <td><span class="sector-tag">친환경</span></td>
-            <td class="price-band">15,000~17,500</td>
-            <td class="date-range">03/31~04/01</td>
-            <td class="date-range">04/07~04/08</td>
-            <td class="date-range">04/10</td>
-            <td class="date-range">04/15</td>
-            <td class="underwriter">신한투자</td>
-            <td><span class="s-done">일정 종료</span></td>
-          </tr>
-          <tr>
-            <td><span class="company-name">메디테크솔루션</span></td>
-            <td><span class="sector-tag">의료기기</span></td>
-            <td class="price-band">28,000~33,000</td>
-            <td class="date-range">03/24~03/25</td>
-            <td class="date-range">03/31~04/01</td>
-            <td class="date-range">04/03</td>
-            <td class="date-range">04/08</td>
-            <td class="underwriter">키움증권</td>
-            <td><span class="s-done">일정 종료</span></td>
-          </tr>
+        <tbody id="ipoTableBody">
+          <tr><td class="loading-cell" colspan="5">📡 데이터 불러오는 중...</td></tr>
         </tbody>
       </table>
     </div>
-    <div class="table-notice">* 일정은 기업 및 주관사 사정에 따라 변경될 수 있습니다. 공모가 밴드는 수요예측 전 제시 기준이며 확정 공모가와 다를 수 있습니다. 더미 데이터 기반 UI 예시입니다.</div>
+    <div class="table-notice">출처: DART(금융감독원 전자공시시스템) · 최근 90일 기준 · 1시간 캐시</div>
   </div>
 
-  <!-- SECTION 2: 주요 체크 포인트 -->
   <div class="section">
-    <div class="sec-title">주요 체크 포인트</div>
-    <div class="check2-grid">
-      <div class="check2-card">
-        <div class="check2-icon">📊</div>
-        <div class="check2-name">기관 경쟁률</div>
-        <div class="check2-desc">숫자 자체보다 참여 기관의 성격과 수요의 질이 중요하다. 단기 차익 목적 참여와 장기 보유 목적 참여는 다른 신호로 해석된다.</div>
-        <div class="check2-items">
-          <span class="check2-item">경쟁률 수준</span>
-          <span class="check2-item">참여 기관 수</span>
-          <span class="check2-item">수요 집중 구간</span>
-        </div>
-      </div>
-      <div class="check2-card">
-        <div class="check2-icon">🔒</div>
-        <div class="check2-name">의무보유확약 비율</div>
-        <div class="check2-desc">기관 배정 물량 중 일정 기간 팔지 않겠다고 약속한 비율이다. 비율이 높을수록 상장 직후 기관 매물이 적어 주가 안정성이 높아지는 경향이 있다.</div>
-        <div class="check2-items">
-          <span class="check2-item">확약 비율</span>
-          <span class="check2-item">확약 기간</span>
-          <span class="check2-item">만료 시점</span>
-        </div>
-      </div>
-      <div class="check2-card">
-        <div class="check2-icon">📦</div>
-        <div class="check2-name">유통가능물량</div>
-        <div class="check2-desc">상장 당일부터 실제로 거래 가능한 주식 수다. 전체 발행주식 대비 비율이 높을수록 단기 변동성이 커질 수 있다. 통상 30% 이하이면 낮은 편으로 본다.</div>
-        <div class="check2-items">
-          <span class="check2-item">유통 비율</span>
-          <span class="check2-item">공모 배정 물량</span>
-          <span class="check2-item">대주주 보호예수</span>
-        </div>
-      </div>
-      <div class="check2-card">
-        <div class="check2-icon">🔄</div>
-        <div class="check2-name">구주매출 비중</div>
-        <div class="check2-desc">공모 물량 중 기존 주주가 보유 주식을 파는 비율이다. 구주매출이 많다면 기업에 자금이 들어오지 않고 기존 주주가 차익을 실현하는 구조일 수 있다.</div>
-        <div class="check2-items">
-          <span class="check2-item">신주 비율</span>
-          <span class="check2-item">구주 비율</span>
-          <span class="check2-item">매도 주주</span>
-        </div>
-      </div>
-      <div class="check2-card">
-        <div class="check2-icon">📈</div>
-        <div class="check2-name">공모가 밴드 초과 여부</div>
-        <div class="check2-desc">수요예측 결과 공모가가 제시 밴드 상단을 초과했다면 시장 기대가 높다는 신호다. 하지만 기대가 선반영돼 상장 후 단기 조정이 나올 가능성도 함께 고려해야 한다.</div>
-        <div class="check2-items">
-          <span class="check2-item">확정 공모가</span>
-          <span class="check2-item">밴드 대비 위치</span>
-          <span class="check2-item">상단 초과 여부</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 3: 이 데이터를 어떻게 읽어야 하나 -->
-  <div class="section">
-    <div class="sec-title">이 데이터를 어떻게 읽어야 하나</div>
+    <div class="sec-title">공모 단계별 이해</div>
     <div class="guide-grid">
       <div class="guide-card">
-        <div class="guide-num">POINT 01</div>
-        <div class="guide-title">경쟁률이 높다고 무조건 좋은 결과는 아니다</div>
-        <div class="guide-desc">경쟁률은 수요가 많다는 신호지만, 상장 후 주가는 유통물량·시장 분위기·수급 등 여러 변수의 영향을 받는다. 경쟁률 하나로 결과를 예단하지 않는 것이 좋다.</div>
+        <div class="guide-num">STEP 1</div>
+        <div class="guide-title">증권신고서 제출</div>
+        <div class="guide-desc">상장 의사 확정 후 금감원에 제출. 공모 개요·재무 정보 포함. IPO 파이프라인 초기 확인 가능.</div>
       </div>
       <div class="guide-card">
-        <div class="guide-num">POINT 02</div>
-        <div class="guide-title">유통가능물량은 단기 변동성의 핵심 변수</div>
-        <div class="guide-desc">상장 첫 날 거래 가능한 물량이 많을수록 주가가 흔들릴 수 있다. 특히 대주주 보호예수가 짧거나, 일반 공모 비율이 높은 경우 첫 날 변동이 크게 나타나는 경향이 있다.</div>
+        <div class="guide-num">STEP 2</div>
+        <div class="guide-title">상장예비심사</div>
+        <div class="guide-desc">거래소가 상장 적격성 심사. 승인 후 본격 공모 절차 진행. 심사 결과 공시로 확인.</div>
       </div>
       <div class="guide-card">
-        <div class="guide-num">POINT 03</div>
-        <div class="guide-title">의무보유확약 비율이 높으면 상장 후 물량 부담이 낮다</div>
-        <div class="guide-desc">기관이 일정 기간 보유를 약속한 비율이 높을수록 초반 매도 물량이 줄어 주가가 안정되는 경향이 있다. 다만 확약 기간 만료 시점도 함께 확인해야 한다.</div>
+        <div class="guide-num">STEP 3</div>
+        <div class="guide-title">수요예측</div>
+        <div class="guide-desc">기관투자자 대상 가격 탐색. 결과로 공모가 밴드 결정. 일반 청약 전 핵심 지표.</div>
       </div>
       <div class="guide-card">
-        <div class="guide-num">POINT 04</div>
-        <div class="guide-title">공모가가 밴드 상단을 넘었다면 기대가 선반영됐을 수 있다</div>
-        <div class="guide-desc">수요가 몰려 공모가가 높게 확정됐다면, 상장 후 추가 상승 여력이 제한될 수 있다. 시초가 형성 후 추격 매수보다 흐름을 확인한 뒤 판단하는 것이 좋다.</div>
+        <div class="guide-num">STEP 4</div>
+        <div class="guide-title">공모가 확정·청약</div>
+        <div class="guide-desc">최종 공모가 확정 공시 후 일반 청약 접수. 청약 경쟁률이 상장 후 주가 흐름에 영향.</div>
       </div>
       <div class="guide-card">
-        <div class="guide-num">POINT 05</div>
-        <div class="guide-title">업종 분위기와 시장 수급도 같이 본다</div>
-        <div class="guide-desc">아무리 좋은 IPO도 업종 전체가 약세이거나 시장 전체 수급이 빠지는 시기엔 영향을 받을 수 있다. 개별 공모주 분석과 함께 전체 시장 분위기를 확인하는 것이 좋다.</div>
+        <div class="guide-num">STEP 5</div>
+        <div class="guide-title">신규상장</div>
+        <div class="guide-desc">거래소 정식 상장. 상장일 공시로 확인. 상장 당일 ±30% 가격 제한 폭 적용.</div>
+      </div>
+      <div class="guide-card">
+        <div class="guide-num">CHECK</div>
+        <div class="guide-title">투자 전 확인 사항</div>
+        <div class="guide-desc">공모가 밴드·청약 경쟁률·유통 물량·락업 기간·업종 성장성을 반드시 확인 후 결정.</div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION 4: 특히 체크할 일정 -->
-  <div class="section">
-    <div class="sec-title">특히 체크할 일정</div>
-    <div class="check-grid">
-      <div class="check-card">
-        <div class="check-dot"></div>
-        <div class="check-text"><strong>수요예측 결과 발표일</strong>을 확인한다. 공모가 확정 수준과 기관 경쟁률이 청약 참여 여부 판단에 가장 중요한 신호다.</div>
-      </div>
-      <div class="check-card">
-        <div class="check-dot"></div>
-        <div class="check-text"><strong>일반 청약 경쟁률 변화</strong>를 체크한다. 청약 첫날과 마지막 날 경쟁률이 다른 경우도 많아, 최종 마감 경쟁률까지 확인하는 것이 좋다.</div>
-      </div>
-      <div class="check-card">
-        <div class="check-dot"></div>
-        <div class="check-text"><strong>상장일 유통가능물량 비중</strong>을 확인한다. 30% 초과 시 변동성이 커질 수 있으며, 대주주 보호예수 기간도 함께 체크한다.</div>
-      </div>
-      <div class="check-card">
-        <div class="check-dot"></div>
-        <div class="check-text"><strong>구주매출 비중과 주주 구성</strong>을 함께 체크한다. 구주매출이 50% 이상이면 기업 성장보다 기존 주주 회수 목적이 클 수 있다.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DISCLAIMER -->
   <div class="disclaimer">
     <ul>
-      <li>데이터는 출처 및 반영 시점에 따라 일부 차이가 있을 수 있습니다.</li>
-      <li>일부 해외 데이터는 현지 발표 기준 시각으로 제공될 수 있습니다.</li>
-      <li>본 페이지는 정보 제공 목적이며, 특정 투자 판단을 권유하지 않습니다.</li>
+      <li>이 페이지는 DART 공시 데이터를 기반으로 자동 수집하며, 실제 청약 일정과 다를 수 있습니다.</li>
+      <li>정확한 청약 일정 및 공모가는 각 증권사 및 DART 원문을 반드시 확인하세요.</li>
+      <li>투자 판단은 본인 책임이며, 이 페이지는 정보 제공 목적만으로 제공됩니다.</li>
     </ul>
   </div>
 
-</div><!-- /main -->
+</div>
 
-<div class="divider"><hr></div>
+<hr class="divider">
 <footer class="footer">
-  <div style="font-size:13px;color:var(--text2)">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
+  <span>© 2025 FinQ · 투자 정보 제공 서비스</span>
   <div class="footer-links">
     <a href="../../about/index.html">소개</a>
-    <a href="../../privacy/index.html">개인정보처리방침</a>
+    <a href="../../privacy/">개인정보처리방침</a>
   </div>
 </footer>
 
 <script>
 function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
   document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('finq-theme', isDark ? '' : 'dark');
 }
 (function() {
   const saved = localStorage.getItem('finq-theme');
@@ -465,6 +254,65 @@ function toggleTheme() {
     document.getElementById('themeBtn').textContent = '☀️';
   }
 })();
+
+let allItems = [];
+const TYPE_CLASS = {
+  '신규상장': 'type-listing', '심사결과': 'type-review',
+  '수요예측': 'type-book',   '공모가확정': 'type-price',
+  '청약일정': 'type-sub',    '투자설명서': 'type-pros',
+  '증권신고': 'type-reg',    '기타': 'type-other',
+};
+
+function renderRows(items) {
+  const tbody = document.getElementById('ipoTableBody');
+  if (!items.length) {
+    tbody.innerHTML = '<tr><td class="loading-cell" colspan="5">해당 유형의 공시가 없습니다</td></tr>';
+    return;
+  }
+  tbody.innerHTML = items.map(d => {
+    const tc  = TYPE_CLASS[d.typeLabel] || 'type-other';
+    const mkt = d.market === 'KOSPI'  ? '<span class="mkt-kospi">KOSPI</span>'
+              : d.market === 'KOSDAQ' ? '<span class="mkt-kosdaq">KOSDAQ</span>'
+              : '<span style="color:var(--text2);font-size:12px">—</span>';
+    return `<tr>
+      <td class="company-name">${d.corp_name}</td>
+      <td><span class="type-tag ${tc}">${d.typeLabel}</span></td>
+      <td>${mkt}</td>
+      <td style="font-size:13px;color:var(--text2);white-space:nowrap">${d.dateStr}</td>
+      <td><a class="notice-link" href="${d.url}" target="_blank" rel="noopener">공시 보기 →</a></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterTable(type, btn) {
+  document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRows(type === '전체' ? allItems : allItems.filter(d => d.typeLabel === type));
+}
+
+async function loadIPO() {
+  try {
+    const res  = await fetch('/api/ipo');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    allItems = data.items || [];
+    const c = data.counts || {};
+    document.getElementById('cntListing').textContent = c['신규상장']  || 0;
+    document.getElementById('cntBook').textContent    = c['수요예측']  || 0;
+    document.getElementById('cntSub').textContent     = c['청약일정']  || 0;
+    document.getElementById('cntReg').textContent     = c['증권신고']  || 0;
+    if (data.updatedAt) {
+      const d = new Date(data.updatedAt);
+      document.getElementById('updatedAt').textContent =
+        `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} 기준 · 최근 90일`;
+    }
+    renderRows(allItems);
+  } catch (e) {
+    document.getElementById('ipoTableBody').innerHTML =
+      `<tr><td class="loading-cell" colspan="5">⚠️ ${e.message || '데이터를 불러오지 못했습니다'}</td></tr>`;
+  }
+}
+loadIPO();
 </script>
 </body>
 </html>

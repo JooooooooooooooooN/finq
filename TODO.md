@@ -1,10 +1,15 @@
 # FinQ 작업 체크리스트
 
-> 최종 업데이트: 2026-04-02 (초보자 가이드 상세페이지 9개 완성)
+> 최종 업데이트: 2026-04-05 (마켓 데이터 분석 API 연동 작업)
 > - /insight/beginner/ 카드 링크 전체 연결 완료
 > - 상세페이지 9개 신규 생성: what-is-etf / why-13f / understand-dividend-yield / per-pbr-roe / why-market-cap-matters / why-diversification / what-is-dca / price-vs-value / investing-basics-first
 > - 각 페이지 고유 시각화 요소 포함 (공식 박스 / 비교 카드 / DCA 테이블 / 학습 로드맵 등)
-> 현재 완성 페이지: 기본 5개 + 시뮬레이터 7개 + 전략 아티클 3개 + 구루 12개 + 자산전략 목록 1개 + 자산전략 상세 9개 + 방법전략 목록 1개 + 방법전략 상세 12개 + 인사이트 목록 1개 + 인사이트 아티클 4개 + 초보자 가이드 상세 9개 = 64개
+> - Cloudflare Functions: earnings.js / fundamentals.js / dart.js 신규 생성
+> - /data/us_earnings/ — Yahoo Finance 실적 일정 API 연동 완료
+> - /data/kr_disclosure/ — DART API 연동 완료 (작동 확인)
+> - /data/kr_fundamentals/ — 한글 종목 검색 추가, Yahoo Finance 401 수정 배포 (확인 필요)
+> - /data/us_calendar/ — 카드 6개로 확장, 명사형 텍스트 정리
+> 현재 완성 페이지: 기본 5개 + 시뮬레이터 7개 + 전략 아티클 3개 + 구루 12개 + 자산전략 목록 1개 + 자산전략 상세 9개 + 방법전략 목록 1개 + 방법전략 상세 12개 + 인사이트 목록 1개 + 인사이트 아티클 4개 + 초보자 가이드 상세 9개 + 데이터 4개 = 68개
 
 ---
 
@@ -113,8 +118,25 @@
 - [x] `/strategy/asset/commodity/` — 원자재·금 전략 ✅ 콘텐츠 완성
 - [x] `/strategy/asset/cash/` — 현금성 자산 전략 ✅ 콘텐츠 완성
 
-### 기타
-- [x] `/data/us_calendar/` — 경제 이벤트 캘린더 ✅ 2026-04-03 (하드코딩, Fed/BLS 기준)
+### 마켓 데이터 분석 (/data/) 📡
+
+#### 완료
+- [x] `/data/us_calendar/` — 경제 이벤트 캘린더 ✅ 2026-04-03 (하드코딩, 카드 6개)
+- [x] `/data/us_earnings/` — 미국 실적 발표 일정 ✅ 2026-04-05 (Yahoo Finance API)
+- [x] `/data/kr_disclosure/` — 국내 핵심 공시 ✅ 2026-04-05 (DART API, 작동 확인)
+- [x] `/data/kr_fundamentals/` — 종목 재무 요약 🔶 2026-04-05 (한글 검색 완료, Yahoo 401 수정 배포됨 — 실제 작동 확인 필요)
+
+#### 미작업
+- [ ] `/data/us_earnings-surprise/` — 어닝 서프라이즈 분석 (유료 API 필요)
+- [x] `/data/us_insider/` — 미국 내부자 거래 동향 ✅ 2026-04-05 (SEC EDGAR Form 4 연동)
+- [ ] `/data/kr_flow/` — 국내 수급 동향 (KRX 공개 API 없음, 난이도 높음)
+- [x] `/data/kr_ipo/` — 국내 IPO·공모 일정 ✅ 2026-04-05 (DART API 거래소공시+발행공시 연동)
+- [ ] `/data/kr_ir/` — 국내 IR 일정 (공개 API 없음)
+
+#### Cloudflare Functions
+- [x] `functions/api/earnings.js` — Yahoo Finance 실적 일정
+- [x] `functions/api/fundamentals.js` — Yahoo Finance 재무 지표 (crumb 인증)
+- [x] `functions/api/dart.js` — DART 공시 목록
 
 ---
 
@@ -123,6 +145,7 @@
 - [x] Netlify Functions — stock-search (Yahoo Finance 검색)
 - [x] Netlify Functions — stock-price (Yahoo Finance 주가)
 - [x] kr-stocks.js — 한국 종목 데이터 (KRX 2,769개)
+- [x] Cloudflare Functions — earnings / fundamentals / dart (2026-04-05)
 
 ---
 
@@ -160,4 +183,6 @@
 | ✅ 완료 | 자산 기반 전략 페이지 | 목록 + 9개 상세 콘텐츠 완성 |
 | ✅ 완료 | 투자자 기반 전략 키워드 필터 | 12개 성향 키워드, 카드 하이라이트 |
 | ✅ 완료 | 초보자 가이드 상세페이지 9개 | 입문 콘텐츠 완성 → SEO 강화 |
-| 🟡 3순위 | 경제 이벤트 캘린더 | 재방문 유도 |
+| ✅ 완료 | 경제 이벤트 캘린더 + 실적 일정 + 공시 | 재방문 유도 데이터 페이지 |
+| 🔶 확인필요 | 종목 재무 요약 Yahoo 401 수정 | finq.kr에서 실제 검색 테스트 필요 |
+| 🟡 다음 | 국내 IPO 일정 | DART API 가능, 미착수 |
