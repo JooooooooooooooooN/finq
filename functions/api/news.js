@@ -55,7 +55,7 @@ export async function onRequest(context) {
 }
 
 async function debugSource({ rss, source }) {
-  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}&count=3`;
+  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}`;
   try {
     const res = await fetch(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
     const text = await res.text();
@@ -87,7 +87,7 @@ async function fetchAllNews() {
 }
 
 async function fetchSource({ rss, source }) {
-  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}&count=20`;
+  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}`;
   const res = await fetch(apiUrl, {
     headers: { 'User-Agent': 'Mozilla/5.0' }
   });
