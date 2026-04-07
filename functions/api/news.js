@@ -4,11 +4,10 @@ const HEADERS = {
 };
 
 const SOURCES = [
-  { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' },
-  { url: 'https://www.yna.co.kr/rss/stock.xml',       source: '연합뉴스' },
-  { url: 'https://www.mk.co.kr/rss/30000001/',        source: '매일경제' },
-  { url: 'https://biz.chosun.com/rss/rss.xml',        source: '조선비즈' },
-  { url: 'https://rss.mt.co.kr/mt_economy.xml',       source: '머니투데이' },
+  { url: 'https://www.yna.co.kr/rss/economy.xml',          source: '연합뉴스' }, // ✅ 확인
+  { url: 'https://www.mk.co.kr/rss/30000001/',             source: '매일경제' }, // ✅ 확인
+  { url: 'https://www.hankyung.com/feed/finance',          source: '한국경제' },
+  { url: 'https://rss.mt.co.kr/mt_stock.xml',              source: '머니투데이' },
 ];
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
