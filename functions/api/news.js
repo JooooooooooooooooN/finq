@@ -3,84 +3,104 @@ const HEADERS = {
   'Access-Control-Allow-Origin': '*'
 };
 
-const RSS_SOURCES = [
-  { url: 'https://news.google.com/rss/search?q=증권+금융+주식&hl=ko&gl=KR&ceid=KR:ko', source: 'auto' },
-];
+const RSS_URL = 'https://news.google.com/rss/search?q=%EC%A6%9D%EA%B6%8C+%EA%B8%88%EC%9C%B5+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko';
+
+const FETCH_HEADERS = {
+  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+  'Accept': 'application/rss+xml, application/xml, text/xml, */*',
+  'Accept-Language': 'ko-KR,ko;q=0.9',
+};
 
 export async function onRequest(context) {
   const { request: req } = context;
   const url = new URL(req.url);
   const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 50);
-  const id = url.searchParams.get('id');
+  const id    = url.searchParams.get('id');
+  const debug = url.searchParams.get('debug') === '1';
 
-  // 캐시 확인 (30분 TTL)
-  const cacheKey = new Request(new URL('/api/news-cache-v1', url.origin).toString());
+  // 캐시 (30분)
+  const cacheKey = new Request(new URL('/api/news-cache-v3', url.origin).toString());
   const cache = caches.default;
-  let items;
+  let items = [];
+  let debugInfo = {};
 
   try {
     const cached = await cache.match(cacheKey);
-    if (cached) {
+    if (cached && !debug) {
       items = await cached.json();
     } else {
-      items = await fetchAllNews();
+      const result = await fetchNews(debug);
+      items = result.items;
+      debugInfo = result.debug || {};
 
-      // 캐시 저장
-      const cacheRes = new Response(JSON.stringify(items), {
-        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
-      });
-      context.waitUntil(cache.put(cacheKey, cacheRes));
+      if (items.length > 0) {
+        const cacheRes = new Response(JSON.stringify(items), {
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
+        });
+        context.waitUntil(cache.put(cacheKey, cacheRes));
+      }
     }
-  } catch {
-    // 캐시 API 실패 시 직접 fetch
+  } catch (e) {
+    debugInfo.cacheError = e.message;
     try {
-      items = await fetchAllNews();
-    } catch {
-      return new Response(JSON.stringify({ error: '뉴스를 불러오지 못했습니다', items: [] }), {
-        status: 502, headers: HEADERS
-      });
+      const result = await fetchNews(debug);
+      items = result.items;
+      Object.assign(debugInfo, result.debug || {});
+    } catch (e2) {
+      debugInfo.fetchError = e2.message;
     }
   }
 
   if (id) {
     const item = items.find(i => i.id === id);
-    if (!item) {
-      return new Response(JSON.stringify({ error: '기사를 찾을 수 없습니다' }), {
-        status: 404, headers: HEADERS
-      });
-    }
+    if (!item) return new Response(JSON.stringify({ error: '기사를 찾을 수 없습니다' }), { status: 404, headers: HEADERS });
     return new Response(JSON.stringify(item), { headers: HEADERS });
   }
 
-  return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
+  const body = { items: items.slice(0, limit) };
+  if (debug) body._debug = debugInfo;
+
+  return new Response(JSON.stringify(body), { headers: HEADERS });
 }
 
-async function fetchAllNews() {
-  const results = await Promise.allSettled(
-    RSS_SOURCES.map(s => fetchRSS(s.url, s.source))
-  );
+async function fetchNews(debug = false) {
+  const info = { url: RSS_URL };
 
-  const all = results
-    .filter(r => r.status === 'fulfilled')
-    .flatMap(r => r.value);
+  let res;
+  try {
+    res = await fetch(RSS_URL, {
+      headers: FETCH_HEADERS,
+      redirect: 'follow',
+    });
+    info.status = res.status;
+    info.ok = res.ok;
+  } catch (e) {
+    info.fetchException = e.message;
+    return { items: [], debug: info };
+  }
 
-  // 날짜 내림차순 정렬
-  all.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  if (!res.ok) {
+    info.error = `HTTP ${res.status}`;
+    return { items: [], debug: info };
+  }
 
-  return all;
+  let xml;
+  try {
+    xml = await res.text();
+    info.xmlLength = xml.length;
+    info.xmlPreview = xml.slice(0, 200);
+  } catch (e) {
+    info.textError = e.message;
+    return { items: [], debug: info };
+  }
+
+  const items = parseRSS(xml);
+  info.parsed = items.length;
+
+  return { items, debug: info };
 }
 
-async function fetchRSS(rssUrl, source) {
-  const res = await fetch(rssUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (compatible; FinQ/1.0)' },
-    cf: { cacheTtl: 1800 }
-  });
-  if (!res.ok) return [];
-  const xml = await res.text();
-  return parseRSS(xml, source);
-}
-
-function parseRSS(xml, source) {
+function parseRSS(xml) {
   const items = [];
   const itemRegex = /<item>([\s\S]*?)<\/item>/g;
   let match;
@@ -92,51 +112,34 @@ function parseRSS(xml, source) {
     const link     = extractLink(block);
     const desc     = extractTag(block, 'description');
     const pub      = extractTag(block, 'pubDate');
-    const srcTag   = extractTag(block, 'source'); // 구글 뉴스: <source>매체명</source>
+    const srcTag   = extractTag(block, 'source');
 
     if (!rawTitle || !link) continue;
 
     const { date, timestamp } = parseDate(pub);
     const id = encodeURIComponent(link.trim());
+    const mediaName = srcTag ? cleanText(srcTag) : '뉴스';
+    const title = cleanText(rawTitle).replace(new RegExp(`\\s*[-–]\\s*${escapeRegex(mediaName)}\\s*$`), '');
 
-    // 구글 뉴스 제목 끝에 " - 매체명" 붙는 경우 제거
-    const mediaName = srcTag ? cleanText(srcTag) : source;
-    const title = cleanText(rawTitle).replace(new RegExp(`\\s*-\\s*${mediaName}\\s*$`), '');
-
-    items.push({
-      id,
-      title,
-      summary:   cleanText(desc).slice(0, 300),
-      url:       link.trim(),
-      date,
-      timestamp,
-      source:    mediaName
-    });
+    items.push({ id, title, summary: cleanText(desc).slice(0, 300), url: link.trim(), date, timestamp, source: mediaName });
   }
 
   return items;
 }
 
-// CDATA 포함 태그 추출
 function extractTag(xml, tag) {
-  // CDATA
   const cd = xml.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>`, 'i'));
   if (cd) return cd[1].trim();
-  // 일반
   const plain = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
   if (plain) return plain[1].trim();
   return '';
 }
 
-// <link> 태그는 셀프클로징 없이 텍스트로 들어오는 경우와 href 속성 두 가지 처리
 function extractLink(xml) {
-  // <link>https://...</link>
   const m1 = xml.match(/<link[^>]*>([^<]+)<\/link>/i);
   if (m1) return m1[1].trim();
-  // <link href="..."/>
   const m2 = xml.match(/<link[^>]+href=["']([^"']+)["']/i);
   if (m2) return m2[1].trim();
-  // <guid>
   const m3 = xml.match(/<guid[^>]*>([^<]+)<\/guid>/i);
   if (m3 && m3[1].startsWith('http')) return m3[1].trim();
   return '';
@@ -151,14 +154,18 @@ function cleanText(text) {
     .replace(/\s+/g, ' ').trim();
 }
 
+function escapeRegex(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 function parseDate(pubDate) {
   if (!pubDate) return { date: '', timestamp: 0 };
   try {
     const d = new Date(pubDate);
     if (isNaN(d.getTime())) return { date: '', timestamp: 0 };
-    const date = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    return { date, timestamp: d.getTime() };
-  } catch {
-    return { date: '', timestamp: 0 };
-  }
+    return {
+      date: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,
+      timestamp: d.getTime()
+    };
+  } catch { return { date: '', timestamp: 0 }; }
 }
