@@ -3,52 +3,40 @@ const HEADERS = {
   'Access-Control-Allow-Origin': '*'
 };
 
-const RSS_URL = 'https://news.google.com/rss/search?q=%EC%A6%9D%EA%B6%8C+%EA%B8%88%EC%9C%B5+%EC%A3%BC%EC%8B%9D&hl=ko&gl=KR&ceid=KR:ko';
+const SOURCES = [
+  { rss: 'https://www.yna.co.kr/rss/stock.xml',         source: '연합뉴스' },
+  { rss: 'https://www.hankyung.com/feed/finance',        source: '한국경제' },
+  { rss: 'https://biz.chosun.com/rss/stock.xml',         source: '조선비즈' },
+  { rss: 'https://rss.mt.co.kr/mt_stock.xml',            source: '머니투데이' },
+];
 
-const FETCH_HEADERS = {
-  'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-  'Accept': 'application/rss+xml, application/xml, text/xml, */*',
-  'Accept-Language': 'ko-KR,ko;q=0.9',
-};
+const RSS2JSON = 'https://api.rss2json.com/v1/api.json';
 
 export async function onRequest(context) {
   const { request: req } = context;
-  const url = new URL(req.url);
+  const url   = new URL(req.url);
   const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 50);
   const id    = url.searchParams.get('id');
-  const debug = url.searchParams.get('debug') === '1';
 
-  // 캐시 (30분)
-  const cacheKey = new Request(new URL('/api/news-cache-v3', url.origin).toString());
+  // 캐시 30분
+  const cacheKey = new Request(new URL('/api/news-cache-v4', url.origin).toString());
   const cache = caches.default;
   let items = [];
-  let debugInfo = {};
 
   try {
     const cached = await cache.match(cacheKey);
-    if (cached && !debug) {
+    if (cached) {
       items = await cached.json();
     } else {
-      const result = await fetchNews(debug);
-      items = result.items;
-      debugInfo = result.debug || {};
-
+      items = await fetchAllNews();
       if (items.length > 0) {
-        const cacheRes = new Response(JSON.stringify(items), {
+        context.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(items), {
           headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
-        });
-        context.waitUntil(cache.put(cacheKey, cacheRes));
+        })));
       }
     }
-  } catch (e) {
-    debugInfo.cacheError = e.message;
-    try {
-      const result = await fetchNews(debug);
-      items = result.items;
-      Object.assign(debugInfo, result.debug || {});
-    } catch (e2) {
-      debugInfo.fetchError = e2.message;
-    }
+  } catch {
+    items = await fetchAllNews().catch(() => []);
   }
 
   if (id) {
@@ -57,105 +45,62 @@ export async function onRequest(context) {
     return new Response(JSON.stringify(item), { headers: HEADERS });
   }
 
-  const body = { items: items.slice(0, limit) };
-  if (debug) body._debug = debugInfo;
-
-  return new Response(JSON.stringify(body), { headers: HEADERS });
+  return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
 }
 
-async function fetchNews(debug = false) {
-  const info = { url: RSS_URL };
+async function fetchAllNews() {
+  const results = await Promise.allSettled(SOURCES.map(s => fetchSource(s)));
+  const all = results
+    .filter(r => r.status === 'fulfilled')
+    .flatMap(r => r.value);
 
-  let res;
-  try {
-    res = await fetch(RSS_URL, {
-      headers: FETCH_HEADERS,
-      redirect: 'follow',
+  // 중복 제거 (같은 링크)
+  const seen = new Set();
+  const unique = all.filter(item => {
+    if (seen.has(item.url)) return false;
+    seen.add(item.url);
+    return true;
+  });
+
+  // 날짜 내림차순
+  unique.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+  return unique;
+}
+
+async function fetchSource({ rss, source }) {
+  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}&count=20`;
+  const res = await fetch(apiUrl, {
+    headers: { 'User-Agent': 'Mozilla/5.0' }
+  });
+  if (!res.ok) return [];
+
+  const data = await res.json();
+  if (data.status !== 'ok' || !Array.isArray(data.items)) return [];
+
+  return data.items
+    .filter(i => i.title && i.link)
+    .map(i => {
+      const { date, timestamp } = parseDate(i.pubDate);
+      const id = encodeURIComponent(i.link.trim());
+      return {
+        id,
+        title:   stripHtml(i.title),
+        summary: stripHtml(i.description || i.content || '').slice(0, 300),
+        url:     i.link.trim(),
+        date,
+        timestamp,
+        source
+      };
     });
-    info.status = res.status;
-    info.ok = res.ok;
-  } catch (e) {
-    info.fetchException = e.message;
-    return { items: [], debug: info };
-  }
-
-  if (!res.ok) {
-    info.error = `HTTP ${res.status}`;
-    return { items: [], debug: info };
-  }
-
-  let xml;
-  try {
-    xml = await res.text();
-    info.xmlLength = xml.length;
-    info.xmlPreview = xml.slice(0, 200);
-  } catch (e) {
-    info.textError = e.message;
-    return { items: [], debug: info };
-  }
-
-  const items = parseRSS(xml);
-  info.parsed = items.length;
-
-  return { items, debug: info };
 }
 
-function parseRSS(xml) {
-  const items = [];
-  const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-  let match;
-
-  while ((match = itemRegex.exec(xml)) !== null) {
-    const block = match[1];
-
-    const rawTitle = extractTag(block, 'title');
-    const link     = extractLink(block);
-    const desc     = extractTag(block, 'description');
-    const pub      = extractTag(block, 'pubDate');
-    const srcTag   = extractTag(block, 'source');
-
-    if (!rawTitle || !link) continue;
-
-    const { date, timestamp } = parseDate(pub);
-    const id = encodeURIComponent(link.trim());
-    const mediaName = srcTag ? cleanText(srcTag) : '뉴스';
-    const title = cleanText(rawTitle).replace(new RegExp(`\\s*[-–]\\s*${escapeRegex(mediaName)}\\s*$`), '');
-
-    items.push({ id, title, summary: cleanText(desc).slice(0, 300), url: link.trim(), date, timestamp, source: mediaName });
-  }
-
-  return items;
-}
-
-function extractTag(xml, tag) {
-  const cd = xml.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]><\\/${tag}>`, 'i'));
-  if (cd) return cd[1].trim();
-  const plain = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
-  if (plain) return plain[1].trim();
-  return '';
-}
-
-function extractLink(xml) {
-  const m1 = xml.match(/<link[^>]*>([^<]+)<\/link>/i);
-  if (m1) return m1[1].trim();
-  const m2 = xml.match(/<link[^>]+href=["']([^"']+)["']/i);
-  if (m2) return m2[1].trim();
-  const m3 = xml.match(/<guid[^>]*>([^<]+)<\/guid>/i);
-  if (m3 && m3[1].startsWith('http')) return m3[1].trim();
-  return '';
-}
-
-function cleanText(text) {
+function stripHtml(text) {
+  if (!text) return '';
   return text
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ')
     .replace(/\s+/g, ' ').trim();
-}
-
-function escapeRegex(s) {
-  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function parseDate(pubDate) {
