@@ -4,8 +4,10 @@ const HEADERS = {
 };
 
 const RSS_SOURCES = [
-  { url: 'https://www.yna.co.kr/rss/economy.xml',  source: '연합뉴스' },
-  { url: 'https://www.hankyung.com/feed/economy',   source: '한국경제' },
+  { url: 'https://www.hankyung.com/feed/finance',       source: '한국경제' },
+  { url: 'https://rss.mk.co.kr/stock/',                 source: '매일경제' },
+  { url: 'https://rss.mt.co.kr/mt_stock.xml',           source: '머니투데이' },
+  { url: 'https://biz.chosun.com/rss/stock.xml',        source: '조선비즈' },
 ];
 
 export async function onRequest(context) {
