@@ -4,39 +4,48 @@ const HEADERS = {
 };
 
 const SOURCES = [
-  { rss: 'https://www.yna.co.kr/rss/stock.xml',         source: '연합뉴스' },
-  { rss: 'https://www.hankyung.com/feed/finance',        source: '한국경제' },
-  { rss: 'https://biz.chosun.com/rss/stock.xml',         source: '조선비즈' },
-  { rss: 'https://rss.mt.co.kr/mt_stock.xml',            source: '머니투데이' },
+  { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' },
+  { url: 'https://www.yna.co.kr/rss/stock.xml',       source: '연합뉴스' },
+  { url: 'https://www.mk.co.kr/rss/30000001/',        source: '매일경제' },
+  { url: 'https://biz.chosun.com/rss/rss.xml',        source: '조선비즈' },
+  { url: 'https://rss.mt.co.kr/mt_economy.xml',       source: '머니투데이' },
 ];
 
-const RSS2JSON = 'https://api.rss2json.com/v1/api.json';
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
 export async function onRequest(context) {
   const { request: req } = context;
   const url   = new URL(req.url);
   const limit = Math.min(parseInt(url.searchParams.get('limit') || '20'), 50);
   const id    = url.searchParams.get('id');
+  const debug = url.searchParams.get('debug') === '1';
 
-  // 캐시 30분
-  const cacheKey = new Request(new URL('/api/news-cache-v4', url.origin).toString());
+  // debug=1 이면 캐시 건너뜀
+  const cacheKey = new Request(new URL('/api/news-cache-v5', url.origin).toString());
   const cache = caches.default;
   let items = [];
 
-  try {
-    const cached = await cache.match(cacheKey);
-    if (cached) {
-      items = await cached.json();
-    } else {
-      items = await fetchAllNews();
-      if (items.length > 0) {
-        context.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(items), {
-          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
-        })));
+  if (!debug) {
+    try {
+      const cached = await cache.match(cacheKey);
+      if (cached) {
+        items = await cached.json();
+        return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
       }
-    }
-  } catch {
-    items = await fetchAllNews().catch(() => []);
+    } catch {}
+  }
+
+  if (debug) {
+    const dbg = await Promise.all(SOURCES.map(s => debugFetch(s)));
+    return new Response(JSON.stringify({ _debug: dbg }), { headers: HEADERS });
+  }
+
+  items = await fetchAllNews();
+
+  if (items.length > 0) {
+    context.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(items), {
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
+    })));
   }
 
   if (id) {
@@ -45,91 +54,92 @@ export async function onRequest(context) {
     return new Response(JSON.stringify(item), { headers: HEADERS });
   }
 
-  const debug = url.searchParams.get('debug') === '1';
-  if (debug) {
-    const debugResults = await Promise.allSettled(SOURCES.map(s => debugSource(s)));
-    return new Response(JSON.stringify({ items: items.slice(0, limit), _debug: debugResults.map(r => r.value || r.reason) }), { headers: HEADERS });
-  }
-
   return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
 }
 
-async function debugSource({ rss, source }) {
-  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}`;
+async function debugFetch({ url, source }) {
   try {
-    const res = await fetch(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const res = await fetch(url, { headers: { 'User-Agent': UA }, redirect: 'follow' });
     const text = await res.text();
-    let parsed = null;
-    try { parsed = JSON.parse(text); } catch {}
-    return { source, rss, status: res.status, ok: res.ok, rss2jsonStatus: parsed?.status, itemCount: parsed?.items?.length ?? 0, preview: text.slice(0, 300) };
+    const itemCount = (text.match(/<item/g) || []).length;
+    return { source, url, status: res.status, ok: res.ok, itemCount, preview: text.slice(0, 200) };
   } catch (e) {
-    return { source, rss, error: e.message };
+    return { source, url, error: e.message };
   }
 }
 
 async function fetchAllNews() {
-  const results = await Promise.allSettled(SOURCES.map(s => fetchSource(s)));
-  const all = results
-    .filter(r => r.status === 'fulfilled')
-    .flatMap(r => r.value);
+  const results = await Promise.allSettled(SOURCES.map(s => fetchRSS(s)));
+  const all = results.filter(r => r.status === 'fulfilled').flatMap(r => r.value);
 
-  // 중복 제거 (같은 링크)
   const seen = new Set();
-  const unique = all.filter(item => {
-    if (seen.has(item.url)) return false;
-    seen.add(item.url);
-    return true;
-  });
-
-  // 날짜 내림차순
+  const unique = all.filter(i => { if (seen.has(i.url)) return false; seen.add(i.url); return true; });
   unique.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
   return unique;
 }
 
-async function fetchSource({ rss, source }) {
-  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}`;
-  const res = await fetch(apiUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0' }
-  });
+async function fetchRSS({ url, source }) {
+  const res = await fetch(url, { headers: { 'User-Agent': UA }, redirect: 'follow' });
   if (!res.ok) return [];
+  const xml = await res.text();
+  return parseRSS(xml, source);
+}
 
-  const data = await res.json();
-  if (data.status !== 'ok' || !Array.isArray(data.items)) return [];
-
-  return data.items
-    .filter(i => i.title && i.link)
-    .map(i => {
-      const { date, timestamp } = parseDate(i.pubDate);
-      const id = encodeURIComponent(i.link.trim());
-      return {
-        id,
-        title:   stripHtml(i.title),
-        summary: stripHtml(i.description || i.content || '').slice(0, 300),
-        url:     i.link.trim(),
-        date,
-        timestamp,
-        source
-      };
+function parseRSS(xml, source) {
+  const items = [];
+  const re = /<item[\s>]([\s\S]*?)<\/item>/g;
+  let m;
+  while ((m = re.exec(xml)) !== null) {
+    const b = m[1];
+    const title = getTag(b, 'title');
+    const link  = getLink(b);
+    const desc  = getTag(b, 'description');
+    const pub   = getTag(b, 'pubDate');
+    if (!title || !link) continue;
+    const { date, timestamp } = parseDate(pub);
+    items.push({
+      id:        encodeURIComponent(link),
+      title:     clean(title),
+      summary:   clean(desc).slice(0, 300),
+      url:       link,
+      date, timestamp, source
     });
+  }
+  return items;
 }
 
-function stripHtml(text) {
-  if (!text) return '';
-  return text
+function getTag(xml, tag) {
+  const cd = xml.match(new RegExp(`<${tag}[^>]*><!\\[CDATA\\[([\\s\\S]*?)\\]\\]>`, 'i'));
+  if (cd) return cd[1].trim();
+  const pl = xml.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, 'i'));
+  if (pl) return pl[1].trim();
+  return '';
+}
+
+function getLink(xml) {
+  const m1 = xml.match(/<link[^>]*>\s*([^<\s][^<]*?)\s*<\/link>/i);
+  if (m1) return m1[1].trim();
+  const m2 = xml.match(/<link[^>]+href=["']([^"']+)["']/i);
+  if (m2) return m2[1].trim();
+  const m3 = xml.match(/<guid[^>]*>\s*(https?[^<]+?)\s*<\/guid>/i);
+  if (m3) return m3[1].trim();
+  return '';
+}
+
+function clean(t) {
+  return (t || '')
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
     .replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ').trim();
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+    .replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ')
+    .replace(/\s+/g,' ').trim();
 }
 
-function parseDate(pubDate) {
-  if (!pubDate) return { date: '', timestamp: 0 };
+function parseDate(s) {
+  if (!s) return { date: '', timestamp: 0 };
   try {
-    const d = new Date(pubDate);
+    const d = new Date(s);
     if (isNaN(d.getTime())) return { date: '', timestamp: 0 };
-    return {
-      date: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`,
-      timestamp: d.getTime()
-    };
+    return { date: `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`, timestamp: d.getTime() };
   } catch { return { date: '', timestamp: 0 }; }
 }
