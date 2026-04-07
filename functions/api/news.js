@@ -7,7 +7,7 @@ const SOURCES = [
   { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' }, // ✅
   { url: 'https://www.mk.co.kr/rss/30000001/',       source: '매일경제' }, // ✅
   { url: 'https://www.hankyung.com/feed/finance',    source: '한국경제' }, // ✅
-  { url: 'https://rss.mt.co.kr/mt_finance.xml',      source: '머니투데이' },
+  { url: 'https://news.mt.co.kr/rss/news.xml',        source: '머니투데이' },
 ];
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
@@ -119,10 +119,16 @@ function getTag(xml, tag) {
 }
 
 function getLink(xml) {
+  // CDATA: <link><![CDATA[URL]]></link>
+  const cd = xml.match(/<link[^>]*><!\[CDATA\[([\s\S]*?)\]\]><\/link>/i);
+  if (cd) return cd[1].trim();
+  // 일반: <link>URL</link>
   const m1 = xml.match(/<link[^>]*>\s*([^<\s][^<]*?)\s*<\/link>/i);
   if (m1) return m1[1].trim();
+  // href 속성: <link href="URL"/>
   const m2 = xml.match(/<link[^>]+href=["']([^"']+)["']/i);
   if (m2) return m2[1].trim();
+  // guid 폴백
   const m3 = xml.match(/<guid[^>]*>\s*(https?[^<]+?)\s*<\/guid>/i);
   if (m3) return m3[1].trim();
   return '';
