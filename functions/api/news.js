@@ -23,27 +23,25 @@ export async function onRequest(context) {
   const cache = caches.default;
   let items = [];
 
-  if (!debug) {
-    try {
-      const cached = await cache.match(cacheKey);
-      if (cached) {
-        items = await cached.json();
-        return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
-      }
-    } catch {}
-  }
-
   if (debug) {
     const dbg = await Promise.all(SOURCES.map(s => debugFetch(s)));
     return new Response(JSON.stringify({ _debug: dbg }), { headers: HEADERS });
   }
 
-  items = await fetchAllNews();
+  // 캐시 확인
+  try {
+    const cached = await cache.match(cacheKey);
+    if (cached) items = await cached.json();
+  } catch {}
 
-  if (items.length > 0) {
-    context.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(items), {
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
-    })));
+  // 캐시 미스 시 새로 fetch
+  if (items.length === 0) {
+    items = await fetchAllNews().catch(() => []);
+    if (items.length > 0) {
+      context.waitUntil(cache.put(cacheKey, new Response(JSON.stringify(items), {
+        headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' }
+      })));
+    }
   }
 
   if (id) {
