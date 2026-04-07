@@ -45,7 +45,26 @@ export async function onRequest(context) {
     return new Response(JSON.stringify(item), { headers: HEADERS });
   }
 
+  const debug = url.searchParams.get('debug') === '1';
+  if (debug) {
+    const debugResults = await Promise.allSettled(SOURCES.map(s => debugSource(s)));
+    return new Response(JSON.stringify({ items: items.slice(0, limit), _debug: debugResults.map(r => r.value || r.reason) }), { headers: HEADERS });
+  }
+
   return new Response(JSON.stringify({ items: items.slice(0, limit) }), { headers: HEADERS });
+}
+
+async function debugSource({ rss, source }) {
+  const apiUrl = `${RSS2JSON}?rss_url=${encodeURIComponent(rss)}&count=3`;
+  try {
+    const res = await fetch(apiUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
+    const text = await res.text();
+    let parsed = null;
+    try { parsed = JSON.parse(text); } catch {}
+    return { source, rss, status: res.status, ok: res.ok, rss2jsonStatus: parsed?.status, itemCount: parsed?.items?.length ?? 0, preview: text.slice(0, 300) };
+  } catch (e) {
+    return { source, rss, error: e.message };
+  }
 }
 
 async function fetchAllNews() {
