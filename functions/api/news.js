@@ -5,8 +5,7 @@ const HEADERS = {
 
 const SOURCES = [
   { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' }, // ✅
-  { url: 'https://www.mk.co.kr/rss/30200030/',       source: '매일경제' }, // 금융
-  { url: 'https://www.mk.co.kr/rss/50200011/',       source: '매일경제' }, // 증권
+  { url: 'https://www.mk.co.kr/rss/50200011/',       source: '매일경제' }, // ✅ 증권
   { url: 'https://www.hankyung.com/feed/finance',    source: '한국경제' }, // ✅
 ];
 
@@ -20,7 +19,7 @@ export async function onRequest(context) {
   const debug = url.searchParams.get('debug') === '1';
 
   // debug=1 이면 캐시 건너뜀
-  const cacheKey = new Request(new URL('/api/news-cache-v7', url.origin).toString());
+  const cacheKey = new Request(new URL('/api/news-cache-v8', url.origin).toString());
   const cache = caches.default;
   let items = [];
 
