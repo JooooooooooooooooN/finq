@@ -4,10 +4,7 @@ const HEADERS = {
 };
 
 const RSS_SOURCES = [
-  { url: 'https://www.hankyung.com/feed/finance',       source: '한국경제' },
-  { url: 'https://rss.mk.co.kr/stock/',                 source: '매일경제' },
-  { url: 'https://rss.mt.co.kr/mt_stock.xml',           source: '머니투데이' },
-  { url: 'https://biz.chosun.com/rss/stock.xml',        source: '조선비즈' },
+  { url: 'https://news.google.com/rss/search?q=증권+금융+주식&hl=ko&gl=KR&ceid=KR:ko', source: 'auto' },
 ];
 
 export async function onRequest(context) {
@@ -91,24 +88,29 @@ function parseRSS(xml, source) {
   while ((match = itemRegex.exec(xml)) !== null) {
     const block = match[1];
 
-    const title = extractTag(block, 'title');
-    const link  = extractLink(block);
-    const desc  = extractTag(block, 'description');
-    const pub   = extractTag(block, 'pubDate');
+    const rawTitle = extractTag(block, 'title');
+    const link     = extractLink(block);
+    const desc     = extractTag(block, 'description');
+    const pub      = extractTag(block, 'pubDate');
+    const srcTag   = extractTag(block, 'source'); // 구글 뉴스: <source>매체명</source>
 
-    if (!title || !link) continue;
+    if (!rawTitle || !link) continue;
 
     const { date, timestamp } = parseDate(pub);
     const id = encodeURIComponent(link.trim());
 
+    // 구글 뉴스 제목 끝에 " - 매체명" 붙는 경우 제거
+    const mediaName = srcTag ? cleanText(srcTag) : source;
+    const title = cleanText(rawTitle).replace(new RegExp(`\\s*-\\s*${mediaName}\\s*$`), '');
+
     items.push({
       id,
-      title:     cleanText(title),
+      title,
       summary:   cleanText(desc).slice(0, 300),
       url:       link.trim(),
       date,
       timestamp,
-      source
+      source:    mediaName
     });
   }
 
