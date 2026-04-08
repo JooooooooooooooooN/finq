@@ -3,7 +3,7 @@ const HEADERS = {
   'Access-Control-Allow-Origin': '*'
 };
 
-const BLOCKED_CATEGORIES_YNA = ['정치', '사회', '문화', '스포츠', '연예', '북한', '국제'];
+const ALLOWED_CATEGORIES_YNA = ['경제', '금융', '주식', '증권', '산업', '기업', '부동산', '재정', '무역', '수출', '환율', '금리'];
 
 const SOURCES = [
   { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' }, // ✅
@@ -98,8 +98,8 @@ function parseRSS(xml, source) {
     const pub   = getTag(b, 'pubDate');
     if (!title || !link) continue;
     if (source === '연합뉴스') {
-      const cat = getTag(b, 'category');
-      if (cat && BLOCKED_CATEGORIES_YNA.some(k => cat.includes(k))) continue;
+      const cats = [...b.matchAll(/<category[^>]*>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/category>/g)].map(m => m[1].trim());
+      if (cats.length > 0 && !cats.some(c => ALLOWED_CATEGORIES_YNA.some(k => c.includes(k)))) continue;
     }
     const { date, timestamp } = parseDate(pub);
     items.push({
