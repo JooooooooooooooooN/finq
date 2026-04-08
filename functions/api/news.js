@@ -3,6 +3,8 @@ const HEADERS = {
   'Access-Control-Allow-Origin': '*'
 };
 
+const BLOCKED_CATEGORIES_YNA = ['정치', '사회', '문화', '스포츠', '연예', '북한', '국제'];
+
 const SOURCES = [
   { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' }, // ✅
   { url: 'https://www.mk.co.kr/rss/50200011/',       source: '매일경제' }, // ✅ 증권
@@ -19,7 +21,7 @@ export async function onRequest(context) {
   const debug = url.searchParams.get('debug') === '1';
 
   // debug=1 이면 캐시 건너뜀
-  const cacheKey = new Request(new URL('/api/news-cache-v8', url.origin).toString());
+  const cacheKey = new Request(new URL('/api/news-cache-v9', url.origin).toString());
   const cache = caches.default;
   let items = [];
 
@@ -95,6 +97,10 @@ function parseRSS(xml, source) {
     const desc  = getTag(b, 'description');
     const pub   = getTag(b, 'pubDate');
     if (!title || !link) continue;
+    if (source === '연합뉴스') {
+      const cat = getTag(b, 'category');
+      if (cat && BLOCKED_CATEGORIES_YNA.some(k => cat.includes(k))) continue;
+    }
     const { date, timestamp } = parseDate(pub);
     items.push({
       id:        encodeURIComponent(link),
