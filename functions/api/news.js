@@ -3,10 +3,7 @@ const HEADERS = {
   'Access-Control-Allow-Origin': '*'
 };
 
-const ALLOWED_CATEGORIES_YNA = ['경제', '금융', '주식', '증권', '산업', '기업', '부동산', '재정', '무역', '수출', '환율', '금리'];
-
 const SOURCES = [
-  { url: 'https://www.yna.co.kr/rss/economy.xml',    source: '연합뉴스' }, // ✅
   { url: 'https://www.mk.co.kr/rss/50200011/',       source: '매일경제' }, // ✅ 증권
   { url: 'https://www.hankyung.com/feed/finance',    source: '한국경제' }, // ✅
 ];
@@ -21,7 +18,7 @@ export async function onRequest(context) {
   const debug = url.searchParams.get('debug') === '1';
 
   // debug=1 이면 캐시 건너뜀
-  const cacheKey = new Request(new URL('/api/news-cache-v9', url.origin).toString());
+  const cacheKey = new Request(new URL('/api/news-cache-v10', url.origin).toString());
   const cache = caches.default;
   let items = [];
 
@@ -97,10 +94,6 @@ function parseRSS(xml, source) {
     const desc  = getTag(b, 'description');
     const pub   = getTag(b, 'pubDate');
     if (!title || !link) continue;
-    if (source === '연합뉴스') {
-      const cats = [...b.matchAll(/<category[^>]*>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/category>/g)].map(m => m[1].trim());
-      if (cats.length > 0 && !cats.some(c => ALLOWED_CATEGORIES_YNA.some(k => c.includes(k)))) continue;
-    }
     const { date, timestamp } = parseDate(pub);
     items.push({
       id:        encodeURIComponent(link),
