@@ -103,7 +103,7 @@ export async function onRequest(context) {
     const data = await res.json();
 
     const events = (data.economicCalendar || [])
-      .filter(e => e.time && e.country && KO_COUNTRIES[e.country])
+      .filter(e => e.time && e.country && KO_COUNTRIES[e.country] && e.impact === 'high')
       .map(e => ({
         date: e.time.split(' ')[0],
         time: e.time.split(' ')[1]?.slice(0, 5) || '',
