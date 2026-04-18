@@ -23,6 +23,7 @@ export async function onRequest(context) {
 
   // 거래소공시 키워드 (I타입 — 신규상장·수요예측 등 IPO 전용)
   const EXCHANGE_KW = ['신규상장', '상장예비심사', '수요예측', '공모가격', '청약일정'];
+  const EXCLUDE_KW  = ['정정', '철회'];
 
   async function dartFetch(type) {
     try {
@@ -49,10 +50,13 @@ export async function onRequest(context) {
         if (seen.has(item.rcept_no)) return false;
         seen.add(item.rcept_no);
         const nm = item.report_nm;
+        // 정정·철회 공시 제외
+        if (EXCLUDE_KW.some(k => nm.includes(k))) return false;
         // 거래소공시(I): 신규상장·수요예측 등 IPO 전용
         if (EXCHANGE_KW.some(k => nm.includes(k))) return true;
-        // 발행공시(C): 지분증권 일반공모 증권신고서만 (유상증자·투자설명서 제외)
-        return nm.includes('증권신고서') && nm.includes('지분증권')
+        // 발행공시(C): 지분증권 일반공모 증권신고서·투자설명서만
+        return (nm.includes('증권신고서') || nm.includes('투자설명서'))
+          && nm.includes('지분증권') && nm.includes('일반공모')
           && !nm.includes('주주배정') && !nm.includes('제3자배정');
       })
       .map(item => {
@@ -105,7 +109,7 @@ export async function onRequest(context) {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Cache-Control': 'public, max-age=60',
+        'Cache-Control': 'public, max-age=3600',
       },
     });
   } catch (err) {
