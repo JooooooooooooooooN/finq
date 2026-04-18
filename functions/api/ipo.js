@@ -49,9 +49,11 @@ export async function onRequest(context) {
         if (seen.has(item.rcept_no)) return false;
         seen.add(item.rcept_no);
         const nm = item.report_nm;
-        // 거래소공시: 신규상장·수요예측 등 IPO 전용 키워드
-        // 발행공시: 지분증권 포함 항목만 (채권·CB·유상증자 제외)
-        return EXCHANGE_KW.some(k => nm.includes(k)) || nm.includes('지분증권');
+        // 거래소공시(I): 신규상장·수요예측 등 IPO 전용
+        if (EXCHANGE_KW.some(k => nm.includes(k))) return true;
+        // 발행공시(C): 지분증권 일반공모 증권신고서만 (유상증자·투자설명서 제외)
+        return nm.includes('증권신고서') && nm.includes('지분증권')
+          && !nm.includes('주주배정') && !nm.includes('제3자배정');
       })
       .map(item => {
         const nm = item.report_nm;
