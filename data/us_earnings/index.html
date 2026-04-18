@@ -516,12 +516,8 @@ function impBadge(imp) {
 }
 
 function getWeekRange() {
-  const now = new Date();
-  const day = now.getDay();
-  const diffToMon = day === 0 ? -6 : 1 - day;
-  const mon = new Date(now); mon.setDate(now.getDate() + diffToMon);
-  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-  mon.setHours(0,0,0,0); sun.setHours(23,59,59,999);
+  const mon = new Date(); mon.setHours(0,0,0,0);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6); sun.setHours(23,59,59,999);
   return { monTs: mon.getTime() / 1000, sunTs: sun.getTime() / 1000 };
 }
 
