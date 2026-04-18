@@ -69,9 +69,7 @@ const KO_NAMES = {
 };
 
 const KO_COUNTRIES = {
-  'US': '미국', 'KR': '한국', 'JP': '일본', 'CN': '중국',
-  'EU': '유로존', 'GB': '영국', 'DE': '독일', 'FR': '프랑스',
-  'CA': '캐나다', 'AU': '호주', 'IT': '이탈리아', 'ES': '스페인',
+  'US': '미국', 'KR': '한국', 'JP': '일본', 'CN': '중국', 'EU': '유로존',
 };
 
 const IMPACT_KO = { 'high': '중요', 'medium': '보통', 'low': '낮음' };
