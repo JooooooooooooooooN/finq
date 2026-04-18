@@ -30,7 +30,7 @@ export async function onRequest(context) {
 
     const now = new Date();
     const from = now.toISOString().split('T')[0];
-    const to = new Date(now.getTime() + 90 * 86400000).toISOString().split('T')[0];
+    const to = new Date(now.getTime() + 14 * 86400000).toISOString().split('T')[0];
 
     const res = await fetch(
       `https://finnhub.io/api/v1/calendar/earnings?from=${from}&to=${to}&token=${apiKey}`
@@ -38,15 +38,15 @@ export async function onRequest(context) {
     if (!res.ok) throw new Error('Finnhub API 오류: ' + res.status);
     const data = await res.json();
 
-    const symbolMap = Object.fromEntries(WATCHLIST.map(w => [w.symbol, w]));
+    const watchlistMap = Object.fromEntries(WATCHLIST.map(w => [w.symbol, w]));
 
     const items = (data.earningsCalendar || [])
-      .filter(e => symbolMap[e.symbol])
+      .filter(e => e.epsEstimate != null)
       .map(e => {
-        const w = symbolMap[e.symbol];
+        const w = watchlistMap[e.symbol];
         const dateRaw = Math.floor(new Date(e.date + 'T00:00:00').getTime() / 1000);
 
-        const epsEst = e.epsEstimate != null ? e.epsEstimate.toFixed(2) : '-';
+        const epsEst = e.epsEstimate.toFixed(2);
         let revEst = '-';
         if (e.revenueEstimate != null) {
           const b = e.revenueEstimate / 1e9;
@@ -59,14 +59,14 @@ export async function onRequest(context) {
 
         return {
           symbol: e.symbol,
-          name: w.name,
-          sector: w.sector,
+          name: w?.name || e.symbol,
+          sector: w?.sector || '기타',
           dateRaw,
           dateFmt: e.date,
           callTime,
           epsEst,
           revEst,
-          importance: w.importance,
+          importance: w?.importance || 'mid',
         };
       })
       .sort((a, b) => a.dateRaw - b.dateRaw);
