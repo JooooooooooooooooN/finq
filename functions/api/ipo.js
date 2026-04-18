@@ -21,7 +21,8 @@ export async function onRequest(context) {
     'Referer': 'https://opendart.fss.or.kr/',
   };
 
-  const IPO_KW = ['신규상장', '상장예비심사', '증권신고서', '투자설명서', '수요예측', '공모가격', '청약일정'];
+  // 거래소공시 키워드 (I타입 — 신규상장·수요예측 등 IPO 전용)
+  const EXCHANGE_KW = ['신규상장', '상장예비심사', '수요예측', '공모가격', '청약일정'];
 
   async function dartFetch(type) {
     try {
@@ -47,7 +48,10 @@ export async function onRequest(context) {
       .filter(item => {
         if (seen.has(item.rcept_no)) return false;
         seen.add(item.rcept_no);
-        return IPO_KW.some(k => item.report_nm.includes(k));
+        const nm = item.report_nm;
+        // 거래소공시: 신규상장·수요예측 등 IPO 전용 키워드
+        // 발행공시: 지분증권 포함 항목만 (채권·CB·유상증자 제외)
+        return EXCHANGE_KW.some(k => nm.includes(k)) || nm.includes('지분증권');
       })
       .map(item => {
         const nm = item.report_nm;
