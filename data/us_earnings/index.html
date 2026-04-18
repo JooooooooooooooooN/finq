@@ -174,22 +174,22 @@ hr{border:none;border-top:1px solid var(--border)}
   <div class="summary-grid">
     <div class="summary-card">
       <div class="summary-label">오늘 발표 예정 기업</div>
-      <div class="summary-value accent">3</div>
-      <div class="summary-sub">04/23 기준</div>
+      <div class="summary-value accent" id="statToday">-</div>
+      <div class="summary-sub" id="statTodaySub">로딩 중</div>
     </div>
     <div class="summary-card">
       <div class="summary-label">이번 주 주요 기업</div>
-      <div class="summary-value green">12</div>
-      <div class="summary-sub">04/21 ~ 04/25 기준</div>
+      <div class="summary-value green" id="statWeek">-</div>
+      <div class="summary-sub" id="statWeekSub">로딩 중</div>
     </div>
     <div class="summary-card">
       <div class="summary-label">장전 발표</div>
-      <div class="summary-value orange">4</div>
+      <div class="summary-value orange" id="statPre">-</div>
       <div class="summary-sub">이번 주 기준</div>
     </div>
     <div class="summary-card">
       <div class="summary-label">장후 발표</div>
-      <div class="summary-value" style="color:var(--red)">8</div>
+      <div class="summary-value" style="color:var(--red)" id="statPost">-</div>
       <div class="summary-sub">이번 주 기준</div>
     </div>
   </div>
@@ -471,14 +471,8 @@ hr{border:none;border-top:1px solid var(--border)}
   </div>
 </footer>
 
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
-}
 (function() {
   const saved = localStorage.getItem('finq-theme');
   if (saved === 'dark') {
@@ -510,6 +504,16 @@ function impBadge(imp) {
     : '<span class="imp-mid">보통</span>';
 }
 
+function getWeekRange() {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToMon = day === 0 ? -6 : 1 - day;
+  const mon = new Date(now); mon.setDate(now.getDate() + diffToMon);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  mon.setHours(0,0,0,0); sun.setHours(23,59,59,999);
+  return { monTs: mon.getTime() / 1000, sunTs: sun.getTime() / 1000 };
+}
+
 async function loadEarnings() {
   const tbody = document.getElementById('earningsBody');
   tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">📡 실적 데이터 불러오는 중...</td></tr>';
@@ -521,6 +525,28 @@ async function loadEarnings() {
       tbody.innerHTML = '<tr><td colspan="8" class="loading-cell">예정된 실적 발표가 없습니다</td></tr>';
       return;
     }
+
+    // 상단 카드 동적 업데이트
+    const now = new Date();
+    const todayStr = now.toISOString().split('T')[0];
+    const { monTs, sunTs } = getWeekRange();
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const dd = String(now.getDate()).padStart(2,'0');
+    const monDate = new Date(monTs * 1000);
+    const sunDate = new Date(sunTs * 1000);
+    const wFrom = `${String(monDate.getMonth()+1).padStart(2,'0')}/${String(monDate.getDate()).padStart(2,'0')}`;
+    const wTo   = `${String(sunDate.getMonth()+1).padStart(2,'0')}/${String(sunDate.getDate()).padStart(2,'0')}`;
+
+    const todayItems = data.items.filter(i => new Date(i.dateRaw*1000).toISOString().split('T')[0] === todayStr);
+    const weekItems  = data.items.filter(i => i.dateRaw >= monTs && i.dateRaw <= sunTs);
+
+    document.getElementById('statToday').textContent = todayItems.length;
+    document.getElementById('statTodaySub').textContent = `${mm}/${dd} 기준`;
+    document.getElementById('statWeek').textContent = weekItems.length;
+    document.getElementById('statWeekSub').textContent = `${wFrom} ~ ${wTo} 기준`;
+    document.getElementById('statPre').textContent  = weekItems.filter(i => i.callTime.includes('before')).length;
+    document.getElementById('statPost').textContent = weekItems.filter(i => i.callTime.includes('after')).length;
+
     tbody.innerHTML = data.items.map(item => `
       <tr>
         <td class="date-cell">${fmtEarningsDate(item.dateRaw)}</td>

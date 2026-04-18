@@ -1,72 +1,88 @@
+const WATCHLIST = [
+  { symbol: 'AAPL',  name: 'Apple',          sector: '빅테크',     importance: 'high' },
+  { symbol: 'MSFT',  name: 'Microsoft',       sector: '빅테크',     importance: 'high' },
+  { symbol: 'GOOGL', name: 'Alphabet',        sector: '빅테크',     importance: 'high' },
+  { symbol: 'AMZN',  name: 'Amazon',          sector: '빅테크',     importance: 'high' },
+  { symbol: 'META',  name: 'Meta',            sector: '빅테크',     importance: 'high' },
+  { symbol: 'NVDA',  name: 'NVIDIA',          sector: '반도체',     importance: 'high' },
+  { symbol: 'AMD',   name: 'AMD',             sector: '반도체',     importance: 'mid'  },
+  { symbol: 'AVGO',  name: 'Broadcom',        sector: '반도체',     importance: 'mid'  },
+  { symbol: 'QCOM',  name: 'Qualcomm',        sector: '반도체',     importance: 'mid'  },
+  { symbol: 'MU',    name: 'Micron',          sector: '반도체',     importance: 'mid'  },
+  { symbol: 'INTC',  name: 'Intel',           sector: '반도체',     importance: 'mid'  },
+  { symbol: 'TSLA',  name: 'Tesla',           sector: '자동차',     importance: 'high' },
+  { symbol: 'JPM',   name: 'JPMorgan',        sector: '금융',       importance: 'high' },
+  { symbol: 'BAC',   name: 'Bank of America', sector: '금융',       importance: 'mid'  },
+  { symbol: 'GS',    name: 'Goldman Sachs',   sector: '금융',       importance: 'mid'  },
+  { symbol: 'MS',    name: 'Morgan Stanley',  sector: '금융',       importance: 'mid'  },
+  { symbol: 'V',     name: 'Visa',            sector: '금융',       importance: 'mid'  },
+  { symbol: 'NFLX',  name: 'Netflix',         sector: '미디어',     importance: 'mid'  },
+  { symbol: 'COST',  name: 'Costco',          sector: '소비재',     importance: 'mid'  },
+  { symbol: 'WMT',   name: 'Walmart',         sector: '소비재',     importance: 'mid'  },
+  { symbol: 'ORCL',  name: 'Oracle',          sector: '소프트웨어', importance: 'mid'  },
+  { symbol: 'CRM',   name: 'Salesforce',      sector: '소프트웨어', importance: 'mid'  },
+];
+
 export async function onRequest(context) {
-  const WATCHLIST = [
-    { symbol: 'AAPL',  sector: '빅테크'    },
-    { symbol: 'MSFT',  sector: '빅테크'    },
-    { symbol: 'GOOGL', sector: '빅테크'    },
-    { symbol: 'AMZN',  sector: '빅테크'    },
-    { symbol: 'META',  sector: '빅테크'    },
-    { symbol: 'NVDA',  sector: '반도체'    },
-    { symbol: 'AMD',   sector: '반도체'    },
-    { symbol: 'AVGO',  sector: '반도체'    },
-    { symbol: 'QCOM',  sector: '반도체'    },
-    { symbol: 'MU',    sector: '반도체'    },
-    { symbol: 'INTC',  sector: '반도체'    },
-    { symbol: 'TSLA',  sector: '자동차'    },
-    { symbol: 'JPM',   sector: '금융'      },
-    { symbol: 'BAC',   sector: '금융'      },
-    { symbol: 'GS',    sector: '금융'      },
-    { symbol: 'MS',    sector: '금융'      },
-    { symbol: 'V',     sector: '금융'      },
-    { symbol: 'NFLX',  sector: '미디어'    },
-    { symbol: 'COST',  sector: '소비재'    },
-    { symbol: 'WMT',   sector: '소비재'    },
-    { symbol: 'ORCL',  sector: '소프트웨어'},
-    { symbol: 'CRM',   sector: '소프트웨어'},
-  ];
+  try {
+    const apiKey = context.env.FINNHUB_API_KEY;
+    if (!apiKey) throw new Error('FINNHUB_API_KEY 없음');
 
-  const HIGH = new Set(['AAPL','MSFT','GOOGL','AMZN','META','NVDA','TSLA']);
+    const now = new Date();
+    const from = now.toISOString().split('T')[0];
+    const to = new Date(now.getTime() + 90 * 86400000).toISOString().split('T')[0];
 
-  const nowSec   = Date.now() / 1000;
-  const pastCut  = nowSec - 86400;          // 1일 전까지 허용
-  const futureCut = nowSec + 90 * 86400;    // 90일 후까지
+    const res = await fetch(
+      `https://finnhub.io/api/v1/calendar/earnings?from=${from}&to=${to}&token=${apiKey}`
+    );
+    if (!res.ok) throw new Error('Finnhub API 오류: ' + res.status);
+    const data = await res.json();
 
-  const settled = await Promise.allSettled(
-    WATCHLIST.map(async ({ symbol, sector }) => {
-      const url = `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${symbol}?modules=calendarEvents,price`;
-      const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-      if (!res.ok) return null;
-      const data = await res.json();
-      const r = data.quoteSummary?.result?.[0];
-      if (!r) return null;
+    const symbolMap = Object.fromEntries(WATCHLIST.map(w => [w.symbol, w]));
 
-      const e   = r.calendarEvents?.earnings;
-      const raw = e?.earningsDate?.[0]?.raw;
-      if (!raw || raw < pastCut || raw > futureCut) return null;
+    const items = (data.earningsCalendar || [])
+      .filter(e => symbolMap[e.symbol])
+      .map(e => {
+        const w = symbolMap[e.symbol];
+        const dateRaw = Math.floor(new Date(e.date + 'T00:00:00').getTime() / 1000);
 
-      return {
-        symbol,
-        name: r.price?.shortName || symbol,
-        sector,
-        dateRaw:  raw,
-        dateFmt:  e.earningsDate[0].fmt,
-        callTime: e.earningsCallTime?.s || '',
-        epsEst:   e.epsEstimate?.fmt    || '-',
-        revEst:   e.revenueEstimate?.fmt || '-',
-        importance: HIGH.has(symbol) ? 'high' : 'mid',
-      };
-    })
-  );
+        const epsEst = e.epsEstimate != null ? e.epsEstimate.toFixed(2) : '-';
+        let revEst = '-';
+        if (e.revenueEstimate != null) {
+          const b = e.revenueEstimate / 1e9;
+          revEst = b >= 1 ? `$${b.toFixed(1)}B` : `$${(e.revenueEstimate / 1e6).toFixed(0)}M`;
+        }
 
-  const items = settled
-    .filter(r => r.status === 'fulfilled' && r.value)
-    .map(r => r.value)
-    .sort((a, b) => a.dateRaw - b.dateRaw);
+        let callTime = '';
+        if (e.hour === 'bmo') callTime = 'before market open';
+        else if (e.hour === 'amc') callTime = 'after market close';
 
-  return new Response(JSON.stringify({ items, updatedAt: new Date().toISOString() }), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*',
-      'Cache-Control': 'public, max-age=3600',
-    },
-  });
+        return {
+          symbol: e.symbol,
+          name: w.name,
+          sector: w.sector,
+          dateRaw,
+          dateFmt: e.date,
+          callTime,
+          epsEst,
+          revEst,
+          importance: w.importance,
+        };
+      })
+      .sort((a, b) => a.dateRaw - b.dateRaw);
+
+    return new Response(JSON.stringify({ items, updatedAt: new Date().toISOString() }), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'public, max-age=3600',
+      },
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message, items: [] }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    });
+  }
 }
