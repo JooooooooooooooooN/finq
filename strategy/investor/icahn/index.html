@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, follow">
 <title>칼 아이칸 포트폴리오 — FinQ</title>
 <meta name="description" content="칼 아이칸의 Icahn Enterprises 13F 포트폴리오. 기업 사냥꾼에서 행동주의 투자자로, 보유 종목과 전략 분석.">
 <meta property="og:title" content="칼 아이칸 포트폴리오 — FinQ">
@@ -267,13 +268,8 @@ a{color:inherit;text-decoration:none}
     ※ 이 페이지의 데이터는 Icahn Capital Management의 SEC EDGAR 13F 보고서를 기반으로 합니다. 투자 권유가 아닙니다.
   </div>
 </div>
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme(){
-  const t=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.body.setAttribute('data-theme',t==='dark'?'dark':'');
-  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
-  localStorage.setItem('theme',t);
-}
 (function(){
   const t=localStorage.getItem('theme');
   if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}

@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, follow">
 <title>조지 소로스 포트폴리오 — FinQ</title>
 <meta name="description" content="조지 소로스의 Soros Fund Management 13F 포트폴리오. 글로벌 매크로 전략과 최근 보유 종목 분석.">
 <meta property="og:title" content="조지 소로스 포트폴리오 — FinQ">
@@ -268,13 +269,8 @@ a{color:inherit;text-decoration:none}
     ※ 이 페이지의 데이터는 Soros Fund Management의 SEC EDGAR 13F 보고서를 기반으로 합니다. 13F는 주식 롱 포지션만 공시하며 통화·파생상품 등 매크로 포지션은 반영되지 않습니다. 투자 권유가 아닙니다.
   </div>
 </div>
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme(){
-  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
-  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
-  localStorage.setItem('theme', t);
-}
 (function(){
   const t = localStorage.getItem('theme');
   if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }

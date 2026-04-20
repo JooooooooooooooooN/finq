@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, follow">
 <title>존 템플턴 포트폴리오 — FinQ</title>
 <meta name="description" content="존 템플턴의 글로벌 역발상 투자 철학. 비관 속 기회를 찾는 독립적 시야와 장기 복리 전략을 분석합니다.">
 <meta property="og:title" content="존 템플턴 포트폴리오 — FinQ">
@@ -300,13 +301,8 @@ a{color:inherit;text-decoration:none}
 
 </div>
 
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme(){
-  const t=document.body.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.body.setAttribute('data-theme',t==='dark'?'dark':'');
-  document.getElementById('themeBtn').textContent=t==='dark'?'☀️':'🌙';
-  localStorage.setItem('theme',t);
-}
 (function(){
   const t=localStorage.getItem('theme');
   if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
