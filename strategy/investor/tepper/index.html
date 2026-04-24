@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, follow">
-<title>데이비드 테퍼 포트폴리오 — FinQ</title>
-<meta name="description" content="데이비드 테퍼의 아팔루사 매니지먼트 13F 포트폴리오. 보유 종목, 섹터 비중, 투자 철학을 한눈에 확인하세요.">
+<title>데이비드 테퍼 투자 철학 — FinQ</title>
+<meta name="description" content="아팔루사 매니지먼트 창립자 데이비드 테퍼. 2009년 금융위기 역발상 투자로 전설이 된 거시 투자자의 철학과 대표 투자 사례.">
 <meta property="og:title" content="데이비드 테퍼 포트폴리오 — FinQ">
 <meta property="og:description" content="아팔루사 매니지먼트 창립자 데이비드 테퍼. 부실자산 투자의 전설이자 AI·기술주 집중 포트폴리오로 변신한 거시 투자자.">
 <meta property="og:type" content="article">
@@ -46,32 +45,6 @@ a{color:inherit;text-decoration:none}
 .guru-stat-label{font-size:11px;color:var(--text2);margin-top:1px}
 @media(max-width:600px){.guru-stats{gap:1rem}}
 
-.holdings-table{width:100%;border-collapse:collapse;font-size:14px}
-.holdings-table thead th{text-align:left;padding:8px 10px;font-size:12px;font-weight:600;color:var(--text2);border-bottom:1px solid var(--border);white-space:nowrap}
-.holdings-table tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
-.holdings-table tbody tr:last-child{border-bottom:none}
-.holdings-table tbody tr:hover{background:var(--bg2)}
-.holdings-table td{padding:12px 10px;vertical-align:middle}
-.rank-num{width:28px;height:28px;border-radius:8px;background:var(--bg2);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2)}
-.rank-num.top3{width:22px;height:22px;border-radius:6px;background:#d97706;color:#fff;font-size:11px}
-.ticker{font-weight:700;font-size:15px;font-family:'Courier New',monospace;color:var(--accent)}
-.co-name{font-size:13px;color:var(--text2);margin-top:1px}
-.weight-bar-wrap{display:flex;align-items:center;gap:8px}
-.weight-bar{height:6px;border-radius:3px;background:var(--accent);opacity:.7;min-width:2px}
-.weight-text{font-size:13px;font-weight:600;min-width:42px}
-.change-up{color:var(--green);font-size:13px;font-weight:600}
-.change-down{color:var(--red);font-size:13px;font-weight:600}
-.change-same{color:var(--text2);font-size:13px}
-.change-new{color:var(--orange);font-size:13px;font-weight:600}
-.amount{font-size:13px;font-weight:500}
-@media(max-width:640px){.holdings-table .col-shares{display:none}.holdings-table .col-value{display:none}}
-
-.sector-list{display:flex;flex-direction:column;gap:10px}
-.sector-row{display:flex;align-items:center;gap:12px}
-.sector-name{font-size:14px;font-weight:500;min-width:110px;flex-shrink:0}
-.sector-bar-bg{flex:1;height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
-.sector-bar{height:100%;border-radius:5px;transition:width .3s}
-.sector-pct{font-size:13px;font-weight:600;min-width:40px;text-align:right;color:var(--text2)}
 
 .quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .quote-card{background:var(--bg2);border-radius:10px;padding:1.25rem}
@@ -171,41 +144,9 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 2. 상위 보유 종목 -->
+  <!-- 2. 투자 철학 -->
   <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">2</span>상위 10개 보유 종목</div>
-      <span class="data-tag">2024년 Q3 13F 기준</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="holdings-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th><th>종목</th><th>비중</th>
-            <th class="col-value">평가액</th><th class="col-shares">보유 주수</th><th>전분기 대비</th>
-          </tr>
-        </thead>
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-    <div class="info-box">
-      <span class="info-icon">ℹ️</span>
-      <span>아팔루사는 포지션 변경이 빈번한 편입니다. 거시 경제 전망에 따라 섹터 비중을 빠르게 조정하므로 13F 공시 시점과 실제 보유 간 차이가 클 수 있습니다.</span>
-    </div>
-  </div>
-
-  <!-- 3. 섹터 배분 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
-      <span class="data-tag">2024년 Q3 기준</span>
-    </div>
-    <div class="sector-list" id="sectorList"></div>
-  </div>
-
-  <!-- 4. 투자 철학 -->
-  <div class="section">
-    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">2</span>투자 철학</div></div>
     <div class="quote-grid">
       <div class="quote-card">
         <div class="quote-text">"시장은 종종 틀린다. 두려움이 극에 달했을 때 반대편에 서는 것이 가장 큰 기회다."</div>
@@ -251,28 +192,26 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 5. 주요 변동 -->
+  <!-- 3. 대표 투자 사례 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">5</span>최근 주요 변동</div>
-      <span class="data-tag">2024년 Q3</span>
+      <div class="sec-title-left"><span class="sec-num">3</span>대표 투자 사례</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대폭 증가</span>
-        <div><strong>NVDA (엔비디아)</strong> — AI GPU 수요 확신 속 지속 매수. 포트폴리오 최대 비중으로 확대. "AI 인프라의 핵심" 발언.</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2009 · 금융/은행주</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">씨티그룹·BOA 집중 매수 — "테퍼 랠리"</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">금융위기 직후 모두가 은행 파산을 두려워할 때, 정부가 시스템 은행을 파산시킬 수 없다는 논리로 씨티·BOA에 집중 투자. 2009년 한 해에만 약 70억 달러 수익. 역대 헤지펀드 단일 연도 수익률 최상위 기록.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">증가</span>
-        <div><strong>META (메타)</strong> — AI 광고 효율화·라마 모델 무료 공개 전략 긍정 평가. 비중 유의미하게 확대.</div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2001~2002 · 부실채권</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">닷컴 버블 붕괴 후 부실자산 투자</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">아팔루사 창립 초기 핵심 전략. 파산 기업의 선순위 채권과 부실자산을 헐값에 매수해 구조조정 과정에서 수배 수익 실현. "두려움이 극대화될 때 반대편에 서는" 역발상 투자의 원형.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">전량 매도</span>
-        <div><strong>중국 관련주 (BABA·JD·PDD)</strong> — 중국 경기 부양책 발표 후 반등 시 차익 실현. 지정학 리스크 이유로 완전 청산.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">신규 편입</span>
-        <div><strong>AMZN (아마존)</strong> — AWS 클라우드·AI 서비스 성장 가속 기대로 신규 매수. 알리바바 비중 줄인 자금 재배치.</div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2020 · 코로나 급락장</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">팬데믹 매도 구간 역발상 매수</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">코로나19 충격으로 시장이 급락한 2020년 3~4월, 연준의 대규모 유동성 공급을 신뢰하며 공격적으로 포지션 확대. 이후 빠른 반등으로 대규모 수익 실현. "연준에 맞서지 말라"는 원칙의 실전 적용.</div>
       </div>
     </div>
   </div>
@@ -290,44 +229,6 @@ a{color:inherit;text-decoration:none}
   if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
 })();
 
-const holdings=[
-  {ticker:'NVDA', name:'엔비디아', sector:'반도체/AI', weight:21.3, value:'$29.8억', shares:'240만주', change:'up', changeLabel:'▲ 대폭 증가'},
-  {ticker:'META', name:'메타 플랫폼', sector:'소셜미디어/AI', weight:16.7, value:'$23.4억', shares:'380만주', change:'up', changeLabel:'▲ 증가'},
-  {ticker:'MSFT', name:'마이크로소프트', sector:'기술/클라우드', weight:12.4, value:'$17.4억', shares:'430만주', change:'same', changeLabel:'— 유지'},
-  {ticker:'AMZN', name:'아마존', sector:'이커머스/클라우드', weight:11.8, value:'$16.5억', shares:'920만주', change:'new', changeLabel:'★ 신규'},
-  {ticker:'GOOGL',name:'알파벳 A', sector:'기술/광고', weight:9.6, value:'$13.4억', shares:'820만주', change:'same', changeLabel:'— 유지'},
-  {ticker:'ORCL', name:'오라클', sector:'기업용 소프트웨어', weight:6.3, value:'$8.8억', shares:'700만주', change:'up', changeLabel:'▲ 증가'},
-  {ticker:'TSM',  name:'TSMC (ADR)', sector:'반도체 파운드리', weight:5.1, value:'$7.1억', shares:'580만주', change:'new', changeLabel:'★ 신규'},
-  {ticker:'NFLX', name:'넷플릭스', sector:'스트리밍/미디어', weight:4.4, value:'$6.2억', shares:'95만주', change:'same', changeLabel:'— 유지'},
-  {ticker:'AVGO', name:'브로드컴', sector:'반도체', weight:3.8, value:'$5.3억', shares:'350만주', change:'up', changeLabel:'▲ 증가'},
-  {ticker:'UBER', name:'우버', sector:'플랫폼/모빌리티', weight:3.2, value:'$4.5억', shares:'590만주', change:'down', changeLabel:'▼ 감소'},
-];
-
-const tbody=document.getElementById('holdingsBody');
-holdings.forEach((h,i)=>{
-  const cc=h.change==='up'?'change-up':h.change==='down'?'change-down':h.change==='new'?'change-new':'change-same';
-  tbody.innerHTML+=`<tr>
-    <td><span class="rank-num ${i<3?'top3':''}">${i+1}</span></td>
-    <td><div class="ticker">${h.ticker}</div><div class="co-name">${h.name}</div></td>
-    <td><div class="weight-bar-wrap"><div class="weight-bar" style="width:${h.weight*2.8}px"></div><span class="weight-text">${h.weight}%</span></div></td>
-    <td class="col-value"><span class="amount">${h.value}</span></td>
-    <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
-    <td><span class="${cc}">${h.changeLabel}</span></td>
-  </tr>`;
-});
-
-const sectors=[
-  {name:'반도체/AI', pct:30.2, color:'#7c3aed'},
-  {name:'소셜/광고', pct:26.3, color:'#2563eb'},
-  {name:'클라우드/SW', pct:18.7, color:'#059669'},
-  {name:'스트리밍',   pct:4.4,  color:'#d97706'},
-  {name:'플랫폼',     pct:3.2,  color:'#db2777'},
-  {name:'기타/현금',  pct:17.2, color:'#6b7280'},
-];
-const sl=document.getElementById('sectorList');
-sectors.forEach(s=>{
-  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
-});
 </script>
 </body>
 </html>
