@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, follow">
 <title>칼 아이칸 포트폴리오 — FinQ</title>
 <meta name="description" content="칼 아이칸의 Icahn Enterprises 13F 포트폴리오. 기업 사냥꾼에서 행동주의 투자자로, 보유 종목과 전략 분석.">
 <meta property="og:title" content="칼 아이칸 포트폴리오 — FinQ">
@@ -153,37 +152,7 @@ a{color:inherit;text-decoration:none}
   </div>
 
   <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">2</span>주요 보유 종목</div>
-      <span class="data-tag">2024년 Q2 13F 기준</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="holdings-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th><th>종목</th><th>비중</th>
-            <th class="col-value">평가액</th><th class="col-shares">보유 주수</th><th>전분기 대비</th>
-          </tr>
-        </thead>
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-    <div class="info-box">
-      <span class="info-icon">ℹ️</span>
-      <span>아이칸의 포트폴리오는 통상 5~8개 종목에 초집중되어 있습니다. 행동주의 포지션은 공개 전 대규모 누적 매입 후 13D/13G 공시로 알려지는 경우가 많습니다.</span>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
-      <span class="data-tag">2024년 Q2 기준</span>
-    </div>
-    <div class="sector-list" id="sectorList"></div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">2</span>투자 철학</div></div>
     <div class="quote-grid">
       <div class="quote-card">
         <div class="quote-text">"내가 싸우는 이유는 단순하다. 나는 기업들이 주주를 위해 운영되어야 한다고 믿기 때문이다."</div>
@@ -229,34 +198,34 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
+  <!-- 대표 투자 사례 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">5</span>주요 역사적 행동주의 투자</div>
+      <div class="sec-title-left"><span class="sec-num">3</span>대표 투자 사례</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대성공</span>
-        <div><strong>TWA (트랜스월드 항공)</strong> — 1980년대 항공사 인수 후 자산 매각. 수억 달러 차익. 이후 항공사 파산으로 논란.</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">1985 · 항공</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">TWA 적대적 인수</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">행동주의 투자의 초기 선구 사례. 지분 확보 후 이사회 장악, 자산 매각과 구조조정으로 수익 실현. 이후 "기업 사냥꾼"의 대명사.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">대성공</span>
-        <div><strong>AAPL (애플)</strong> — 2013년 지분 매입 후 $1,500억 규모 자사주매입 요구, 관철. 수십억 달러 수익 후 매도.</div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2012 · 스트리밍/기술</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">넷플릭스 (NFLX)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">주가 $58에 대규모 매수. 스트리밍 사업 가치를 조기 인식. $300대에 매도해 약 600% 수익. 아이칸이 가장 아쉬워한 조기 매도 사례.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">성공</span>
-        <div><strong>Dell Technologies</strong> — 사모화 반대 후 협상, 더 높은 가격 획득. 행동주의로 주주 가치 증대 사례.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">논란</span>
-        <div><strong>IEP (아이칸 엔터프라이즈)</strong> — 2023년 힌덴버그의 공매도 보고서로 주가 60%+ 급락. 과도한 배당과 레버리지 구조 문제 지적.</div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2013 · 기술/주주환원</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">애플 주주환원 캠페인</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">애플 지분 확보 후 팀 쿡에 자사주 매입 및 배당 확대 압박. 결과적으로 수천억 달러 규모의 주주환원 정책 이끌어냄.</div>
       </div>
     </div>
   </div>
 
-  <!-- 6. 주요 저서 / 대표 자료 -->
+  <!-- 주요 저서 / 대표 자료 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+      <div class="sec-title-left"><span class="sec-num">4</span>주요 저서 / 대표 자료</div>
     </div>
     <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
       <li style="font-size:14px;line-height:1.7"><strong>공개서한(Open Letters)</strong> — 행동주의 투자 방식과 기업 지배구조 압박 전략을 가장 잘 보여주는 자료</li>
@@ -274,40 +243,6 @@ a{color:inherit;text-decoration:none}
   const t=localStorage.getItem('theme');
   if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
 })();
-
-const holdings=[
-  {ticker:'IEP', name:'아이칸 엔터프라이즈 LP', sector:'복합기업', weight:42.1, value:'$38억', shares:'1.97억주', change:'same', changeLabel:'— 유지'},
-  {ticker:'CVR', name:'CVR 에너지', sector:'에너지', weight:18.6, value:'$16.8억', shares:'7,100만주', change:'same', changeLabel:'— 유지'},
-  {ticker:'NWL', name:'뉴웰 브랜즈', sector:'소비재', weight:9.4, value:'$8.5억', shares:'7,200만주', change:'down', changeLabel:'▼ 감소'},
-  {ticker:'PARA',name:'파라마운트 글로벌', sector:'미디어', weight:8.2, value:'$7.4억', shares:'5,600만주', change:'down', changeLabel:'▼ 감소'},
-  {ticker:'SW',  name:'스타이너 월드와이드', sector:'서비스', weight:5.8, value:'$5.2억', shares:'2,800만주', change:'same', changeLabel:'— 유지'},
-];
-
-const tbody=document.getElementById('holdingsBody');
-holdings.forEach((h,i)=>{
-  const cc=h.change==='up'?'change-up':h.change==='down'?'change-down':h.change==='new'?'change-new':'change-same';
-  tbody.innerHTML+=`<tr>
-    <td><span class="rank-num ${i<3?'top3':''}">${i+1}</span></td>
-    <td><div class="ticker">${h.ticker}</div><div class="co-name">${h.name}</div></td>
-    <td><div class="weight-bar-wrap"><div class="weight-bar" style="width:${h.weight*2.0}px"></div><span class="weight-text">${h.weight}%</span></div></td>
-    <td class="col-value"><span class="amount">${h.value}</span></td>
-    <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
-    <td><span class="${cc}">${h.changeLabel}</span></td>
-  </tr>`;
-});
-
-const sectors=[
-  {name:'복합기업',pct:42.1,color:'#2563eb'},
-  {name:'에너지',pct:18.6,color:'#d97706'},
-  {name:'소비재',pct:9.4,color:'#059669'},
-  {name:'미디어',pct:8.2,color:'#7c3aed'},
-  {name:'서비스',pct:5.8,color:'#db2777'},
-  {name:'현금성',pct:15.9,color:'#6b7280'},
-];
-const sl=document.getElementById('sectorList');
-sectors.forEach(s=>{
-  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
-});
 </script>
 </body>
 </html>

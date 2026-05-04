@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, follow">
 <title>빌 애크먼 포트폴리오 — FinQ</title>
 <meta name="description" content="빌 애크먼의 Pershing Square Capital 13F 포트폴리오. 행동주의 투자 전략과 보유 종목 분석.">
 <meta property="og:title" content="빌 애크먼 포트폴리오 — FinQ">
@@ -148,38 +147,32 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
+  <!-- 대표 투자 사례 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">2</span>상위 보유 종목</div>
-      <span class="data-tag">2024년 Q3 13F 기준</span>
+      <div class="sec-title-left"><span class="sec-num">2</span>대표 투자 사례</div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="holdings-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th><th>종목</th><th>비중</th>
-            <th class="col-value">평가액</th><th class="col-shares">보유 주수</th><th>전분기 대비</th>
-          </tr>
-        </thead>
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-    <div class="info-box">
-      <span class="info-icon">ℹ️</span>
-      <span>애크먼은 극도로 집중된 포트폴리오를 운용합니다. 통상 6~10개 종목에만 투자하며, 각 종목에 대규모 지분을 취득해 경영진에 변화를 요구하는 행동주의 전략을 씁니다.</span>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2011 · 철도/운송</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">캐나다 퍼시픽 레일웨이 (CP)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">행동주의 투자자로 이사회 및 경영진 교체 주도. 헌터 해리슨 CEO 영입 후 운영 효율화로 주가 3배 이상 상승. 행동주의 투자의 교과서 사례.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2008 · 부동산</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">제너럴 그로스 프로퍼티즈 (GGP)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">파산 직전 쇼핑몰 리츠에 투자. 부동산 자산 가치 대비 극단적 저평가를 발굴, 회생 후 약 60배 수익 달성.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2020~2021 · 매크로</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">코로나 CDS 헤지</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">팬데믹 초기 신용시장 CDS로 $27억 수익. "우리 생애 최고의 비대칭 트레이드"로 평가. 이후 힐튼 등 경기민감주로 회전해 추가 수익.</div>
+      </div>
     </div>
   </div>
 
   <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
-      <span class="data-tag">2024년 Q3 기준</span>
-    </div>
-    <div class="sector-list" id="sectorList"></div>
-  </div>
-
-  <div class="section">
-    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div></div>
+    <div class="sec-title"><div class="sec-title-left"><span class="sec-num">3</span>투자 철학</div></div>
     <div class="quote-grid">
       <div class="quote-card">
         <div class="quote-text">"우리는 소수의 크고 단순하며 예측 가능한 비즈니스에 집중 투자한다. 우리가 가장 잘 이해하는 기업만 보유한다."</div>
@@ -225,35 +218,10 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
+  <!-- 주요 저서 / 대표 자료 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">5</span>최근 주요 변동</div>
-      <span class="data-tag">2024년 Q3</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">신규 매수</span>
-        <div><strong>NKE (나이키)</strong> — 2024년 주가 급락 후 저가 매수. 브랜드 가치 훼손 없이 실적 개선 가능하다는 판단. 행동주의적 접근 가능성 언급.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#dbeafe;color:#1e40af;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">장기 보유</span>
-        <div><strong>HLT (힐튼)</strong> — 자산 경량화(asset-light) 프랜차이즈 모델의 수혜. 2017년 매수 후 수배 수익, 최대 비중 유지.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 확대</span>
-        <div><strong>GOOGL (알파벳)</strong> — AI 경쟁력과 광고 시장 지배력 재평가. 2023년 처음 매수 후 지속 확대.</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">과거 대형 손실</span>
-        <div><strong>HLF (허벌라이프) 공매도</strong> — 2012년 다단계 사기 주장, $10억+ 공매도. 칼 아이칸과 공개 설전. 결국 2018년 포지션 청산, 약 $10억 손실 추정.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 6. 주요 저서 / 대표 자료 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+      <div class="sec-title-left"><span class="sec-num">4</span>주요 저서 / 대표 자료</div>
     </div>
     <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
       <li style="font-size:14px;line-height:1.7"><strong>Pershing Square 주주서한</strong> — 행동주의 투자와 집중투자 철학을 보여주는 핵심 자료</li>
@@ -273,42 +241,6 @@ a{color:inherit;text-decoration:none}
   if(t==='dark'){document.body.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️';}
 })();
 
-const holdings = [
-  { ticker:'HLT',  name:'힐튼 월드와이드', sector:'호텔/여행', weight:21.4, value:'$25.7억', shares:'1,460만주', change:'same', changeLabel:'— 유지' },
-  { ticker:'CP',   name:'캐나디안 패시픽 캔자스시티', sector:'운송', weight:20.1, value:'$24.1억', shares:'2,810만주', change:'same', changeLabel:'— 유지' },
-  { ticker:'BN',   name:'브룩필드 코퍼레이션', sector:'금융', weight:15.6, value:'$18.7억', shares:'3,820만주', change:'up', changeLabel:'▲ 증가' },
-  { ticker:'CMG',  name:'치폴레 멕시칸 그릴', sector:'외식', weight:13.8, value:'$16.6억', shares:'87만주', change:'same', changeLabel:'— 유지' },
-  { ticker:'GOOGL',name:'알파벳', sector:'기술', weight:11.9, value:'$14.3억', shares:'780만주', change:'up', changeLabel:'▲ 증가' },
-  { ticker:'QSR',  name:'레스토랑 브랜즈 인터내셔널', sector:'외식', weight:8.2, value:'$9.8억', shares:'1,520만주', change:'same', changeLabel:'— 유지' },
-  { ticker:'HHH',  name:'하워드 휴즈 홀딩스', sector:'부동산', weight:4.8, value:'$5.8억', shares:'480만주', change:'same', changeLabel:'— 유지' },
-  { ticker:'NKE',  name:'나이키', sector:'소비재', weight:4.2, value:'$5.0억', shares:'680만주', change:'new', changeLabel:'★ 신규' },
-];
-
-const tbody=document.getElementById('holdingsBody');
-holdings.forEach((h,i)=>{
-  const cc=h.change==='up'?'change-up':h.change==='down'?'change-down':h.change==='new'?'change-new':'change-same';
-  tbody.innerHTML+=`<tr>
-    <td><span class="rank-num ${i<3?'top3':''}">${i+1}</span></td>
-    <td><div class="ticker">${h.ticker}</div><div class="co-name">${h.name}</div></td>
-    <td><div class="weight-bar-wrap"><div class="weight-bar" style="width:${h.weight*2.8}px"></div><span class="weight-text">${h.weight}%</span></div></td>
-    <td class="col-value"><span class="amount">${h.value}</span></td>
-    <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
-    <td><span class="${cc}">${h.changeLabel}</span></td>
-  </tr>`;
-});
-
-const sectors=[
-  {name:'호텔/여행',pct:21.4,color:'#2563eb'},
-  {name:'운송',pct:20.1,color:'#7c3aed'},
-  {name:'금융',pct:15.6,color:'#059669'},
-  {name:'외식',pct:22.0,color:'#d97706'},
-  {name:'기술',pct:11.9,color:'#db2777'},
-  {name:'기타',pct:9.0,color:'#6b7280'},
-];
-const sl=document.getElementById('sectorList');
-sectors.forEach(s=>{
-  sl.innerHTML+=`<div class="sector-row"><div class="sector-name">${s.name}</div><div class="sector-bar-bg"><div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div></div><div class="sector-pct">${s.pct}%</div></div>`;
-});
 </script>
 </body>
 </html>

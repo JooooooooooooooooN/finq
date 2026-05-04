@@ -236,46 +236,34 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 3. 보유 종목 -->
+  <!-- 대표 투자 사례 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">3</span>상위 10개 보유 종목</div>
-      <span class="data-tag">2024년 3분기 13F 기준</span>
+      <div class="sec-title-left"><span class="sec-num">3</span>대표 투자 사례</div>
     </div>
-    <div style="overflow-x:auto">
-      <table class="holdings-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>종목</th>
-            <th>비중</th>
-            <th class="col-value">평가액</th>
-            <th class="col-shares">보유 주수</th>
-            <th>전분기 대비</th>
-          </tr>
-        </thead>
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-    <div class="info-box">
-      <span class="info-icon">ℹ️</span>
-      <span>사이온은 운용 규모가 작고 포트폴리오가 매우 집중되어 있습니다. 13F 제출 시점과 실제 보유 사이에 큰 변화가 있을 수 있습니다. 버리는 포지션을 빠르게 바꾸는 것으로 유명합니다.</span>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2005~2008 · 파생상품</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">서브프라임 CDO 쇼트 (빅쇼트)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">주택담보대출 부실을 남들보다 2년 앞서 포착, CDS로 쇼트 포지션 구축. 2008년 금융위기로 약 $8억(개인 수익 $1억) 달성. 영화 "빅쇼트"의 실제 주인공.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2019 · 리테일</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">게임스탑 (GME)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">밈주식 광풍 이전 순수 가치투자로 발굴. 자사주 매입 잠재력과 저평가를 근거로 매수, 이후 밈주식 사태로 급등.</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2008~ · 실물자산</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">농지·물 관련 자산</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">기후변화로 인한 물 부족을 예측, 캘리포니아 아몬드 농장 등 관개농지에 투자. "다음 위기는 물"이라는 독자적 매크로 시각 반영.</div>
+      </div>
     </div>
   </div>
 
-  <!-- 4. 섹터 배분 -->
+  <!-- 투자 철학 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">4</span>섹터 배분</div>
-      <span class="data-tag">2024년 3분기 기준</span>
-    </div>
-    <div class="sector-list" id="sectorList"></div>
-  </div>
-
-  <!-- 5. 투자 철학 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">5</span>투자 철학</div>
+      <div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div>
     </div>
     <div class="quote-grid">
       <div class="quote-card">
@@ -323,44 +311,10 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 6. 최근 주요 변동 -->
+  <!-- 주요 저서 / 대표 자료 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">6</span>최근 주요 변동</div>
-      <span class="data-tag">2024년 3분기</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 확대</span>
-        <div>
-          <strong>BABA (알리바바)</strong> — 규제 리스크 완화 및 자사주 매입 확대 기대감 속 지속 매수. 포트폴리오 1위 유지.
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">신규 매수</span>
-        <div>
-          <strong>HCA (HCA 헬스케어)</strong> — 미국 최대 민영 병원 체인. 고령화 수혜 + 안정적 현금흐름 평가로 신규 편입.
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">전량 매도</span>
-        <div>
-          <strong>GOOG (알파벳)</strong> — AI 경쟁 심화에 따른 광고 매출 압박 우려로 전량 청산.
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fef3c7;color:#92400e;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">경고 발언</span>
-        <div>
-          <strong>X(트위터) 포스트</strong> — AI 버블 및 미국 국채 급등에 대한 경고 반복. 시장 전반의 과도한 낙관론 비판.
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. 주요 저서 / 대표 자료 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">7</span>주요 저서 / 대표 자료</div>
+      <div class="sec-title-left"><span class="sec-num">5</span>주요 저서 / 대표 자료</div>
     </div>
     <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
       <li style="font-size:14px;line-height:1.7"><strong>《Cassandra Unchained》</strong> — 버블, 시장 구조, 매크로 리스크에 대한 버리의 대표 뉴스레터</li>
@@ -374,73 +328,13 @@ a{color:inherit;text-decoration:none}
 
 </div>
 
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme(){
-  const t = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  document.body.setAttribute('data-theme', t === 'dark' ? 'dark' : '');
-  document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
-  localStorage.setItem('theme', t);
-}
 (function(){
   const t = localStorage.getItem('theme');
   if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
 })();
 
-const holdings = [
-  { ticker:'BABA', name:'알리바바',        sector:'중국 기술',  weight:21.4, value:'$2,140만', shares:'25만주',  change:'up',   changeLabel:'▲ 비중 확대' },
-  { ticker:'JD',   name:'JD닷컴',          sector:'중국 이커머스',weight:16.8, value:'$1,680만', shares:'62만주',  change:'same', changeLabel:'— 유지' },
-  { ticker:'BIDU', name:'바이두',           sector:'중국 AI',    weight:13.2, value:'$1,320만', shares:'9만주',   change:'new',  changeLabel:'★ 신규 편입' },
-  { ticker:'HCA',  name:'HCA 헬스케어',    sector:'헬스케어',   weight:10.5, value:'$1,050만', shares:'2.8만주', change:'new',  changeLabel:'★ 신규 편입' },
-  { ticker:'MGM',  name:'MGM 리조트',       sector:'소비재',     weight:8.7,  value:'$870만',   shares:'23만주',  change:'same', changeLabel:'— 유지' },
-  { ticker:'CPRI', name:'카프리 홀딩스',    sector:'소비재',     weight:7.1,  value:'$710만',   shares:'18만주',  change:'down', changeLabel:'▼ 소폭 축소' },
-  { ticker:'SIG',  name:'시그넷 주얼러스',  sector:'소비재',     weight:6.3,  value:'$630만',   shares:'8만주',   change:'same', changeLabel:'— 유지' },
-  { ticker:'REAL', name:'더리얼리얼',        sector:'이커머스',   weight:5.4,  value:'$540만',   shares:'80만주',  change:'same', changeLabel:'— 유지' },
-  { ticker:'OLLI', name:'올리스 바겐 아울렛',sector:'소비재',     weight:4.8,  value:'$480만',   shares:'5만주',   change:'same', changeLabel:'— 유지' },
-  { ticker:'GEO',  name:'GEO 그룹',         sector:'부동산',     weight:3.2,  value:'$320만',   shares:'22만주',  change:'up',   changeLabel:'▲ 증가' },
-];
-
-const tbody = document.getElementById('holdingsBody');
-holdings.forEach((h, i) => {
-  const cc = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
-  tbody.innerHTML += `
-    <tr>
-      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
-      <td>
-        <div class="ticker">${h.ticker}</div>
-        <div class="co-name">${h.name}</div>
-      </td>
-      <td>
-        <div class="weight-bar-wrap">
-          <div class="weight-bar" style="width:${h.weight * 2.8}px"></div>
-          <span class="weight-text">${h.weight}%</span>
-        </div>
-      </td>
-      <td class="col-value"><span class="amount">${h.value}</span></td>
-      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
-      <td><span class="${cc}">${h.changeLabel}</span></td>
-    </tr>`;
-});
-
-const sectors = [
-  { name:'중국 기술/이커머스', pct:45, color:'#dc2626' },
-  { name:'소비재',             pct:22, color:'#d97706' },
-  { name:'헬스케어',           pct:12, color:'#059669' },
-  { name:'이커머스',           pct:8,  color:'#7c3aed' },
-  { name:'부동산',             pct:5,  color:'#2563eb' },
-  { name:'기타',               pct:8,  color:'#6b7280' },
-];
-
-const sl = document.getElementById('sectorList');
-sectors.forEach(s => {
-  sl.innerHTML += `
-    <div class="sector-row">
-      <div class="sector-name">${s.name}</div>
-      <div class="sector-bar-bg">
-        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
-      </div>
-      <div class="sector-pct">${s.pct}%</div>
-    </div>`;
-});
 </script>
 </body>
 </html>

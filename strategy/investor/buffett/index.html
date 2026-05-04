@@ -185,46 +185,10 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 2. 상위 보유 종목 -->
+  <!-- 2. 투자 철학 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">2</span>상위 10개 보유 종목</div>
-      <span class="data-tag">2025년 4분기 13F 기준</span>
-    </div>
-    <div style="overflow-x:auto">
-      <table class="holdings-table">
-        <thead>
-          <tr>
-            <th style="width:40px">#</th>
-            <th>종목</th>
-            <th>비중</th>
-            <th class="col-value">평가액</th>
-            <th class="col-shares">보유 주수</th>
-            <th>전분기 대비</th>
-          </tr>
-        </thead>
-        <tbody id="holdingsBody"></tbody>
-      </table>
-    </div>
-    <div class="info-box">
-      <span class="info-icon">ℹ️</span>
-      <span>버크셔 해서웨이는 매분기 말 기준 45일 이내에 SEC에 13F를 제출합니다. 일부 포지션은 기밀 처리(confidential treatment)로 공개되지 않을 수 있습니다.</span>
-    </div>
-  </div>
-
-  <!-- 3. 섹터 배분 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">3</span>섹터 배분</div>
-      <span class="data-tag">2024년 3분기 기준</span>
-    </div>
-    <div class="sector-list" id="sectorList"></div>
-  </div>
-
-  <!-- 4. 투자 철학 -->
-  <div class="section">
-    <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">4</span>투자 철학</div>
+      <div class="sec-title-left"><span class="sec-num">2</span>투자 철학</div>
     </div>
     <div class="quote-grid">
       <div class="quote-card">
@@ -272,44 +236,34 @@ a{color:inherit;text-decoration:none}
     </div>
   </div>
 
-  <!-- 5. 최근 주요 변동 -->
+  <!-- 대표 투자 사례 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">5</span>최근 주요 변동</div>
-      <span class="data-tag">2024년 3분기</span>
+      <div class="sec-title-left"><span class="sec-num">3</span>대표 투자 사례</div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">지속 축소</span>
-        <div>
-          <strong>AAPL (애플)</strong> — 2024~2025년 지속 축소. 905M주 → 228M주 (약 75% 감소). 비중 1위는 유지하나 AXP와 격차 좁혀짐.
-        </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">1988 · 필수소비재</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">코카콜라 (KO)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">1988년 $10억 투자 후 30년 이상 보유. 배당 수익만으로 원금을 수회 회수한 경제적 해자의 교과서 사례. 버핏이 "영원히 팔지 않을 주식"으로 꼽는 종목.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#fee2e2;color:#991b1b;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">지속 매도</span>
-        <div>
-          <strong>BAC (뱅크오브아메리카)</strong> — 2024년부터 지속 매도. 5.17억주 보유, 비중 3위로 하락. 규제 리스크 및 금리 환경 반영.
-        </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">1995 · 보험/금융</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">GEICO 완전 인수</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">1951년 첫 발굴 후 1976년 위기 시 재매수, 1995년 완전 인수. 저비용 직판 보험 모델이 경쟁사 진입을 차단하는 완벽한 해자 구조.</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 확대</span>
-        <div>
-          <strong>CB (처브 리미티드)</strong> — 글로벌 보험사로 상위 10위권 진입. 안정적 언더라이팅 이익과 투자 수익 매력.
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px;background:var(--bg2);border-radius:8px;font-size:14px">
-        <span style="background:#d1fae5;color:#065f46;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:600;flex-shrink:0">비중 증가</span>
-        <div>
-          <strong>CVX (셰브론)</strong> — 에너지 섹터 내 OXY 비중 조정 속 CVX 확대. 배당 안정성 및 에너지 수요 확신 반영.
-        </div>
+      <div style="background:var(--bg2);border-radius:10px;padding:1.1rem 1.25rem">
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:.3rem">2016 · 기술/소비재</div>
+        <div style="font-size:15px;font-weight:700;margin-bottom:.4rem">애플 (AAPL)</div>
+        <div style="font-size:13px;color:var(--text2);line-height:1.7">스마트폰이 아닌 소비자 생태계와 브랜드 충성도에 주목해 매수. "내가 본 최고의 비즈니스"로 평가하며 한때 포트폴리오의 40%+를 차지.</div>
       </div>
     </div>
   </div>
 
-  <!-- 6. 주요 저서 / 대표 자료 -->
+  <!-- 4. 주요 저서 / 대표 자료 -->
   <div class="section">
     <div class="sec-title">
-      <div class="sec-title-left"><span class="sec-num">6</span>주요 저서 / 대표 자료</div>
+      <div class="sec-title-left"><span class="sec-num">4</span>주요 저서 / 대표 자료</div>
     </div>
     <ul style="margin:0;padding-left:1.25rem;display:flex;flex-direction:column;gap:.5rem">
       <li style="font-size:14px;line-height:1.7"><strong>《워런 버핏의 주주 서한》</strong> — 투자 원칙과 자본배분 철학이 가장 직접적으로 드러나는 핵심 자료</li>
@@ -332,62 +286,6 @@ a{color:inherit;text-decoration:none}
   if(t === 'dark'){ document.body.setAttribute('data-theme','dark'); document.getElementById('themeBtn').textContent='☀️'; }
 })();
 
-// 보유 종목 데이터 (2025년 4분기 13F 기준)
-const holdings = [
-  { ticker:'AAPL', name:'애플',               sector:'기술',       weight:22.60, value:'$619억', shares:'2.28억주', change:'down', changeLabel:'▼ 지속 축소' },
-  { ticker:'AXP',  name:'아메리칸 익스프레스', sector:'금융',       weight:20.46, value:'$561억', shares:'1.52억주', change:'same', changeLabel:'— 유지' },
-  { ticker:'BAC',  name:'뱅크 오브 아메리카',  sector:'금융',       weight:10.38, value:'$285억', shares:'5.17억주', change:'down', changeLabel:'▼ 지속 매도' },
-  { ticker:'KO',   name:'코카콜라',            sector:'필수소비재', weight:10.20, value:'$280억', shares:'4억주',    change:'same', changeLabel:'— 유지' },
-  { ticker:'CVX',  name:'셰브론',              sector:'에너지',     weight:7.24,  value:'$198억', shares:'1.30억주', change:'up',   changeLabel:'▲ 증가' },
-  { ticker:'MCO',  name:'무디스',              sector:'금융',       weight:4.60,  value:'$126억', shares:'2,467만주',change:'same', changeLabel:'— 유지' },
-  { ticker:'OXY',  name:'옥시덴탈 피트롤리엄', sector:'에너지',     weight:3.97,  value:'$109억', shares:'2.65억주', change:'same', changeLabel:'— 유지' },
-  { ticker:'CB',   name:'처브 리미티드',        sector:'보험',       weight:3.90,  value:'$107억', shares:'3,425만주',change:'up',   changeLabel:'▲ 비중 확대' },
-  { ticker:'KHC',  name:'크래프트 하인즈',      sector:'필수소비재', weight:2.88,  value:'$79억',  shares:'3.26억주', change:'down', changeLabel:'▼ 소폭 감소' },
-  { ticker:'GOOGL',name:'알파벳',              sector:'기술',       weight:2.04,  value:'$56억',  shares:'1,785만주',change:'same', changeLabel:'— 유지' },
-];
-
-const tbody = document.getElementById('holdingsBody');
-holdings.forEach((h, i) => {
-  const changeClass = h.change === 'up' ? 'change-up' : h.change === 'down' ? 'change-down' : h.change === 'new' ? 'change-new' : 'change-same';
-  tbody.innerHTML += `
-    <tr>
-      <td><span class="rank-num ${i < 3 ? 'top3' : ''}">${i+1}</span></td>
-      <td>
-        <div class="ticker">${h.ticker}</div>
-        <div class="co-name">${h.name}</div>
-      </td>
-      <td>
-        <div class="weight-bar-wrap">
-          <div class="weight-bar" style="width:${h.weight * 2.8}px"></div>
-          <span class="weight-text">${h.weight}%</span>
-        </div>
-      </td>
-      <td class="col-value"><span class="amount">${h.value}</span></td>
-      <td class="col-shares" style="font-size:13px;color:var(--text2)">${h.shares}</td>
-      <td><span class="${changeClass}">${h.changeLabel}</span></td>
-    </tr>`;
-});
-
-// 섹터 데이터
-const sectors = [
-  { name:'금융/보험', pct:39.3, color:'#2563eb' },
-  { name:'기술',     pct:24.6, color:'#7c3aed' },
-  { name:'필수소비재',pct:13.1, color:'#059669' },
-  { name:'에너지',   pct:11.2, color:'#d97706' },
-  { name:'기타/현금성',pct:11.8, color:'#6b7280' },
-];
-
-const sl = document.getElementById('sectorList');
-sectors.forEach(s => {
-  sl.innerHTML += `
-    <div class="sector-row">
-      <div class="sector-name">${s.name}</div>
-      <div class="sector-bar-bg">
-        <div class="sector-bar" style="width:${s.pct}%;background:${s.color}"></div>
-      </div>
-      <div class="sector-pct">${s.pct}%</div>
-    </div>`;
-});
 </script>
 </body>
 </html>
