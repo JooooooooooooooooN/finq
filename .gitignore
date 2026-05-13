@@ -3,3 +3,6 @@
 
 # 환경변수 (API 키 등 민감 정보)
 .env
+
+# Git worktrees (병렬 작업용)
+.worktrees/
