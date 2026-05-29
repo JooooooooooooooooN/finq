@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /news/?
 Sitemap: https://finq.kr/sitemap.xml
