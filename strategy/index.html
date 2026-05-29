@@ -7,42 +7,8 @@
 <meta name="description" content="워런 버핏, 레이 달리오 등 검증된 투자자 포트폴리오부터 방법론, 자산군별 전략까지. FinQ 투자 전략 허브.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="https://finq.kr/strategy/">
+<link rel="stylesheet" href="/assets/css/common.css">
 <style>
-:root {
-  --bg: #ffffff; --bg-secondary: #f8f9fb; --bg-card: #ffffff;
-  --text: #1a1a2e; --text-secondary: #6b7280;
-  --border: #e5e7eb; --accent: #2563eb; --accent-hover: #1d4ed8;
-  --radius: 12px;
-  --shadow: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-hover: 0 4px 12px rgba(0,0,0,0.08);
-}
-[data-theme="dark"] {
-  --bg: #0a0e14; --bg-secondary: #111827; --bg-card: #1a1f2e;
-  --text: #f1f5f9; --text-secondary: #94a3b8; --border: #1e293b;
-  --shadow: 0 1px 3px rgba(0,0,0,0.3); --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-a { color: inherit; text-decoration: none; }
-
-.nav { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); }
-.nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
-.nav-logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); }
-.nav-logo span { color: var(--text); }
-.nav-links { display: flex; gap: 6px; align-items: center; }
-.nav-links a { padding: 6px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); transition: all 0.15s; }
-.nav-links a:hover, .nav-links a.active { background: var(--bg-secondary); color: var(--text); }
-.nav-links a.active { font-weight: 600; }
-.theme-btn { background: none; border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: all 0.15s; }
-.theme-btn:hover { background: var(--bg-secondary); }
-.nav-mobile-btn { display: none; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text); padding: 4px; }
-@media (max-width: 768px) {
-  .nav-links { display: none; }
-  .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 56px; left: 0; right: 0; background: var(--bg); border-bottom: 1px solid var(--border); padding: 12px 20px; gap: 4px; }
-  .nav-links.open a { padding: 10px 14px; }
-  .nav-mobile-btn { display: block; }
-}
-
 .page-header { max-width: 1100px; margin: 0 auto; padding: 3rem 1.25rem 2rem; }
 .back-link { font-size: 13px; color: var(--text-secondary); display: inline-flex; align-items: center; gap: 4px; margin-bottom: 1.5rem; transition: color 0.15s; }
 .back-link:hover { color: var(--accent); }
@@ -79,6 +45,12 @@ a { color: inherit; text-decoration: none; }
 .footer-links { display: flex; gap: 20px; }
 .footer-links a { font-size: 13px; color: var(--text-secondary); transition: color 0.15s; }
 .footer-links a:hover { color: var(--text); }
+
+.link-section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 1rem; }
+.link-group-label { font-size: 14px; font-weight: 700; color: var(--text); margin: 1.75rem 0 0.85rem; }
+.link-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.link-chips a { padding: 6px 12px; border-radius: 8px; font-size: 13px; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); transition: all 0.15s; }
+.link-chips a:hover { color: var(--accent); border-color: var(--accent); }
 </style>
 <meta property="og:title" content="투자 전략 — FinQ">
 <meta property="og:description" content="워런 버핏, 레이 달리오 등 검증된 투자자 포트폴리오부터 방법론, 자산군별 전략까지. FinQ 투자 전략 허브.">
@@ -157,6 +129,53 @@ a { color: inherit; text-decoration: none; }
   </div>
 </section>
 
+<section class="link-section">
+  <div class="link-group-label">자산 기반 전략 전체</div>
+  <div class="link-chips">
+    <a href="asset/dividend-stock/">배당주 전략</a>
+    <a href="asset/etf/">ETF 전략</a>
+    <a href="asset/reits/">리츠(REITs) 전략</a>
+    <a href="asset/bond/">채권 전략</a>
+    <a href="asset/bond-etf/">채권 ETF 전략</a>
+    <a href="asset/preferred-stock/">우선주 전략</a>
+    <a href="asset/growth-stock/">성장주 전략</a>
+    <a href="asset/commodity/">원자재·금 전략</a>
+    <a href="asset/cash/">현금성 자산 전략</a>
+  </div>
+  <div class="link-group-label">방법 기반 전략 전체</div>
+  <div class="link-chips">
+    <a href="method/value/">가치 투자 전략</a>
+    <a href="method/dividend-growth/">배당 성장 전략</a>
+    <a href="method/leverage-dividend/">레버리지 배당 전략</a>
+    <a href="method/covered-call/">커버드콜 전략</a>
+    <a href="method/dca/">적립식 매수 전략</a>
+    <a href="method/quality/">퀄리티 전략</a>
+    <a href="method/momentum/">모멘텀 전략</a>
+    <a href="method/low-volatility/">저변동성 전략</a>
+    <a href="method/magic-formula/">매직 포뮬러 전략</a>
+    <a href="method/garp/">GARP 전략</a>
+    <a href="method/can-slim/">CAN SLIM 전략</a>
+    <a href="method/all-weather/">올웨더 전략</a>
+  </div>
+  <div class="link-group-label">투자자 기반 전략 전체</div>
+  <div class="link-chips">
+    <a href="investor/buffett/">워런 버핏</a>
+    <a href="investor/dalio/">레이 달리오</a>
+    <a href="investor/lynch/">피터 린치</a>
+    <a href="investor/munger/">찰리 멍거</a>
+    <a href="investor/burry/">마이클 버리</a>
+    <a href="investor/graham/">벤저민 그레이엄</a>
+    <a href="investor/ackman/">빌 애크먼</a>
+    <a href="investor/icahn/">칼 아이칸</a>
+    <a href="investor/klarman/">세스 클라만</a>
+    <a href="investor/marks/">하워드 막스</a>
+    <a href="investor/soros/">조지 소로스</a>
+    <a href="investor/templeton/">존 템플턴</a>
+    <a href="investor/tepper/">데이비드 테퍼</a>
+    <a href="investor/ark/">캐시 우드 / ARK</a>
+  </div>
+</section>
+
 <div class="divider"><hr></div>
 <footer class="footer">
   <div class="footer-left">&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>
@@ -167,14 +186,8 @@ a { color: inherit; text-decoration: none; }
   </div>
 </footer>
 
+<script src="/assets/js/theme.js"></script>
 <script>
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('themeBtn').textContent = isDark ? '🌙' : '☀️';
-  localStorage.setItem('finq-theme', isDark ? 'light' : 'dark');
-}
 (function() {
   const saved = localStorage.getItem('finq-theme');
   if (saved === 'dark') {
