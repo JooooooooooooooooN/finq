@@ -48,13 +48,13 @@
 
 .link-section { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem 1rem; }
 .link-grid { display: flex; flex-direction: column; gap: 1.75rem; }
-.link-col { min-width: 0; }
+.link-col { min-width: 0; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); padding: 1.25rem 1.5rem; }
 .link-group-label { font-size: 15px; font-weight: 700; color: var(--text); margin: 0 0 0.85rem; }
 .link-rows { display: flex; flex-direction: column; gap: 8px; }
 .link-row { display: flex; flex-wrap: wrap; gap: 8px; }
-.link-row a { padding: 9px 14px; border-radius: 20px; font-size: 13px; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); transition: all 0.15s; }
+.link-row a { padding: 9px 14px; border-radius: 20px; font-size: 13px; text-align: center; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); transition: all 0.15s; }
 .link-row a:hover { color: var(--accent); border-color: var(--accent); }
-@media (min-width: 769px) { .link-row { flex-wrap: nowrap; } .link-row a { flex: 1; text-align: center; } }
+@media (min-width: 769px) { .link-row { display: grid; grid-template-columns: repeat(6, 1fr); } .link-col.assets .link-row { grid-template-columns: repeat(5, 1fr); } }
 </style>
 <meta property="og:title" content="투자 전략 — FinQ">
 <meta property="og:description" content="워런 버핏, 레이 달리오 등 검증된 투자자 포트폴리오부터 방법론, 자산군별 전략까지. FinQ 투자 전략 허브.">
@@ -177,7 +177,7 @@
         </div>
       </div>
     </div>
-    <div class="link-col">
+    <div class="link-col assets">
       <div class="link-group-label">자산 기반 전략 전체</div>
       <div class="link-rows">
         <div class="link-row">
