@@ -1,6 +1,6 @@
 # FinQ 작업 체크리스트
 
-> 최종 업데이트: 2026-04-05 (마켓 데이터 분석 API 연동 작업)
+> 최종 업데이트: 2026-04-15 (코드 정리 — 미완성 페이지 삭제, CSS/JS 공통화)
 > - /insight/beginner/ 카드 링크 전체 연결 완료
 > - 상세페이지 9개 신규 생성: what-is-etf / why-13f / understand-dividend-yield / per-pbr-roe / why-market-cap-matters / why-diversification / what-is-dca / price-vs-value / investing-basics-first
 > - 각 페이지 고유 시각화 요소 포함 (공식 박스 / 비교 카드 / DCA 테이블 / 학습 로드맵 등)
@@ -124,14 +124,15 @@
 - [x] `/data/us_calendar/` — 경제 이벤트 캘린더 ✅ 2026-04-03 (하드코딩, 카드 6개)
 - [x] `/data/us_earnings/` — 미국 실적 발표 일정 ✅ 2026-04-05 (Yahoo Finance API)
 - [x] `/data/kr_disclosure/` — 국내 핵심 공시 ✅ 2026-04-05 (DART API, 작동 확인)
-- [x] `/data/kr_fundamentals/` — 종목 재무 요약 🔶 2026-04-05 (한글 검색 완료, Yahoo 401 수정 배포됨 — 실제 작동 확인 필요)
+- [x] `/data/kr_fundamentals/` — 종목 재무 요약 ✅ 2026-06-03 (라이브 작동 확인: AAPL·005930.KS 정상 반환, Yahoo 401 해결 / 한글 검색은 로컬 사전 방식)
 
-#### 미작업
-- [ ] `/data/us_earnings-surprise/` — 어닝 서프라이즈 분석 (유료 API 필요)
 - [x] `/data/us_insider/` — 미국 내부자 거래 동향 ✅ 2026-04-05 (SEC EDGAR Form 4 연동)
-- [ ] `/data/kr_flow/` — 국내 수급 동향 (KRX 공개 API 없음, 난이도 높음)
 - [x] `/data/kr_ipo/` — 국내 IPO·공모 일정 ✅ 2026-04-05 (DART API 거래소공시+발행공시 연동)
-- [ ] `/data/kr_ir/` — 국내 IR 일정 (공개 API 없음)
+
+#### 삭제됨 (API 없어 구현 불가)
+- ~~`/data/us_earnings-surprise/`~~ — 어닝 서프라이즈 분석 (유료 API 필요, 2026-04-15 삭제)
+- ~~`/data/kr_flow/`~~ — 국내 수급 동향 (KRX 공개 API 없음, 2026-04-15 삭제)
+- ~~`/data/kr_ir/`~~ — 국내 IR 일정 (공개 API 없음, 2026-04-15 삭제)
 
 #### Cloudflare Functions
 - [x] `functions/api/earnings.js` — Yahoo Finance 실적 일정
@@ -177,12 +178,10 @@
 
 | 순위 | 작업 | 이유 |
 |------|------|------|
-| 순위 | 작업 | 이유 |
-|------|------|------|
 | ✅ 완료 | 인사이트 허브 + 아티클 4개 | SEO + 콘텐츠 수 확보 → 애드센스 |
 | ✅ 완료 | 자산 기반 전략 페이지 | 목록 + 9개 상세 콘텐츠 완성 |
 | ✅ 완료 | 투자자 기반 전략 키워드 필터 | 12개 성향 키워드, 카드 하이라이트 |
 | ✅ 완료 | 초보자 가이드 상세페이지 9개 | 입문 콘텐츠 완성 → SEO 강화 |
 | ✅ 완료 | 경제 이벤트 캘린더 + 실적 일정 + 공시 | 재방문 유도 데이터 페이지 |
-| 🔶 확인필요 | 종목 재무 요약 Yahoo 401 수정 | finq.kr에서 실제 검색 테스트 필요 |
-| 🟡 다음 | 국내 IPO 일정 | DART API 가능, 미착수 |
+| ✅ 완료 | 종목 재무 요약 Yahoo 401 수정 | 2026-06-03 라이브 테스트 통과 (AAPL·삼성전자 정상) |
+| ✅ 완료 | CSS/JS 공통화 (2026-04-15) | toggleTheme 120개 파일 외부화, 75개 파일 CSS 변수 공통화 |

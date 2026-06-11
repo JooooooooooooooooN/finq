@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G7NS8G78N5"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G7NS8G78N5');</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>레버리지 배당 시뮬레이터 — FinQ</title>
@@ -432,6 +435,7 @@ a{color:inherit;text-decoration:none}
 
 <div id="searchDropdown"></div>
 <script src="../dividend/kr-stocks.js"></script>
+<script src="/assets/js/theme.js"></script>
 <script>
 /* ── 모드 전환 ── */
 let currentMode='basic';
@@ -792,7 +796,6 @@ function testScenario(delta){
   }else{calc();}
 }
 
-function toggleTheme(){const h=document.documentElement;const isDark=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',isDark?'light':'dark');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';localStorage.setItem('finq-theme',isDark?'light':'dark')}
 (function(){if(localStorage.getItem('finq-theme')==='dark'){document.documentElement.setAttribute('data-theme','dark');document.getElementById('themeBtn').textContent='☀️'}})();
 
 calc();
