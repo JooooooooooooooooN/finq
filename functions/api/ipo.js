@@ -21,16 +21,12 @@ export async function onRequest(context) {
     'Referer': 'https://opendart.fss.or.kr/',
   };
 
-  // 거래소공시 키워드 (I타입 — 신규상장·수요예측 등 IPO 전용)
-  const EXCHANGE_KW = ['신규상장', '상장예비심사', '수요예측', '공모가격', '청약일정'];
-  const EXCLUDE_KW  = ['정정', '철회'];
-
   // 실패 원인을 삼키지 않고 diag에 기록한다 (0건일 때 원인 추적용)
   const diag = {};
   async function dartFetch(type) {
     try {
       const res = await fetch(
-        `https://opendart.fss.or.kr/api/list.json?crtfc_key=${apiKey}&pblntf_ty=${type}${base}`,
+        `https://opendart.fss.or.kr/api/list.json?crtfc_key=${apiKey}&pblntf_detail_ty=${type}${base}`,
         { headers: hdrs }
       );
       if (!res.ok) { diag[type] = { http: res.status }; return []; }
@@ -52,57 +48,37 @@ export async function onRequest(context) {
 
   try {
     // 거래소공시(I: 신규상장) + 발행공시(C: 증권신고서·투자설명서) 병렬 조회
-    const [listI, listC] = await Promise.all([dartFetch('I'), dartFetch('C')]);
-
-    // 진단: 상세유형 C001(증권신고-지분증권) 직접 조회 + 실제 보고서명 샘플
-    try {
-      const r = await fetch(
-        `https://opendart.fss.or.kr/api/list.json?crtfc_key=${apiKey}&pblntf_detail_ty=C001${base}`,
-        { headers: hdrs }
-      );
-      const t = await r.text();
-      const j = JSON.parse(t);
-      diag.C001 = {
-        status: j.status,
-        total: j.total_count ?? null,
-        sample: (j.list || []).slice(0, 6).map(x => x.report_nm),
-      };
-    } catch (e) { diag.C001 = { error: String(e && e.message || e) }; }
-
-    diag.sampleI = listI.slice(0, 6).map(x => x.report_nm);
-    diag.sampleC = listC.slice(0, 6).map(x => x.report_nm);
+    // C001 = 증권신고(지분증권). 공모·증자 관련 공시가 여기 모인다.
+    // 대분류 I(거래소공시)는 수시공시가 대부분이라 최신 100건에 IPO가 걸리지 않아 제외.
+    const list = await dartFetch('C001');
 
     const seen = new Set();
-    const items = [...listI, ...listC]
+    const items = list
       .filter(item => {
         if (seen.has(item.rcept_no)) return false;
         seen.add(item.rcept_no);
-        const nm = item.report_nm;
-        // 정정·철회 공시 제외
-        if (EXCLUDE_KW.some(k => nm.includes(k))) return false;
-        // 거래소공시(I): 신규상장·수요예측 등 IPO 전용
-        if (EXCHANGE_KW.some(k => nm.includes(k))) return true;
-        // 발행공시(C): 지분증권 일반공모 증권신고서·투자설명서만
-        return (nm.includes('증권신고서') || nm.includes('투자설명서'))
-          && nm.includes('지분증권') && nm.includes('일반공모')
-          && !nm.includes('주주배정') && !nm.includes('제3자배정');
+        const nm = item.report_nm || '';
+        // 철회분과 단순 정정분은 제외 ([발행조건확정]은 공모가 확정이라 유지)
+        if (nm.includes('철회')) return false;
+        if (nm.includes('[기재정정]') || nm.includes('[첨부정정]') || nm.includes('[정정]')) return false;
+        // 지분증권 공모 관련 서류만
+        return nm.includes('증권신고서(지분증권)')
+          || nm.includes('투자설명서')
+          || nm.includes('소액공모공시서류(지분증권)');
       })
       .map(item => {
         const nm = item.report_nm;
         let typeLabel = '기타';
         let typeClass = 'type-other';
-        if      (nm.includes('신규상장'))     { typeLabel = '신규상장';  typeClass = 'type-listing'; }
-        else if (nm.includes('상장예비심사')) { typeLabel = '심사결과';  typeClass = 'type-review';  }
-        else if (nm.includes('수요예측'))     { typeLabel = '수요예측';  typeClass = 'type-book';    }
-        else if (nm.includes('공모가격'))     { typeLabel = '공모가확정'; typeClass = 'type-price';  }
-        else if (nm.includes('청약일정'))     { typeLabel = '청약일정';  typeClass = 'type-sub';    }
-        else if (nm.includes('투자설명서'))   { typeLabel = '투자설명서'; typeClass = 'type-pros';  }
-        else if (nm.includes('증권신고서'))   { typeLabel = '증권신고';  typeClass = 'type-reg';    }
+        if      (nm.includes('발행조건확정')) { typeLabel = '발행조건확정'; typeClass = 'type-price'; }
+        else if (nm.includes('투자설명서'))   { typeLabel = '투자설명서';   typeClass = 'type-pros';  }
+        else if (nm.includes('소액공모'))     { typeLabel = '소액공모';     typeClass = 'type-book';  }
+        else if (nm.includes('증권신고서'))   { typeLabel = '증권신고';     typeClass = 'type-reg';   }
 
-        const market = nm.includes('코스피') ? 'KOSPI'
-                     : nm.includes('코스닥') ? 'KOSDAQ'
-                     : item.corp_cls === 'Y' ? 'KOSPI'
+        const market = item.corp_cls === 'Y' ? 'KOSPI'
                      : item.corp_cls === 'K' ? 'KOSDAQ'
+                     : item.corp_cls === 'N' ? 'KONEX'
+                     : item.corp_cls === 'E' ? '비상장'
                      : '';
 
         const dt = item.rcept_dt; // YYYYMMDD
