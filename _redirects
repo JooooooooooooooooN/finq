@@ -2,3 +2,9 @@
 /tools/dividend/        /simulation/dividend/         301
 /tools/lever/                    /simulation/                  301
 /tools/*                         /simulation/                  301
+/insight/strategy/all-weather/  /strategy/method/all-weather/  301
+/insight/strategy/can-slim/  /strategy/method/can-slim/  301
+/insight/strategy/dca/  /strategy/method/dca/  301
+/insight/strategy/low-volatility/  /strategy/method/low-volatility/  301
+/insight/strategy/magic-formula/  /strategy/method/magic-formula/  301
+/insight/strategy/quality/  /strategy/method/quality/  301
