@@ -25,19 +25,29 @@ export async function onRequest(context) {
   const EXCHANGE_KW = ['신규상장', '상장예비심사', '수요예측', '공모가격', '청약일정'];
   const EXCLUDE_KW  = ['정정', '철회'];
 
+  // 실패 원인을 삼키지 않고 diag에 기록한다 (0건일 때 원인 추적용)
+  const diag = {};
   async function dartFetch(type) {
     try {
       const res = await fetch(
         `https://opendart.fss.or.kr/api/list.json?crtfc_key=${apiKey}&pblntf_ty=${type}${base}`,
         { headers: hdrs }
       );
-      if (!res.ok) return [];
+      if (!res.ok) { diag[type] = { http: res.status }; return []; }
       const text = await res.text();
-      if (text.trim().startsWith('<')) return [];
+      if (text.trim().startsWith('<')) { diag[type] = { http: res.status, note: 'HTML 응답(키/차단 의심)' }; return []; }
       const data = JSON.parse(text);
-      if (data.status !== '000') return [];
-      return data.list || [];
-    } catch { return []; }
+      if (data.status !== '000') {
+        diag[type] = { http: res.status, status: data.status, message: data.message || '' };
+        return [];
+      }
+      const list = data.list || [];
+      diag[type] = { http: res.status, status: data.status, raw: list.length, total: data.total_count ?? null };
+      return list;
+    } catch (e) {
+      diag[type] = { error: String(e && e.message || e) };
+      return [];
+    }
   }
 
   try {
@@ -104,6 +114,7 @@ export async function onRequest(context) {
       total: items.length,
       counts,
       items,
+      diag: { ...diag, range: [fmt(start), fmt(end)] },
       updatedAt: new Date().toISOString(),
     }), {
       headers: {
