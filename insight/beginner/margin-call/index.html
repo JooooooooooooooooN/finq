@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G7NS8G78N5"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G7NS8G78N5');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>반대매매란 무엇인가 — FinQ 초보자 가이드</title>
+<meta name="description" content="주가가 얼마나 떨어지면 반대매매를 당할까? 담보비율 계산법, 담보유지비율 기준, 반대매매가 실행되는 순서와 왜 손실이 커지는지를 정리.">
+<meta name="keywords" content="반대매매, 담보유지비율, 담보비율 계산, 주식담보대출, 신용융자 반대매매, 마진콜">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://finq.kr/insight/beginner/margin-call/">
+<link rel="stylesheet" href="/assets/css/common.css">
+<style>
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 16px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+.callout-warn { background: rgba(220,38,38,.06); border: 1px solid rgba(220,38,38,.2); }
+[data-theme="dark"] .callout-warn { background: rgba(220,38,38,.12); border-color: rgba(220,38,38,.3); }
+
+.formula { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; text-align: center; margin-top: 0.25rem; }
+.formula-main { font-size: 16px; font-weight: 700; line-height: 1.8; word-break: keep-all; }
+.formula-main em { font-style: normal; color: var(--accent); }
+.formula-note { font-size: 13px; color: var(--text-secondary); margin-top: 0.6rem; line-height: 1.6; }
+
+.zone-list { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.zone { display: flex; align-items: center; gap: 12px; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; }
+.zone-badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; flex-shrink: 0; min-width: 74px; text-align: center; }
+.zone-safe .zone-badge { background: rgba(5,150,105,.12); color: var(--green); }
+.zone-warn .zone-badge { background: rgba(217,119,6,.14); color: #d97706; }
+.zone-danger .zone-badge { background: rgba(220,38,38,.12); color: var(--red); }
+.zone-body { font-size: 14px; line-height: 1.6; word-break: keep-all; }
+.zone-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.zone-body span { color: var(--text-secondary); }
+
+.calc-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-top: 0.25rem; }
+.calc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; font-size: 14px; }
+.calc-row + .calc-row { border-top: 1px dashed var(--border); }
+.calc-row span:first-child { color: var(--text-secondary); }
+.calc-row span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+.calc-row.total { border-top: 1px solid var(--border); margin-top: 0.3rem; padding-top: 0.7rem; }
+.calc-row.total span:last-child { color: var(--red); font-size: 17px; font-weight: 800; }
+.calc-caption { font-size: 12px; color: var(--text-secondary); margin-top: 0.7rem; line-height: 1.6; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+.related-card.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.related-card.primary:hover { background: var(--accent-hover); color: #fff; }
+.related-card.primary .related-card-arrow { color: #fff; }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="반대매매란 무엇인가 — FinQ 초보자 가이드">
+<meta property="og:description" content="주가가 얼마나 떨어지면 반대매매를 당할까? 담보비율 계산법과 반대매매가 실행되는 순서를 정리.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/beginner/margin-call/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4111399134907305" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"반대매매란 무엇인가 — FinQ 초보자 가이드","url":"https://finq.kr/insight/beginner/margin-call/","description":"주가가 얼마나 떨어지면 반대매매를 당할까? 담보비율 계산법, 담보유지비율 기준, 반대매매가 실행되는 순서와 왜 손실이 커지는지를 정리.","inLanguage":"ko","publisher":{"@type":"Organization","name":"FinQ","url":"https://finq.kr"}}</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="/simulation/">계산기</a>
+      <a href="/data/">데이터</a>
+      <a href="/strategy/">전략</a>
+      <a href="/insight/" class="active">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="/">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/insight/">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/insight/beginner/">초보자 가이드</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>반대매매란 무엇인가</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">RISK</div>
+    <h1>반대매매란 무엇인가</h1>
+    <p class="hero-desc">빌린 돈으로 주식을 사면 주가가 일정 수준 아래로 떨어질 때 증권사가 주식을 강제로 파는 구조가 작동.<br>담보비율이 무엇이고, 주가가 몇 퍼센트 떨어지면 그 선에 닿는지를 숫자로 정리.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">반대매매</span>
+      <span class="hero-tag">담보유지비율</span>
+      <span class="hero-tag">레버리지</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">강제 매도 장치</div>
+        <div class="summary-text">담보 가치가 기준 아래로 내려가면 증권사가 투자자 동의 없이 주식을 파는 구조</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">담보비율이 기준</div>
+        <div class="summary-text">보유 주식 평가액을 빌린 금액으로 나눈 비율이 유지 기준을 밑돌면 발동</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">가격을 못 고른다</div>
+        <div class="summary-text">체결을 확실히 하려고 낮은 가격에 주문이 나가 실제 손실이 예상보다 커지는 구조</div>
+      </div>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 반대매매는 손실이 <strong>대출해 준 쪽으로 번지지 않게</strong> 막는 장치이며, 투자자 입장에서는 가장 불리한 시점에 강제로 파는 결과가 되는 구조
+    </div>
+  </div>
+
+  <!-- 담보비율 공식 -->
+  <div class="section">
+    <div class="sec-title">담보비율 계산법</div>
+    <div class="formula">
+      <div class="formula-main">담보비율 = <em>보유 주식 평가액</em> ÷ <em>대출 금액</em> × 100</div>
+      <div class="formula-note">주가가 떨어지면 분자만 줄어들고 갚아야 할 돈은 그대로이므로, 담보비율은 주가보다 빠르게 하락</div>
+    </div>
+    <div class="zone-list" style="margin-top:1rem;">
+      <div class="zone zone-safe">
+        <span class="zone-badge">안전</span>
+        <div class="zone-body"><strong>경고 기준 위</strong><span>담보에 여유가 있어 추가 조치가 필요하지 않은 구간</span></div>
+      </div>
+      <div class="zone zone-warn">
+        <span class="zone-badge">경고</span>
+        <div class="zone-body"><strong>경고 기준 ~ 유지 기준</strong><span>증권사가 담보 부족 가능성을 알리는 구간. 추가 하락 시 반대매매 대상이 되는 위치</span></div>
+      </div>
+      <div class="zone zone-danger">
+        <span class="zone-badge">반대매매</span>
+        <div class="zone-body"><strong>담보유지비율 미달</strong><span>정해진 기한까지 담보를 채우지 못하면 강제 매도가 실행되는 구간</span></div>
+      </div>
+    </div>
+    <div class="callout callout-info">
+      담보유지비율과 경고 기준은 증권사와 상품(신용융자·주식담보대출)에 따라 다릅니다. 일반적으로 <strong>120~140% 사이</strong>가 쓰이며, 본인 계좌의 실제 기준은 거래 증권사에서 확인이 필요합니다.
+    </div>
+  </div>
+
+  <!-- 숫자 예시 -->
+  <div class="section">
+    <div class="sec-title">숫자로 보는 예시</div>
+    <div class="calc-box">
+      <div class="calc-row"><span>보유 주식</span><span>1,000주 × 50,000원 = 5,000만원</span></div>
+      <div class="calc-row"><span>대출 금액</span><span>3,000만원</span></div>
+      <div class="calc-row"><span>현재 담보비율</span><span>166.7%</span></div>
+      <div class="calc-row"><span>경고 기준 140% 도달 주가</span><span>42,000원 (−16%)</span></div>
+      <div class="calc-row total"><span>담보유지 120% 미달 주가</span><span>36,000원 (−28%)</span></div>
+    </div>
+    <p class="calc-caption">주가가 28% 빠지면 반대매매 구간에 진입하는 구조. 자기 돈만으로 샀다면 28% 하락은 평가손실에 그치지만, 3,000만원을 빌린 상태에서는 강제 매도로 손실이 확정됨.</p>
+    <div class="callout callout-info">
+      대출 금액과 담보 기준을 바꿔가며 내 반대매매 가격을 확인하려면 <a href="/simulation/loan/" style="color:var(--accent);font-weight:600;">담보대출 리스크 계산기</a>를 이용해 보세요.
+    </div>
+  </div>
+
+  <!-- 진행 순서 -->
+  <div class="section">
+    <div class="sec-title">반대매매가 실행되는 순서</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>담보비율이 유지 기준 아래로 내려감</strong>
+          <span>장 마감 후 종가를 기준으로 계좌의 담보비율을 평가. 이 시점에 기준 미달이 확인되면 담보 부족 상태로 분류</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>증권사가 담보 부족을 통보</strong>
+          <span>문자나 앱 알림으로 부족 사실과 채워야 할 금액을 안내. 이때 필요한 것은 현금 입금 또는 추가 담보 제공</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>기한까지 담보를 채우지 못함</strong>
+          <span>보통 다음 영업일까지가 기한. 이 시간 안에 부족분이 해소되지 않으면 반대매매 대상으로 확정</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>장 시작과 함께 강제 매도</strong>
+          <span>다음 거래일 시초가 무렵에 매도 주문이 실행. 체결을 확실히 하기 위해 낮은 가격으로 주문이 나가는 경우가 많아 실제 체결가가 전날 종가보다 크게 낮을 수 있음</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">꼭 알아야 할 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body">
+          <strong>빌린 비중이 클수록 버틸 수 있는 하락폭이 작아진다</strong>
+          같은 종목이라도 대출 비중이 커지면 담보비율의 출발점이 낮아져 반대매매 가격이 현재가에 가까워짐. 레버리지를 키우는 것은 기대수익과 함께 강제 매도 확률을 함께 키우는 선택
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⏱️</div>
+        <div class="point-body">
+          <strong>대응 시간이 하루뿐인 경우가 많다</strong>
+          담보 부족을 인지한 다음 날 안에 자금을 마련해야 하는 구조. 급락은 대체로 예고 없이 오기 때문에, 부족분을 메울 현금을 미리 확보해 두지 않으면 대응이 어려움
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🎲</div>
+        <div class="point-body">
+          <strong>파는 종목과 가격을 고를 수 없다</strong>
+          어떤 종목을 얼마나 팔지는 증권사 기준으로 결정. 팔고 싶지 않았던 종목이 먼저 정리될 수 있고, 체결가도 투자자가 지정할 수 없음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔁</div>
+        <div class="point-body">
+          <strong>반등해도 이미 팔린 뒤라는 점</strong>
+          반대매매는 보통 하락이 가장 심한 국면에서 실행. 며칠 뒤 주가가 회복해도 이미 저점에서 물량이 정리된 상태이므로 회복의 혜택을 받지 못하는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">💸</div>
+        <div class="point-body">
+          <strong>이자는 주가와 무관하게 계속 쌓인다</strong>
+          주가가 오르든 내리든 대출 이자는 기간에 비례해 발생. 하락장이 길어지면 담보 가치는 줄고 이자 부담은 늘어나 담보비율이 양쪽에서 압박받는 구조
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 주의할 점 -->
+  <div class="section">
+    <div class="sec-title">위험을 줄이는 방법</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">🧮</div>
+        <div class="point-body caution">
+          <strong>빌리기 전에 반대매매 가격부터 계산할 것</strong>
+          대출을 실행하기 전에 "주가가 얼마가 되면 강제로 팔리는가"를 숫자로 확인하는 절차가 필요. 그 가격이 최근 1년 저점보다 높다면 이미 위험한 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🛟</div>
+        <div class="point-body caution">
+          <strong>담보를 채울 현금을 따로 남겨둘 것</strong>
+          투자 가능한 자금을 전부 매수에 쓰면 담보 부족 시 대응 수단이 없음. 추가 납입에 쓸 현금을 별도로 두는 것이 반대매매를 막는 가장 현실적인 방법
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📊</div>
+        <div class="point-body caution">
+          <strong>한 종목에 몰아서 담보를 잡지 말 것</strong>
+          담보가 한 종목에 집중되면 그 종목의 급락이 곧바로 담보비율 붕괴로 연결. 종목이 분산되어 있으면 개별 악재의 충격이 완화되는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>기준은 증권사마다 다르다</strong>
+          담보유지비율, 통보 방식, 반대매매 실행 시점은 증권사와 상품마다 차이가 있음. 이 글의 숫자는 이해를 돕기 위한 예시이며, 실제 조건은 본인 계좌 약관에서 확인이 필요
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 계산기 연결 -->
+  <div class="section">
+    <div class="sec-title">직접 계산해 보기</div>
+    <div class="related-cards">
+      <a href="/simulation/loan/" class="related-card primary">
+        <span>🏦 담보대출 리스크 계산기로 내 반대매매 가격 확인</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/simulation/lever-dividend/" class="related-card">
+        <span>📊 레버리지 배당 시뮬레이터 — 이자까지 반영한 손익</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="/strategy/method/leverage-dividend/" class="related-card">
+        <span>📈 레버리지 배당 전략</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/insight/psychology/panic-market-principles/" class="related-card">
+        <span>🌊 공포장 대응 원칙</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/insight/macro/rates-and-stocks/" class="related-card">
+        <span>💹 금리 인상과 주식시장 관계</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="/insight/beginner/" class="bottom-link">← 초보자 가이드 전체로</a>
+    <a href="/insight/" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 상품이나 종목에 대한 권유가 아닙니다. 담보유지비율과 반대매매 기준은 증권사·상품별로 다르므로 실제 조건은 거래 증권사에서 확인하시기 바랍니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/news/">뉴스</a>
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script src="/assets/js/theme.js"></script>
+<script>
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>

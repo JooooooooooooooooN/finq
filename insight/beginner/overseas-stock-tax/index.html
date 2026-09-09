@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-G7NS8G78N5"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-G7NS8G78N5');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>해외주식 양도소득세 정리 — FinQ 초보자 가이드</title>
+<meta name="description" content="미국 주식을 팔면 세금을 얼마나 낼까? 250만원 기본공제, 22% 세율, 5월 신고, 손익통산과 환율 적용까지 해외주식 양도소득세의 구조를 정리.">
+<meta name="keywords" content="해외주식 양도소득세, 미국주식 세금, 해외주식 250만원 공제, 해외주식 세금 신고, 양도소득세 22%">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://finq.kr/insight/beginner/overseas-stock-tax/">
+<link rel="stylesheet" href="/assets/css/common.css">
+<style>
+.article-wrap { max-width: 800px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+.breadcrumb { padding: 1.5rem 0 0; font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.breadcrumb a { color: var(--text-secondary); transition: color 0.15s; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb-sep { opacity: 0.4; }
+
+.hero { padding: 1.75rem 0 2rem; }
+.hero-label { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.hero h1 { font-size: clamp(22px, 4vw, 32px); font-weight: 800; letter-spacing: -0.5px; line-height: 1.3; margin-bottom: 0.75rem; }
+.hero-desc { font-size: 15px; color: var(--text-secondary); line-height: 1.75; word-break: keep-all; margin-bottom: 1rem; max-width: 580px; }
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; background: var(--bg-secondary); color: var(--text-secondary); border: 1px solid var(--border); }
+
+hr { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+.section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-top: 1rem; }
+.sec-title { font-size: 15px; font-weight: 700; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+
+.summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 560px) { .summary-grid { grid-template-columns: 1fr; } }
+.summary-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+.summary-num { font-size: 16px; font-weight: 800; color: var(--accent); margin-bottom: 0.4rem; }
+.summary-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; }
+
+.callout { border-radius: 10px; padding: 0.9rem 1.1rem; margin-top: 1rem; font-size: 14px; line-height: 1.75; word-break: keep-all; }
+.callout-info { background: rgba(37,99,235,.07); border: 1px solid rgba(37,99,235,.2); }
+[data-theme="dark"] .callout-info { background: rgba(37,99,235,.12); border-color: rgba(37,99,235,.3); }
+
+.calc-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-top: 0.25rem; }
+.calc-row { display: flex; justify-content: space-between; align-items: baseline; padding: 0.5rem 0; font-size: 14px; }
+.calc-row + .calc-row { border-top: 1px dashed var(--border); }
+.calc-row span:first-child { color: var(--text-secondary); }
+.calc-row span:last-child { font-weight: 600; font-variant-numeric: tabular-nums; }
+.calc-row.total { border-top: 1px solid var(--border); margin-top: 0.3rem; padding-top: 0.7rem; }
+.calc-row.total span:last-child { color: var(--accent); font-size: 17px; font-weight: 800; }
+.calc-caption { font-size: 12px; color: var(--text-secondary); margin-top: 0.7rem; line-height: 1.6; }
+
+.flow-steps { display: flex; flex-direction: column; gap: 0; margin-top: 0.25rem; }
+.flow-step { display: flex; align-items: flex-start; gap: 14px; padding: 0.85rem 0; }
+.flow-step + .flow-step { border-top: 1px solid var(--border); }
+.step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.step-body { font-size: 15px; line-height: 1.7; word-break: keep-all; }
+.step-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.step-body span { font-size: 14px; color: var(--text-secondary); }
+
+.point-list { display: flex; flex-direction: column; gap: 10px; margin-top: 0.25rem; }
+.point-item { display: flex; align-items: flex-start; gap: 12px; padding: 0.85rem 1rem; background: var(--bg-secondary); border-radius: 10px; }
+.point-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.point-body { font-size: 14px; line-height: 1.65; word-break: keep-all; }
+.point-body strong { font-weight: 700; display: block; margin-bottom: 2px; }
+.point-body.caution strong { color: var(--red); }
+
+.related-cards { display: flex; flex-direction: column; gap: 8px; margin-top: 0.25rem; }
+.related-card { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1rem; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-weight: 500; transition: all 0.15s; }
+.related-card:hover { border-color: var(--accent); color: var(--accent); }
+.related-card-arrow { color: var(--text-secondary); font-size: 16px; }
+.related-card.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.related-card.primary:hover { background: var(--accent-hover); color: #fff; }
+.related-card.primary .related-card-arrow { color: #fff; }
+
+.bottom-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 1.5rem; }
+.bottom-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 8px; font-size: 14px; font-weight: 500; border: 1px solid var(--border); color: var(--text-secondary); background: var(--bg-card); transition: all 0.15s; }
+.bottom-link:hover { border-color: var(--accent); color: var(--accent); }
+
+.disclaimer { font-size: 12px; color: var(--text-secondary); padding: 10px 14px; background: var(--bg-secondary); border-radius: 8px; margin-top: 1.25rem; line-height: 1.7; }
+
+.footer { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 13px; color: var(--text-secondary); }
+.footer-links { display: flex; gap: 20px; }
+.footer-links a:hover { color: var(--text); }
+</style>
+<meta property="og:title" content="해외주식 양도소득세 정리 — FinQ 초보자 가이드">
+<meta property="og:description" content="미국 주식을 팔면 세금을 얼마나 낼까? 250만원 기본공제, 22% 세율, 5월 신고, 손익통산과 환율 적용까지 정리.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://finq.kr/insight/beginner/overseas-stock-tax/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4111399134907305" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"해외주식 양도소득세 정리 — FinQ 초보자 가이드","url":"https://finq.kr/insight/beginner/overseas-stock-tax/","description":"미국 주식을 팔면 세금을 얼마나 낼까? 250만원 기본공제, 22% 세율, 5월 신고, 손익통산과 환율 적용까지 해외주식 양도소득세의 구조를 정리.","inLanguage":"ko","publisher":{"@type":"Organization","name":"FinQ","url":"https://finq.kr"}}</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">Fin<span>Q</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="/simulation/">계산기</a>
+      <a href="/data/">데이터</a>
+      <a href="/strategy/">전략</a>
+      <a href="/insight/" class="active">인사이트</a>
+      <a href="/about/">소개</a>
+      <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    </div>
+    <button class="nav-mobile-btn" onclick="document.getElementById('navLinks').classList.toggle('open')">☰</button>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <div class="breadcrumb">
+    <a href="/">FinQ</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/insight/">투자 인사이트</a>
+    <span class="breadcrumb-sep">/</span>
+    <a href="/insight/beginner/">초보자 가이드</a>
+    <span class="breadcrumb-sep">/</span>
+    <span>해외주식 양도소득세 정리</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">TAX</div>
+    <h1>해외주식 양도소득세 정리</h1>
+    <p class="hero-desc">미국 주식을 팔면 세금을 얼마나 낼까? 250만원 기본공제, 22% 세율, 5월 신고라는 세 가지 축을 중심으로 해외주식 양도소득세의 구조를 정리.<br>손익통산과 환율 적용처럼 실제 세액을 바꾸는 요소까지 함께 확인.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">양도소득세</span>
+      <span class="hero-tag">해외주식</span>
+      <span class="hero-tag">기초</span>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 핵심 요약 -->
+  <div class="section" style="margin-top:1.25rem;">
+    <div class="sec-title">핵심 요약</div>
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="summary-num">연 250만원 공제</div>
+        <div class="summary-text">한 해 양도차익에서 250만원을 먼저 빼고, 남은 금액에만 과세되는 구조</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">세율 22%</div>
+        <div class="summary-text">양도소득세 20% + 지방소득세 2%를 합한 세율이 과세 대상 금액에 적용</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-num">이듬해 5월 신고</div>
+        <div class="summary-text">전년 1월~12월 양도분을 합산해 다음 해 5월 1일~31일에 신고·납부</div>
+      </div>
+    </div>
+    <div class="callout callout-info">
+      <strong>한 줄 요약:</strong> 판 금액이 아니라 <strong>번 금액</strong>에 매기는 세금이며, 한 해에 250만원까지는 세금이 없고 그 이상부터 22%가 적용되는 구조
+    </div>
+  </div>
+
+  <!-- 계산 구조 -->
+  <div class="section">
+    <div class="sec-title">세금이 정해지는 순서</div>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>판 금액에서 산 금액과 비용을 뺀다</strong>
+          <span>매도금액에서 매수금액과 증권사 수수료 등 필요경비를 차감해 양도차익을 계산. 아직 팔지 않고 들고 있는 평가이익은 과세 대상이 아님</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>같은 해 이익과 손실을 합친다</strong>
+          <span>1월 1일부터 12월 31일까지 매도한 해외주식의 이익과 손실을 모두 합산. A 종목에서 벌고 B 종목에서 잃었다면 순이익만 남음</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>기본공제 250만원을 뺀다</strong>
+          <span>합산한 순이익에서 연 250만원을 공제. 순이익이 250만원 이하라면 과세 대상 금액이 0원이 되어 세금이 발생하지 않는 구조</span>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>남은 금액에 22%를 적용한다</strong>
+          <span>공제 후 남은 금액에 양도소득세 20%와 지방소득세 2%를 더한 22%가 적용되어 최종 세액이 결정</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 숫자 예시 -->
+  <div class="section">
+    <div class="sec-title">숫자로 보는 예시</div>
+    <div class="calc-box">
+      <div class="calc-row"><span>A 종목 매도 이익</span><span>+800만원</span></div>
+      <div class="calc-row"><span>B 종목 매도 손실</span><span>−300만원</span></div>
+      <div class="calc-row"><span>합산 순이익 (손익통산 후)</span><span>500만원</span></div>
+      <div class="calc-row"><span>기본공제</span><span>−250만원</span></div>
+      <div class="calc-row"><span>과세 대상 금액</span><span>250만원</span></div>
+      <div class="calc-row total"><span>납부할 세금 (22%)</span><span>55만원</span></div>
+    </div>
+    <p class="calc-caption">B 종목의 손실 300만원을 같은 해에 확정했기 때문에 과세 대상이 800만원에서 250만원으로 줄어든 구조. 손실을 확정하지 않았다면 세금은 55만원이 아니라 121만원이 됨.</p>
+    <div class="callout callout-info">
+      실제 세액은 매수일과 매도일의 환율, 거래 비용까지 반영해야 정확해집니다. <a href="/simulation/tax/" style="color:var(--accent);font-weight:600;">해외주식 세금 계산기</a>에 본인 숫자를 넣어 확인해 보세요.
+    </div>
+  </div>
+
+  <!-- 핵심 포인트 -->
+  <div class="section">
+    <div class="sec-title">꼭 알아야 할 포인트</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">💱</div>
+        <div class="point-body">
+          <strong>환율이 세금을 바꾼다</strong>
+          매수 시점과 매도 시점의 환율을 각각 적용해 원화로 환산한 뒤 차익을 계산. 주가가 그대로여도 그 사이 원달러 환율이 오르면 원화 기준 이익이 생겨 과세 대상이 될 수 있음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📆</div>
+        <div class="point-body">
+          <strong>기준은 매도한 날이지 입금된 날이 아니다</strong>
+          과세 기간을 가르는 것은 매도 체결 시점. 12월 말에 판 주식은 결제일이 다음 해로 넘어가도 그해 양도분으로 잡히는 것이 일반적이므로 연말 매도 시점 관리가 필요
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🧮</div>
+        <div class="point-body">
+          <strong>250만원은 사람 기준, 한 해 기준</strong>
+          증권사 계좌 개수와 무관하게 개인당 연 250만원이 한 번 적용되는 구조. 여러 증권사를 쓰더라도 합산해서 신고해야 하며, 공제가 계좌마다 반복 적용되지는 않음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🔀</div>
+        <div class="point-body">
+          <strong>손익통산은 같은 해 안에서만</strong>
+          해외주식끼리는 이익과 손실을 합칠 수 있지만, 올해의 손실을 내년으로 넘겨서 빼는 이월공제는 적용되지 않음. 손실을 세금에 반영하려면 같은 해에 확정해야 하는 구조
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">💵</div>
+        <div class="point-body">
+          <strong>배당에 붙는 세금은 별개</strong>
+          매매차익에 붙는 양도소득세와 배당에 붙는 배당소득세는 별도 항목. 미국 주식 배당은 현지에서 원천징수된 뒤 지급되며, 금융소득이 일정 규모를 넘으면 종합과세 대상이 될 수 있음
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 주의할 점 -->
+  <div class="section">
+    <div class="sec-title">주의할 점</div>
+    <div class="point-list">
+      <div class="point-item">
+        <div class="point-icon">⚠️</div>
+        <div class="point-body caution">
+          <strong>세금이 0원이어도 신고 대상일 수 있음</strong>
+          공제 범위 안이라 납부할 세액이 없더라도 양도 자체가 있었다면 신고 의무는 남는 것이 원칙. 세액이 없다는 이유로 넘기면 가산세 문제가 생길 수 있음
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">🏦</div>
+        <div class="point-body caution">
+          <strong>증권사 대행 신고에만 의존하지 말 것</strong>
+          증권사가 신고를 대행해 주는 경우가 있지만, 여러 증권사에 계좌가 흩어져 있으면 합산이 누락될 수 있음. 계좌가 둘 이상이면 본인이 합산 내역을 확인하는 것이 안전
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📉</div>
+        <div class="point-body caution">
+          <strong>세금을 아끼려다 투자 판단을 그르치는 경우</strong>
+          손실 확정으로 세금을 줄이는 방법이 있지만, 세금을 아끼려고 회복 가능성이 있는 종목을 파는 것은 본말이 전도된 판단. 세금은 투자 결정의 결과이지 목적이 아님
+        </div>
+      </div>
+      <div class="point-item">
+        <div class="point-icon">📋</div>
+        <div class="point-body caution">
+          <strong>세법은 바뀔 수 있음</strong>
+          공제 금액과 세율, 신고 방식은 세법 개정에 따라 달라질 수 있음. 실제 신고 전에는 국세청 공고나 세무 전문가를 통해 해당 연도 기준을 확인하는 것이 필요
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 계산기 연결 -->
+  <div class="section">
+    <div class="sec-title">직접 계산해 보기</div>
+    <div class="related-cards">
+      <a href="/simulation/tax/" class="related-card primary">
+        <span>🧾 해외주식 세금 계산기로 내 세금 확인</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/simulation/dividend/" class="related-card">
+        <span>💰 투자 수익 시뮬레이터 — 세후 수익 확인</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 함께 보면 좋은 글 -->
+  <div class="section">
+    <div class="sec-title">함께 보면 좋은 글</div>
+    <div class="related-cards">
+      <a href="/insight/beginner/what-is-etf/" class="related-card">
+        <span>🗂️ ETF란 무엇인가</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/insight/beginner/understand-dividend-yield/" class="related-card">
+        <span>💵 배당수익률 쉽게 이해하기</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+      <a href="/insight/dividend/monthly-etf-guide/" class="related-card">
+        <span>📅 월배당 ETF 비교 가이드</span>
+        <span class="related-card-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- 하단 링크 -->
+  <div class="bottom-nav">
+    <a href="/insight/beginner/" class="bottom-link">← 초보자 가이드 전체로</a>
+    <a href="/insight/" class="bottom-link">← 투자 인사이트 전체로</a>
+  </div>
+
+  <p class="disclaimer">이 콘텐츠는 투자 및 세금 관련 참고 정보이며, 세무 자문이 아닙니다. 세법은 개정될 수 있고 개인의 상황에 따라 적용이 달라질 수 있으므로, 실제 신고 시에는 국세청 안내 또는 세무 전문가의 확인을 받으시기 바랍니다. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</p>
+
+</div>
+
+<hr>
+<footer class="footer">
+  <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 투자자 본인에게 있습니다.</div>
+  <div class="footer-links">
+    <a href="/news/">뉴스</a>
+    <a href="/about/">소개</a>
+    <a href="/privacy/">개인정보처리방침</a>
+  </div>
+</footer>
+
+<script src="/assets/js/theme.js"></script>
+<script>
+(function() {
+  const saved = localStorage.getItem('finq-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+</script>
+</body>
+</html>
