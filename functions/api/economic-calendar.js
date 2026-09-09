@@ -1,88 +1,84 @@
+/**
+ * 경제 일정 캘린더 API
+ *
+ * Finnhub 무료 플랜은 economic calendar 엔드포인트를 지원하지 않아(403) 정적 일정으로 전환.
+ * FOMC·CPI·고용지표 등 주요 지표는 발표일이 1년 단위로 미리 공개되므로
+ * 외부 API보다 정적 데이터가 더 안정적이다.
+ *
+ * 출처 (모두 공식 발표 일정)
+ *  - FOMC        : federalreserve.gov/monetarypolicy/fomccalendars.htm
+ *  - CPI / 고용   : bls.gov/schedule/news_release/
+ *  - PCE / GDP   : bea.gov/news/schedule
+ *  - 한은 금통위  : bok.or.kr
+ *
+ * 날짜·시간은 모두 한국 시각(KST) 기준으로 변환해 저장했다.
+ *  - 미국 지표 08:30 ET  -> 서머타임 21:30 / 표준시 22:30 (같은 날)
+ *  - FOMC       14:00 ET -> 서머타임 익일 03:00 / 표준시 익일 04:00
+ *  (미국 서머타임: 2026-03-08~11-01, 2027-03-14~11-07)
+ *
+ * ⚠️ 갱신 규칙: 2027년 CPI·고용·PCE·GDP 일정은 아직 미공개다.
+ *    BLS/BEA가 다음 해 일정을 발표하면 아래 EVENTS에 추가할 것.
+ */
+
 const HEADERS = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*'
+  'Access-Control-Allow-Origin': '*',
+  'Cache-Control': 'public, max-age=3600'
 };
 
-const KO_NAMES = {
-  'ISM Manufacturing PMI': 'ISM 제조업 PMI',
-  'Nonfarm Payrolls': '비농업고용지표 (NFP)',
-  'Consumer Price Index (CPI) YoY': '소비자물가지수 (CPI) YoY',
-  'Consumer Price Index (CPI) MoM': '소비자물가지수 (CPI) MoM',
-  'Core Consumer Price Index (CPI) YoY': '근원 CPI YoY',
-  'Core Consumer Price Index (CPI) MoM': '근원 CPI MoM',
-  'Producer Price Index (PPI) MoM': '생산자물가지수 (PPI) MoM',
-  'Producer Price Index (PPI) YoY': '생산자물가지수 (PPI) YoY',
-  'Retail Sales MoM': '소매판매 MoM',
-  'Retail Sales YoY': '소매판매 YoY',
-  'GDP Growth Rate QoQ': 'GDP 성장률 QoQ',
-  'GDP Growth Rate YoY': 'GDP 성장률 YoY',
-  'GDP Growth Rate QoQ Adv': 'GDP 성장률 속보치',
-  'Unemployment Rate': '실업률',
-  'Fed Interest Rate Decision': '연준 금리 결정',
-  'FOMC Economic Projections': 'FOMC 경제 전망',
-  'FOMC Meeting Minutes': 'FOMC 의사록',
-  'Initial Jobless Claims': '신규실업급여 청구건수',
-  'Continuing Jobless Claims': '연속실업급여 청구건수',
-  'Consumer Confidence': '소비자신뢰지수',
-  'ISM Services PMI': 'ISM 서비스업 PMI',
-  'ADP Nonfarm Employment Change': 'ADP 비농업고용',
-  'PCE Price Index YoY': '개인소비지출 (PCE) YoY',
-  'PCE Price Index MoM': '개인소비지출 (PCE) MoM',
-  'Core PCE Price Index YoY': '근원 PCE YoY',
-  'Core PCE Price Index MoM': '근원 PCE MoM',
-  'Durable Goods Orders MoM': '내구재 주문',
-  'Building Permits': '건축허가',
-  'Housing Starts': '주택착공',
-  'Existing Home Sales': '기존주택판매',
-  'New Home Sales': '신규주택판매',
-  'Trade Balance': '무역수지',
-  'Industrial Production MoM': '산업생산 MoM',
-  'Philadelphia Fed Manufacturing Index': '필라델피아 연은 제조업',
-  'Empire State Manufacturing Index': '엠파이어 스테이트 제조업',
-  'Michigan Consumer Sentiment': '미시간 소비자심리지수',
-  'Job Openings (JOLTS)': '구인건수 (JOLTS)',
-  'JOLTs Job Openings': '구인건수 (JOLTS)',
-  'CB Consumer Confidence': 'CB 소비자신뢰지수',
-  'S&P Global Manufacturing PMI': 'S&P 글로벌 제조업 PMI',
-  'S&P Global Services PMI': 'S&P 글로벌 서비스업 PMI',
-  'Balance of Trade': '무역수지',
-  'Exports YoY': '수출 YoY',
-  'Imports YoY': '수입 YoY',
-  'GDP Growth Rate YoY Adv': 'GDP 성장률 YoY 속보치',
-  'Fixed Asset Investment (YTD) YoY': '고정자산투자 YTD YoY',
-  'Industrial Production YoY': '산업생산 YoY',
-  'Retail Sales YoY': '소매판매 YoY',
-  'Inflation Rate YoY': '소비자물가지수 YoY',
-  'Inflation Rate MoM': '소비자물가지수 MoM',
-  'Core Inflation Rate YoY': '근원 소비자물가 YoY',
-  'Interest Rate Decision': '기준금리 결정',
-  'Machinery Orders MoM': '기계수주 MoM',
-  'Machinery Orders YoY': '기계수주 YoY',
-  'Export Prices YoY': '수출물가 YoY',
-  'Import Prices YoY': '수입물가 YoY',
-  'CPI YoY': '소비자물가지수 YoY',
-  'CPI MoM': '소비자물가지수 MoM',
-  'PPI MoM': '생산자물가지수 MoM',
-  'PPI YoY': '생산자물가지수 YoY',
-  'Loan Prime Rate 1Y': '대출우대금리 1년',
-  'Loan Prime Rate 5Y': '대출우대금리 5년',
-};
+// date: KST 기준 발표일 / time: KST 기준 발표 시각
+const EVENTS = [
+  // ── 2026 ──────────────────────────────────────────────
+  { date: '2026-09-11', time: '21:30', event: '소비자물가지수 (CPI) — 8월', eventEn: 'Consumer Price Index (CPI)', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-09-17', time: '03:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-09-30', time: '21:30', event: '개인소비지출 (PCE) — 8월', eventEn: 'PCE Price Index', country: '미국', countryCode: 'US', impactRaw: 'high' },
 
-const KO_COUNTRIES = {
-  'US': '미국', 'KR': '한국', 'JP': '일본', 'CN': '중국', 'EU': '유로존',
-};
+  { date: '2026-10-02', time: '21:30', event: '비농업고용지표 (NFP) — 9월', eventEn: 'Nonfarm Payrolls', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-10-08', time: '03:00', event: 'FOMC 의사록 공개', eventEn: 'FOMC Meeting Minutes', country: '미국', countryCode: 'US', impactRaw: 'medium' },
+  { date: '2026-10-14', time: '21:30', event: '소비자물가지수 (CPI) — 9월', eventEn: 'Consumer Price Index (CPI)', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-10-22', time: '10:00', event: '한국은행 기준금리 결정', eventEn: 'BOK Interest Rate Decision', country: '한국', countryCode: 'KR', impactRaw: 'high' },
+  { date: '2026-10-29', time: '03:00', event: '연준 금리 결정', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-10-29', time: '21:30', event: 'GDP 성장률 3분기 (속보치)', eventEn: 'GDP Growth Rate QoQ Adv', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-10-29', time: '21:30', event: '개인소비지출 (PCE) — 9월', eventEn: 'PCE Price Index', country: '미국', countryCode: 'US', impactRaw: 'high' },
 
-const IMPACT_KO = { 'high': '중요', 'medium': '보통', 'low': '낮음' };
-const IMPACT_ORDER = { 'high': 0, 'medium': 1, 'low': 2 };
+  { date: '2026-11-06', time: '22:30', event: '비농업고용지표 (NFP) — 10월', eventEn: 'Nonfarm Payrolls', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-11-10', time: '22:30', event: '소비자물가지수 (CPI) — 10월', eventEn: 'Consumer Price Index (CPI)', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-11-19', time: '04:00', event: 'FOMC 의사록 공개', eventEn: 'FOMC Meeting Minutes', country: '미국', countryCode: 'US', impactRaw: 'medium' },
+  { date: '2026-11-25', time: '22:30', event: '개인소비지출 (PCE) — 10월', eventEn: 'PCE Price Index', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-11-25', time: '22:30', event: 'GDP 성장률 3분기 (잠정치)', eventEn: 'GDP Growth Rate QoQ', country: '미국', countryCode: 'US', impactRaw: 'medium' },
+  { date: '2026-11-26', time: '10:00', event: '한국은행 기준금리 결정', eventEn: 'BOK Interest Rate Decision', country: '한국', countryCode: 'KR', impactRaw: 'high' },
 
+  { date: '2026-12-04', time: '22:30', event: '비농업고용지표 (NFP) — 11월', eventEn: 'Nonfarm Payrolls', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-12-10', time: '04:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-12-10', time: '22:30', event: '소비자물가지수 (CPI) — 11월', eventEn: 'Consumer Price Index (CPI)', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-12-23', time: '22:30', event: '개인소비지출 (PCE) — 11월', eventEn: 'PCE Price Index', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2026-12-23', time: '22:30', event: 'GDP 성장률 3분기 (확정치)', eventEn: 'GDP Growth Rate QoQ', country: '미국', countryCode: 'US', impactRaw: 'medium' },
+  { date: '2026-12-31', time: '04:00', event: 'FOMC 의사록 공개', eventEn: 'FOMC Meeting Minutes', country: '미국', countryCode: 'US', impactRaw: 'medium' },
+
+  // ── 2027 (FOMC만 공개됨) ───────────────────────────────
+  { date: '2027-01-28', time: '04:00', event: '연준 금리 결정', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-03-18', time: '03:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-04-29', time: '03:00', event: '연준 금리 결정', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-06-10', time: '03:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-07-29', time: '03:00', event: '연준 금리 결정', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-09-16', time: '03:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-10-28', time: '03:00', event: '연준 금리 결정', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+  { date: '2027-12-09', time: '04:00', event: '연준 금리 결정 + 경제 전망(SEP)', eventEn: 'Fed Interest Rate Decision', country: '미국', countryCode: 'US', impactRaw: 'high' },
+];
+
+const IMPACT_KO = { high: '중요', medium: '보통', low: '낮음' };
+const IMPACT_ORDER = { high: 0, medium: 1, low: 2 };
+
+// KST 기준 이번 주(월~일) 범위
 function getWeekRange(offsetWeeks = 0) {
-  const now = new Date();
-  const day = now.getDay();
+  const nowUtc = new Date();
+  const kst = new Date(nowUtc.getTime() + 9 * 60 * 60 * 1000);
+  const day = kst.getUTCDay();
   const diffToMon = day === 0 ? -6 : 1 - day;
-  const mon = new Date(now);
-  mon.setDate(now.getDate() + diffToMon + offsetWeeks * 7);
+  const mon = new Date(kst);
+  mon.setUTCDate(kst.getUTCDate() + diffToMon + offsetWeeks * 7);
   const sun = new Date(mon);
-  sun.setDate(mon.getDate() + 6);
+  sun.setUTCDate(mon.getUTCDate() + 6);
   const fmt = d => d.toISOString().split('T')[0];
   return { from: fmt(mon), to: fmt(sun) };
 }
@@ -90,41 +86,37 @@ function getWeekRange(offsetWeeks = 0) {
 export async function onRequest(context) {
   try {
     const url = new URL(context.request.url);
-    const weekOffset = parseInt(url.searchParams.get('week') || '0');
+    const weekOffset = parseInt(url.searchParams.get('week') || '0', 10) || 0;
     const { from, to } = getWeekRange(weekOffset);
 
-    const apiKey = context.env.FINNHUB_API_KEY;
-    if (!apiKey) throw new Error('FINNHUB_API_KEY 환경변수 없음');
-
-    const res = await fetch(
-      `https://finnhub.io/api/v1/calendar/economic?from=${from}&to=${to}&token=${apiKey}`
-    );
-    if (!res.ok) throw new Error('Finnhub API 오류: ' + res.status);
-    const data = await res.json();
-
-    const events = (data.economicCalendar || [])
-      .filter(e => e.time && e.country && KO_COUNTRIES[e.country] && e.impact === 'high')
+    const events = EVENTS
+      .filter(e => e.date >= from && e.date <= to)
       .map(e => ({
-        date: e.time.split(' ')[0],
-        time: e.time.split(' ')[1]?.slice(0, 5) || '',
-        event: KO_NAMES[e.event] || e.event,
-        eventEn: e.event,
-        country: KO_COUNTRIES[e.country],
-        countryCode: e.country,
-        impact: IMPACT_KO[e.impact] || e.impact,
-        impactRaw: e.impact,
-        estimate: e.estimate ?? null,
-        prev: e.prev ?? null,
-        actual: e.actual ?? null,
-        unit: e.unit || '',
+        date: e.date,
+        time: e.time,
+        event: e.event,
+        eventEn: e.eventEn,
+        country: e.country,
+        countryCode: e.countryCode,
+        impact: IMPACT_KO[e.impactRaw] || e.impactRaw,
+        impactRaw: e.impactRaw,
+        estimate: null,
+        prev: null,
+        actual: null,
+        unit: '',
       }))
       .sort((a, b) => {
-        const dateDiff = a.date.localeCompare(b.date);
-        if (dateDiff !== 0) return dateDiff;
+        const d = a.date.localeCompare(b.date);
+        if (d !== 0) return d;
+        const t = a.time.localeCompare(b.time);
+        if (t !== 0) return t;
         return (IMPACT_ORDER[a.impactRaw] ?? 9) - (IMPACT_ORDER[b.impactRaw] ?? 9);
       });
 
-    return new Response(JSON.stringify({ events, from, to }), { headers: HEADERS });
+    // 정적 데이터가 어디까지 채워져 있는지 프론트가 알 수 있게 함께 반환
+    const coverageEnd = EVENTS[EVENTS.length - 1].date;
+
+    return new Response(JSON.stringify({ events, from, to, coverageEnd }), { headers: HEADERS });
 
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {

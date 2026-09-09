@@ -234,7 +234,7 @@ hr{border:none;border-top:1px solid var(--border)}
     <div class="summary-card">
       <div class="summary-label">발표 완료</div>
       <div class="summary-value orange" id="statDone">—</div>
-      <div class="summary-sub">실제치 확인 가능</div>
+      <div class="summary-sub">이번 주 경과분</div>
     </div>
   </div>
 
@@ -497,7 +497,7 @@ function updateStats(events) {
   document.getElementById('statTotal').textContent = events.length;
   document.getElementById('statToday').textContent = events.filter(e => e.date === todayStr).length;
   document.getElementById('statHigh').textContent = events.filter(e => e.impactRaw === 'high').length;
-  document.getElementById('statDone').textContent = events.filter(e => e.actual !== null).length;
+  document.getElementById('statDone').textContent = events.filter(e => e.date < todayStr).length;
   const { from, to } = getWeekRange(currentWeek);
   document.getElementById('statRange').textContent =
     `${from.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})} ~ ${to.toLocaleDateString('ko-KR',{month:'numeric',day:'numeric'})}`;
@@ -530,6 +530,8 @@ function evCard(e) {
   if (e.actual !== null && e.estimate !== null) ac = e.actual >= e.estimate ? 'beat' : 'miss';
   const actualRow = e.actual !== null
     ? `<div class="vrow"><span class="vlabel">실제</span><span class="vnum ${ac}">${fv(e.actual, e.unit)}</span></div>` : '';
+  const hasVals = e.estimate !== null || e.prev !== null || e.actual !== null;
+  const passed = e.date < fmtDate(new Date());
   return `<div class="ev-card">
     <div class="ev-time">${e.time || '—'}</div>
     <div>
@@ -540,9 +542,9 @@ function evCard(e) {
       </div>
     </div>
     <div class="ev-vals">
-      <div class="vrow"><span class="vlabel">예상</span><span class="vnum">${fv(e.estimate, e.unit)}</span></div>
-      <div class="vrow"><span class="vlabel">이전</span><span class="vnum">${fv(e.prev, e.unit)}</span></div>
-      ${actualRow}
+      ${hasVals
+        ? `${e.estimate !== null ? `<div class="vrow"><span class="vlabel">예상</span><span class="vnum">${fv(e.estimate, e.unit)}</span></div>` : ''}${e.prev !== null ? `<div class="vrow"><span class="vlabel">이전</span><span class="vnum">${fv(e.prev, e.unit)}</span></div>` : ''}${actualRow}`
+        : `<div class="vrow"><span class="vnum" style="font-size:13px;font-weight:600;color:${passed ? 'var(--text-secondary)' : 'var(--accent)'}">${passed ? '발표 완료' : '발표 예정'}</span></div>`}
     </div>
   </div>`;
 }
