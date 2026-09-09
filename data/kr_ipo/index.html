@@ -75,6 +75,7 @@ a{color:inherit;text-decoration:none}
 [data-theme=dark] .type-price  {background:#78350f;color:#fcd34d}
 [data-theme=dark] .type-sub    {background:#7f1d1d;color:#fca5a5}
 [data-theme=dark] .type-pros   {background:#831843;color:#fbcfe8}
+.mkt-etc {display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:var(--bg2);color:var(--text2);border:1px solid var(--border)}
 .mkt-kospi {display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:#eff6ff;color:#1d4ed8}
 .mkt-kosdaq{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;background:#f0fdf4;color:#166534}
 [data-theme=dark] .mkt-kospi {background:#1e3a5f;color:#93c5fd}
@@ -128,10 +129,10 @@ hr{border:none;border-top:1px solid var(--border)}
     <h1>국내 공모주 일정</h1>
     <p class="hero-lead">DART 공시 기반 최근 90일 신규상장·수요예측·청약 일정. 공모 단계별 공시를 한눈에 확인하고 DART 원문으로 바로 이동.</p>
     <div class="hero-tags">
-      <span class="hero-tag">신규상장</span>
-      <span class="hero-tag">수요예측</span>
-      <span class="hero-tag">청약일정</span>
       <span class="hero-tag">증권신고서</span>
+      <span class="hero-tag">발행조건확정</span>
+      <span class="hero-tag">투자설명서</span>
+      <span class="hero-tag">소액공모</span>
       <span class="hero-tag">DART 연동</span>
     </div>
     <span class="hero-update" id="updatedAt">최근 90일 기준</span>
@@ -271,6 +272,8 @@ function renderRows(items) {
     const tc  = TYPE_CLASS[d.typeLabel] || 'type-other';
     const mkt = d.market === 'KOSPI'  ? '<span class="mkt-kospi">KOSPI</span>'
               : d.market === 'KOSDAQ' ? '<span class="mkt-kosdaq">KOSDAQ</span>'
+              : d.market === 'KONEX'  ? '<span class="mkt-etc">KONEX</span>'
+              : d.market === '비상장' ? '<span class="mkt-etc">비상장</span>'
               : '<span style="color:var(--text2);font-size:12px">—</span>';
     return `<tr>
       <td class="company-name">${d.corp_name}</td>
