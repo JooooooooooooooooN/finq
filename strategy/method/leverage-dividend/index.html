@@ -237,6 +237,35 @@ hr{border:none;border-top:1px solid var(--border)}
   <p class="disclaimer">이 콘텐츠는 투자 참고 정보이며, 특정 종목에 대한 매수·매도 추천이 아닙니다. 모든 투자 판단과 책임은 이용자에게 있습니다.</p>
 </main>
 
+<style>
+.related { max-width: 1100px; margin: 2.5rem auto 0; padding: 0 1.25rem; }
+.related-title { font-size: 18px; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.4px; color: var(--text, #1a1a2e); }
+.related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.related-card { display: block; padding: 1rem 1.1rem; background: var(--bg-card, var(--card, transparent)); border: 1px solid var(--border, #e5e7eb); border-radius: 12px; transition: border-color 0.15s, transform 0.15s; }
+.related-card:hover { border-color: var(--accent, #2563eb); transform: translateY(-2px); }
+.related-tag { display: block; font-size: 11.5px; color: var(--text-secondary, var(--text2, #6b7280)); margin-bottom: 0.35rem; }
+.related-card h3 { font-size: 14.5px; font-weight: 600; line-height: 1.5; color: var(--text, #1a1a2e); }
+@media (max-width: 760px) { .related-grid { grid-template-columns: 1fr; } }
+</style>
+
+<section class="related">
+  <h2 class="related-title">숫자로 확인해 보기</h2>
+  <div class="related-grid">
+    <a href="/simulation/lever-dividend/" class="related-card">
+      <span class="related-tag">계산기</span>
+      <h3>레버리지 배당 시뮬레이터</h3>
+    </a>
+    <a href="/simulation/loan/" class="related-card">
+      <span class="related-tag">계산기</span>
+      <h3>담보대출 리스크 계산기</h3>
+    </a>
+    <a href="/simulation/" class="related-card">
+      <span class="related-tag">전체</span>
+      <h3>투자 계산기 9종 모두 보기</h3>
+    </a>
+  </div>
+</section>
+
 <hr>
 <footer class="footer">
   <div>&copy; 2026 FinQ. 모든 투자 판단과 책임은 이용자에게 있습니다.</div>

@@ -14,7 +14,10 @@
 <meta property="og:description" content="한국 주요 경제 뉴스를 빠르게 확인하세요.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://finq.kr/news/">
+<meta property="og:image" content="https://finq.kr/og-image.png">
 <link rel="stylesheet" href="/assets/css/common.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"경제 뉴스 — FinQ","url":"https://finq.kr/news/","description":"한국 주요 경제 뉴스를 빠르게 확인하세요.","inLanguage":"ko","publisher":{"@type":"Organization","name":"FinQ","url":"https://finq.kr"}}</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4111399134907305" crossorigin="anonymous"></script>
 <style>
 /* WRAP */
 .page-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
@@ -194,7 +197,7 @@ function renderDetail(id) {
       if (!d) return;
       d.innerHTML = `
         <span class="detail-source-badge">${item.source}</span>
-        <h1 class="detail-title">${item.title}</h1>
+        <h2 class="detail-title">${item.title}</h2>
         <div class="detail-meta">${item.date ? item.date.replace(/-/g,'.') : ''}</div>
         <div class="detail-body">${item.summary || '본문을 불러올 수 없습니다.'}</div>
         <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="detail-link-btn">
