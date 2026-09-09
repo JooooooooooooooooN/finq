@@ -59,7 +59,7 @@ export async function onRequest(context) {
 
     const now = new Date();
     const from = now.toISOString().split('T')[0];
-    const to = new Date(now.getTime() + 14 * 86400000).toISOString().split('T')[0];
+    const to = new Date(now.getTime() + 30 * 86400000).toISOString().split('T')[0];
 
     const res = await fetch(
       `https://finnhub.io/api/v1/calendar/earnings?from=${from}&to=${to}&token=${apiKey}`
