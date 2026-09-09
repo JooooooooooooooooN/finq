@@ -54,6 +54,24 @@ export async function onRequest(context) {
     // 거래소공시(I: 신규상장) + 발행공시(C: 증권신고서·투자설명서) 병렬 조회
     const [listI, listC] = await Promise.all([dartFetch('I'), dartFetch('C')]);
 
+    // 진단: 상세유형 C001(증권신고-지분증권) 직접 조회 + 실제 보고서명 샘플
+    try {
+      const r = await fetch(
+        `https://opendart.fss.or.kr/api/list.json?crtfc_key=${apiKey}&pblntf_detail_ty=C001${base}`,
+        { headers: hdrs }
+      );
+      const t = await r.text();
+      const j = JSON.parse(t);
+      diag.C001 = {
+        status: j.status,
+        total: j.total_count ?? null,
+        sample: (j.list || []).slice(0, 6).map(x => x.report_nm),
+      };
+    } catch (e) { diag.C001 = { error: String(e && e.message || e) }; }
+
+    diag.sampleI = listI.slice(0, 6).map(x => x.report_nm);
+    diag.sampleC = listC.slice(0, 6).map(x => x.report_nm);
+
     const seen = new Set();
     const items = [...listI, ...listC]
       .filter(item => {
