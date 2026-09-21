@@ -8,3 +8,8 @@
 /insight/strategy/low-volatility/  /strategy/method/low-volatility/  301
 /insight/strategy/magic-formula/  /strategy/method/magic-formula/  301
 /insight/strategy/quality/  /strategy/method/quality/  301
+/strategy/investor/ark/  /strategy/investor/  301
+/strategy/investor/tepper/  /strategy/investor/  301
+/data/kr_ir/  /data/kr_disclosure/  301
+/strategy/leverage-dividend/news/  /news/  301
+/strategy/leverage-dividend/strategy/*  /strategy/:splat  301
